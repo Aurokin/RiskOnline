@@ -7,13 +7,13 @@ function Room(name, id, owner){
 	this.status = "available";
 	this.private = false;
 };
-
+//add a person to the table
 Room.prototype.addPerson = function(personID){
 	if(this.status === "available"){
 		this.people.push(personID);
 	}
 };
-
+//removing a person from the room
 Room.prototype.removePerson = function(person){
 	var personIndex = -1;
 	for(var i = 0; i < this.people.length; i++){
@@ -24,7 +24,7 @@ Room.prototype.removePerson = function(person){
 	}
 	this.people.remove(personIndex);
 };
-
+//get a person
 Room.prototype.getPerson = function(personID){
 	var person = null;
 	for(var i = 0; i < this.people.length; i++){
@@ -35,7 +35,7 @@ Room.prototype.getPerson = function(personID){
 	}
 	return person;
 };
-
+//private room 
 Room.prototype.isPrivate = function(){
 	if(this.private){
 		return true;
