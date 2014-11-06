@@ -34,7 +34,7 @@ send404 = function(res) {
 server.listen(8080);
 
 //socket.io
-var io = require('cs4320-groupdanny/node_modules/sails/node_modules/socket.io').listen(server);
+var io = require('socket.io').listen(server);
 
 //on a 'connection' event
 
