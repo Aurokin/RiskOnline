@@ -147,5 +147,17 @@
     <script src="/js/real_time.js"></script>
     <script src="/js/room.js"></script>
     <!--SCRIPTS END-->
+
+  	<!-- TEST: Summer -->
+		<script>
+		socket.on('connect', function(){
+			console.log('Client has been connected to the server');
+		});
+		
+		function sendMessageToServer(message){
+			socket.send(message);
+		};
+		</script>
+	<!-- End test: Summer -->
   </body>
 </html>
