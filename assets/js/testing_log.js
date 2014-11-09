@@ -1,6 +1,6 @@
-var io = require('socket.io'),
-	express = require('express'),
-	app = express.createServer();
+var io = require('socket.io');
+var express = require('express');
+var app = express.createServer();
 
 app.configure(function (){
 	app.use(express.cookieParser());
@@ -16,5 +16,4 @@ var sio = io.listen(app);
 sio.sockets.on('connection', function(socket){
 	console.log('A socket connected!');
 });
-
 
