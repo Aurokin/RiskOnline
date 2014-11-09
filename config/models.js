@@ -11,13 +11,19 @@
 
 module.exports.models = {
 
+  connection: 'postgres'
+
   /***************************************************************************
   *                                                                          *
   * Your app's default connection. i.e. the name of one of your app's        *
   * connections (see `config/connections.js`)                                *
   *                                                                          *
   ***************************************************************************/
-  // connection: 'localDiskDb',
+
+   //For JJ: Change to the name of your postgres adapter
+   //For example, in connection.js, my mongo adapter is called 'mongo'
+   //I'll leave it commented out so you can see it
+   //connection: 'mongo',
 
   /***************************************************************************
   *                                                                          *
@@ -27,6 +33,8 @@ module.exports.models = {
   * See http://sailsjs.org/#/documentation/concepts/ORM/model-settings.html  *
   *                                                                          *
   ***************************************************************************/
-  // migrate: 'alter'
+
+   /*migrate: 'alter',
+   schema: true*/
 
 };
