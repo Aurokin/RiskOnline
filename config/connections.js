@@ -80,7 +80,7 @@ module.exports.connections = {
     host: '104.236.46.205',
     user: 'cs4320',
     password: 'risk',
-    database: 'riskOnline'
+    database: 'riskonline'
   }
 
 
