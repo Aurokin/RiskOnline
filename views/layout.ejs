@@ -145,27 +145,21 @@
     <script src="/js/chat.js"></script>
     <script src="/js/index.js"></script>
     <script src="/js/room.js"></script>
-    <script>
-    socket.on('connect', function(){
-      console.log('Client has been connected to the server');
-    });
-
-    function sendMessageToServer(message){
-      socket.send(message);
-    };
-    </script>
     <!--SCRIPTS END-->
 
   	<!-- TEST: Summer -->
-		<!--<script>
-		socket.on('connect', function(){
-			console.log('Client has been connected to the server');
-		});
 
-		function sendMessageToServer(message){
-			socket.send(message);
-		};
+    <script>
+		  socket.on('connect', function()
+        {
+			    console.log('Client has been connected to the server');
+		    });
+      function sendMessageToServer(message)
+        {
+			    socket.send(message);
+		    };
 		</script>
-	End test: Summer -->
+
+
   </body>
 </html>
