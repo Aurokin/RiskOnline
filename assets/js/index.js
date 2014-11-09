@@ -1,7 +1,7 @@
-var http = require('http')
-, url = require('url')
-, fs = require('fs')
-, server;
+var http = require('http');
+var url = require('url');
+var fs = require('fs');
+var server;
 
 server = http.createServer(function(req, res){
 	//our personal server will go here
