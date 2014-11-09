@@ -6,16 +6,13 @@
 */
 module.exports = {
 	attributes:{
-		RegionID:{
-			type:'string',
-			require:true,
-			unique:true
-		},
 		ArmyCount:{
-			type:'Integer'
+			type:'integer',
+			defaultsTo:0
 		},
 		ControlledBy:{
-			type:'string',
+			type:'integer',
+			defaultsTo:0
 		}
 	}
 };
