@@ -7,5 +7,9 @@
 
 module.exports = {
 	
+	fillWithRegions: function (req, res) {
+		
+	}
+
 };
 

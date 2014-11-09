@@ -10,7 +10,7 @@ module.exports = {
   attributes: {
 	region: {
 		type: 'string'
-	}
+	},
 	adjRegion: {
 		type: 'string'
 	}
