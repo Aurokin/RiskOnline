@@ -8,7 +8,15 @@
 module.exports = {
 
   attributes: {
-
+	name: {
+		type: 'string',
+		required: true,
+		unique: true
+	}
+	continent: {
+		type: 'string',
+		required: true
+	}
   }
 };
 
