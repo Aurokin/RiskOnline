@@ -32,7 +32,7 @@ send404 = function(res) {
 	res.end();
 };
 
-server.listen(8080);
+server.listen(1337);
 
 //socket.io
 var io = require('/Users/Summer/Documents/Workspace/cs4320-groupdanny/node_modules/sails/node_modules/socket.io').listen(server);
