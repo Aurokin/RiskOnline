@@ -3,7 +3,6 @@
  */
 
 module.exports = {
-	connection:
 	attributes:{
 		RegionID:{
 			type:'string',
@@ -17,4 +16,4 @@ module.exports = {
 			type:'string',
 		}
 	}
-}
+};
