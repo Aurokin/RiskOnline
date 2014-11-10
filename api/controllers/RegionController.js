@@ -6,6 +6,8 @@
  */
 
 module.exports = {
-	
+	 RegionsPerGame: function (req, res) {
+	 	//Reports the regions per a game
+	 }
 };
 
