@@ -56,7 +56,7 @@ module.exports = {
           gameID: values.tempGameID,
           playerID: players[i]
         }).exec(function(err, gamesUsersLink) {
-          console.log(gamesUsersLink);
+          //console.log(gamesUsersLink);
         });
     }
     //console.log(values);
