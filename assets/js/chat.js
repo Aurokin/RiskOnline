@@ -42,7 +42,7 @@ function purge(s, action){
 		if(s.id === room.owner){
 			if(action === "disconnect"){
 				io.sockets.in(s.room).emit("update", "The owner (" +people[s.id].name + ") has left the server. The room is removed and you have been disconnected.");
-				var socketid = [];
+				var socketids = [];
 				for(var i = 0; i < sockets.length; i++){
 					socketids.push(sockets[i].id);
 					if(_.contains((socketids)), room.people){
