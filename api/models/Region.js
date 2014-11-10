@@ -12,7 +12,7 @@ module.exports = {
 		},
 		controlledBy:{
 			type:'integer',
-			defaultsTo:0
+			defaultsTo:0,
 			required: true
 		},
 		game: {
