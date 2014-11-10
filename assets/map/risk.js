@@ -30,8 +30,8 @@ var Risk = {
 		//Initiate a Kinetic stage
 		Risk.stage = new Kinetic.Stage({
 			container: 'map',
-			width: 1920,
-			height: 1080
+			width: 1152,
+			height: 648
 		});
 
 		Risk.mapLayer = new Kinetic.Layer({
