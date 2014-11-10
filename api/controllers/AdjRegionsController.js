@@ -181,6 +181,10 @@ module.exports = {
 		}).exec(function(err, adjRegion) {
 			console.log(adjRegion);
 		});
+	},
+
+	canAttack: function(req, res) {
+		//Will take two region IDs and see if they can attack each other
 	}
 };
 
