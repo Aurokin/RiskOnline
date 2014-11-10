@@ -42,5 +42,18 @@ module.exports = {
       collection: 'region',
       via: 'game'
     }
+  },
+
+  beforeCreate: function (values, cb) {
+    values.startDate = new Date().toISOString();
+    var players = values.players.split(',').map(Number);
+    console.log(values);
+    console.log(players);
+    cb();
+  },
+
+  afterCreate: function (values, cb) {
+    console.log(values);
+    cb();
   }
 };
