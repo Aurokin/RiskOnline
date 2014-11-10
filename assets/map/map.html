@@ -2,6 +2,20 @@
 <html lang="en">
 
 <head>
+	<!--adding the next few lines: Summer--!>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+		var socket = io('http://localhost');
+		//may have to change local host
+		socket.on('news', function(data){
+			console.log(data);
+			socket.emit('my other event', {my: 'data'}
+			);
+		});
+	</script>
+	<!-- End of Socket.io stuff --!>
+	<script src="jquery-1.11.1.min.js"></script>
+	<!-- Added that jquery (Summer) --!>
 	<script src="kinetic-v5.1.0.min.js"></script>
 	<script src="gameData.js"></script>
 	<script src="paths.js"></script>

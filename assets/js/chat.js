@@ -5,7 +5,7 @@ var express = require('express')
 , server = require('http').createServer(app)
 , io = require("socket.io").listen(server)
 , uuid = require('node-uuid')
-, Room = require('./room.js)
+, Room = require('./room.js')
 , _ = require('underscore')._;
 
 app.configure(function() {
