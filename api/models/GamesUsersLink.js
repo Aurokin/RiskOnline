@@ -8,7 +8,16 @@
 module.exports = {
 
   attributes: {
+  	
+  	gameID: {
+  		type: 'integer',
+  		required: true
+  	},
 
+  	playerID: {
+  		type: 'integer',
+  		required: true
+  	}
   }
 };
 
