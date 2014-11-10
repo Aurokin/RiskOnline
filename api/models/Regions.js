@@ -8,11 +8,16 @@
 module.exports = {
 
   attributes: {
+	regionID: {
+		type: 'integer',
+		required: true,
+		unique: true
+	},
 	name: {
 		type: 'string',
 		required: true,
 		unique: true
-	}
+	},
 	continent: {
 		type: 'string',
 		required: true
