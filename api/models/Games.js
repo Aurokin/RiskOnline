@@ -32,6 +32,11 @@ module.exports = {
 
   	winner: {
   		type: 'integer'
-  	}
+  	},
+
+    password: {
+      type: 'string',
+      notNull: false
+    }
   }
 };
