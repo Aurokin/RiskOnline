@@ -13,6 +13,7 @@ module.exports = {
 		controlledBy:{
 			type:'integer',
 			defaultsTo:0
+			required: true
 		},
 		game: {
 			model: 'games'
