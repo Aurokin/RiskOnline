@@ -11,175 +11,175 @@ module.exports = {
 			region: 1,
 			adjRegion: 2
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 1,
 			adjRegion: 6
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 1,
 			adjRegion: 32
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 6,
 			adjRegion: 1
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 6,
 			adjRegion: 2
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 6,
 			adjRegion: 7
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 6,
 			adjRegion: 5
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 2,
 			adjRegion: 1
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 2,
 			adjRegion: 6
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 2,
 			adjRegion: 7
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 2,
 			adjRegion: 9
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 5,
 			adjRegion: 6
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 5,
 			adjRegion: 7
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 5,
 			adjRegion: 8
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 5,
 			adjRegion: 15
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 7,
 			adjRegion: 6
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 7,
 			adjRegion: 2
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 7,
 			adjRegion: 8
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 7,
 			adjRegion: 5
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 7,
 			adjRegion: 4
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 7,
 			adjRegion: 2
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 9,
 			adjRegion: 2
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 9,
 			adjRegion: 7
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 9,
 			adjRegion: 4
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 9,
 			adjRegion: 3
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 4,
 			adjRegion: 7
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 4,
 			adjRegion: 8
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 4,
 			adjRegion: 9
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 		AdjRegions.create({
 			region: 4,
 			adjRegion: 3
 		}).exec(function(err, adjRegion) {
-			console.log(adjRegion);
+			//console.log(adjRegion);
 		});
 	},
 
@@ -193,7 +193,7 @@ module.exports = {
 			region: t1,
 			adjRegion: t2
 		}).exec(function findCB(err, found) {
-			console.log(found);
+			//console.log(found);
 		});
 	}
 };
