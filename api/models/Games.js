@@ -37,6 +37,10 @@ module.exports = {
     password: {
       type: 'string',
       notNull: false
+    },
+    regions: {
+      collection: 'region',
+      via: 'game'
     }
   }
 };

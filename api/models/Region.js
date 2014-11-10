@@ -6,13 +6,16 @@
 */
 module.exports = {
 	attributes:{
-		ArmyCount:{
+		armyCount:{
 			type:'integer',
 			defaultsTo:0
 		},
-		ControlledBy:{
+		controlledBy:{
 			type:'integer',
 			defaultsTo:0
+		},
+		game: {
+			model: 'games'
 		}
 	}
 };
