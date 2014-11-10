@@ -5,7 +5,7 @@ var express = require('express')
 , server = require('http').createServer(app)
 , io = require("socket.io").listen(server)
 , uuid = require('node-uuid')
-, Room = require('./room.js)
+, Room = require('./room.js')
 , _ = require('underscore')._;
 
 app.configure(function() {
@@ -32,7 +32,7 @@ server.listen(app.get('port'), app.get('ipaddr'), function(){
 io.set("log level", 1);
 var people = {};
 var rooms = {};
-var sockets [];
+var sockets = [];
 var chatHistory = {};
 
 function purge(s, action){
@@ -42,7 +42,7 @@ function purge(s, action){
 		if(s.id === room.owner){
 			if(action === "disconnect"){
 				io.sockets.in(s.room).emit("update", "The owner (" +people[s.id].name + ") has left the server. The room is removed and you have been disconnected.");
-				var socketid = [];
+				var socketids = [];
 				for(var i = 0; i < sockets.length; i++){
 					socketids.push(sockets[i].id);
 					if(_.contains((socketids)), room.people){

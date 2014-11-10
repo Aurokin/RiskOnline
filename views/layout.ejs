@@ -146,6 +146,7 @@
     <script src="/js/chat.js"></script>
     <script src="/js/index.js"></script>
     <script src="/js/room.js"></script>
+    <script src="/js/testing_log.js"></script>
     <!--SCRIPTS END-->
 
   	<!-- TEST: Summer -->
@@ -159,6 +160,19 @@
         {
 			    socket.send(message);
 		    };
+		<script>
+
+		var  socket = new io.Socket();
+
+		socket.connect('http://localhost:1337');
+	
+		socket.on('connect', function(){
+			console.log('Client has been connected to the server');
+		});
+		
+		function sendMessageToServer(message){
+			socket.send(message);
+		};
 		</script>
 
 

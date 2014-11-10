@@ -28,7 +28,7 @@ Room.prototype.removePerson = function(person){
 Room.prototype.getPerson = function(personID){
 	var person = null;
 	for(var i = 0; i < this.people.length; i++){
-		if(this.people[i].id == personID){
+		if(this.people[i].id === personID){
 			person = this.people[i];
 			break;
 		}
