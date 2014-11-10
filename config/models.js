@@ -13,7 +13,8 @@ module.exports.models = {
 
   connection: 'postgres',
   schema: true,
-  autoPK: true
+  autoPK: true,
+  migrate: 'drop'
 
   /***************************************************************************
   *                                                                          *
