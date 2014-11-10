@@ -33,7 +33,7 @@ var io = require('/Users/Summer/Documents/Workspace/cs4320-groupdanny/node_modul
 
 //on a 'connection' event
 
-io.sockets.on('connection', function(socket) {
+io.socket.on('connection', function(socket) {
 	console.log("Connection " + socket.id + " accepted.");
 
 	//define event handlers
