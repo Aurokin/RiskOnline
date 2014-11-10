@@ -6,6 +6,20 @@
  */
 
 module.exports = {
-	
+	sendGameState: function (req, res) {
+		//Will Report Game, Players, Regions
+	},
+
+	changeTurn: function (req, res) {
+
+	},
+
+	increaseRound: function (req, res) {
+
+	},
+
+	endGame: function (req, res) {
+
+	}
 };
 

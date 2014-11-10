@@ -181,6 +181,20 @@ module.exports = {
 		}).exec(function(err, adjRegion) {
 			console.log(adjRegion);
 		});
+	},
+
+	canAttack: function(req, res) {
+		//Will take two region IDs and see if they can attack each other
+		var values = req.allParams();
+		var t1 = values.t1;
+		var t2 = values.t2;
+
+		AdjRegions.find({
+			region: t1,
+			adjRegion: t2
+		}).exec(function findCB(err, found) {
+			console.log(found);
+		});
 	}
 };
 
