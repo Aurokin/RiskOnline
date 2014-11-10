@@ -32,7 +32,7 @@ server.listen(app.get('port'), app.get('ipaddr'), function(){
 io.set("log level", 1);
 var people = {};
 var rooms = {};
-var sockets [];
+var sockets = [];
 var chatHistory = {};
 
 function purge(s, action){

@@ -143,10 +143,10 @@
     <script src="/js/dependencies/customValidate.js"></script>
     <script src="/js/dependencies/jquery-2.1.1.min.js"></script>
     <script src="/js/dependencies/jquery.validate.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script>
     <script src="/js/chat.js"></script>
     <script src="/js/index.js"></script>
     <script src="/js/room.js"></script>
+    <script src="/js/testing_log.js"></script>
     <!--SCRIPTS END-->
 
   	<!-- TEST: Summer -->
@@ -160,6 +160,18 @@
         {
 			    socket.send(message);
 		    };
+
+		var  socket = new io.Socket();
+
+		socket.connect('http://localhost:1337');
+
+		socket.on('connect', function(){
+			console.log('Client has been connected to the server');
+		});
+
+		function sendMessageToServer(message){
+			socket.send(message);
+		};
 		</script>
 
 
