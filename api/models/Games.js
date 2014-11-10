@@ -14,8 +14,7 @@ module.exports = {
   	},
 
   	round: {
-  		type: 'integer',
-  		autoIncrement: true
+  		type: 'integer'
   	},
 
   	currentUserTurn: {
@@ -35,8 +34,7 @@ module.exports = {
   	},
 
     password: {
-      type: 'string',
-      notNull: false
+      type: 'string'
     },
     regions: {
       collection: 'region',
