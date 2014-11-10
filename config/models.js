@@ -11,7 +11,9 @@
 
 module.exports.models = {
 
-  connection: 'postgres'
+  connection: 'postgres',
+  schema: true,
+  autoPK: true
 
   /***************************************************************************
   *                                                                          *
