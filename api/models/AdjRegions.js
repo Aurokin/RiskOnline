@@ -9,10 +9,10 @@ module.exports = {
 
   attributes: {
 	region: {
-		type: 'string'
+		type: 'integer'
 	},
 	adjRegion: {
-		type: 'string'
+		type: 'integer'
 	}
   }
 };
