@@ -293,28 +293,28 @@ module.exports = {
 			console.log(region);
 		});
 	Regions.create({
-			regionID: 31,
+			regionID: 39,
 			name: 'Eastern Australia',
 			continent: 'Asia'
 		}).exec(function(err, region) {
 			console.log(region);
 		});
 	Regions.create({
-			regionID: 32,
+			regionID: 40,
 			name: 'Indonesia',
 			continent: 'Australia'
 		}).exec(function(err, region) {
 			console.log(region);
 		});
 	Regions.create({
-			regionID: 33,
+			regionID: 41,
 			name: 'New Guinea',
 			continent: 'Australia'
 		}).exec(function(err, region) {
 			console.log(region);
 		});
 	Regions.create({
-			regionID: 34,
+			regionID: 42,
 			name: 'Western Australia',
 			continent: 'Australia'
 		}).exec(function(err, region) {
