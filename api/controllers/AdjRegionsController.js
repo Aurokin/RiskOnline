@@ -6,6 +6,13 @@
  */
 
 module.exports = {
-	
+	fillWithAdjRegions: function (req, res) {
+		AdjRegions.create({
+			region: 1,
+			adjRegion: 2
+		}).exec(function(err, adjRegion) {
+			console.log(adjRegion);
+		});
+	}
 };
 
