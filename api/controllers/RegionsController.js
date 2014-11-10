@@ -8,7 +8,13 @@
 module.exports = {
 	
 	fillWithRegions: function (req, res) {
-		
+		Regions.create({
+			regionID: 1,
+			name: 'hello',
+			continent: 'yes'
+		}).exec(function(err, region) {
+			console.log(region);
+		});
 	}
 
 };
