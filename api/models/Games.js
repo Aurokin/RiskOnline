@@ -36,6 +36,11 @@ module.exports = {
     password: {
       type: 'string'
     },
+
+    tempGameID: {
+      type: 'string'
+    },
+
     regions: {
       collection: 'region',
       via: 'game'
