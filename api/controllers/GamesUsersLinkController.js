@@ -6,6 +6,8 @@
  */
 
 module.exports = {
-	
+	PlayersBasedOnGame: function(req, res) {
+		
+	}
 };
 
