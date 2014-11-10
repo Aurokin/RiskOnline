@@ -6,6 +6,16 @@
  */
 
 module.exports = {
-	
+	changeTurn: function (req, res) {
+
+	},
+
+	increaseRound: function (req, res) {
+
+	},
+
+	endGame: function (req, res) {
+		
+	}
 };
 
