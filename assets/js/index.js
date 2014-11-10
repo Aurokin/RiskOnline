@@ -7,14 +7,7 @@ var http = require('http')
 server = http.createServer(function(req, res){
 	//our personal server will go here
 	var path = url.parse(req.url).pathname;
-	switch(path) {
-		case '/':
-			res.writeHead(200, {'Content-Type': 'text/html'});
-			res.write('Stuff is working!\n');
-			res.end();
-			break;
-		case '/map.html':
-			fs.readFile(__dirname + path, function(err, data){
+		fs.readFile(__dirname + path, function(err, data){
 				if (err) return send404(res);
 				res.write('Stuff is working!\n');
 				res.writeHead(200, {'Content-Type' : path == 'json.js' ? 'text/javascript' : 'text/html'})
@@ -25,7 +18,7 @@ server = http.createServer(function(req, res){
 	default: send404(res);
 		
 	}
-}),
+),
 
 send404 = function(res) {
 	res.writeHead(404);
