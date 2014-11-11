@@ -25,7 +25,7 @@ module.exports = {
 				bcrypt.compare(req.body.password, user.password, function(err, match) {
 					if (match) {
 						req.session.user = user.id;
-						res.view('static/index');;
+						res.view('static/index');
 					}
 				});
 			}
