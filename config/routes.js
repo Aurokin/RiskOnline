@@ -38,7 +38,7 @@ module.exports.routes = {
   '/register': {
     view: 'user/new'
   },
-  'post /login': 'UsersController.login'
+  'post /login': 'UserController.login'
 
   /***************************************************************************
   *                                                                          *

@@ -10,10 +10,9 @@ module.exports = {
 
 		var bcrypt = require('bcrypt');
 
-		Users.findOne({
+		User.findOne({
 			email: req.body.email
 		}, function(err, user) {
-
 			if (err) {
 				res.json({ error: 'DB error' }, 500);
 			}
@@ -24,6 +23,7 @@ module.exports = {
 			else {
 				bcrypt.compare(req.body.password, user.password, function(err, match) {
 					if (match) {
+						//console.log('login');
 						req.session.user = user.id;
 						res.view('static/index');
 					}
