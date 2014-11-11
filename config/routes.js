@@ -34,6 +34,9 @@ module.exports.routes = {
 
   '/': {
     view: 'static/index'
+  },
+  '/register': {
+    view: 'user/new'
   }
 
   /***************************************************************************
