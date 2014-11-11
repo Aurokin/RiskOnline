@@ -46,6 +46,7 @@
         </button>
         <a class="navbar-brand" href="/">Risk Homepage</a>
       </div>
+      <% if (!session.user) { %>
       <form class="navbar-form navbar-right" action="/login" method="POST">
         <div class="form-group">
           <input type="text" placeholder="Email" name="email" class="form-control">
@@ -56,10 +57,11 @@
         <button type="submit" class="btn btn-success">Login</button>
         <input type="hidden" name="_csrf" value="<%= _csrf %>"/>
       </form>
+      <% } %>
       <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-          <% if (session.authenticated) { %>
-            <li class="active"><a href="/user/show/<%= session.User.id %>"><%= session.User.name %></a></li>
+          <% if (session.user) { %>
+            <li class="active"><a href="/user/show/<%= session.user %>"><%= session.name %></a></li>
           <% } %>
           <% if (session.authenticated && session.User.admin) { %>
           <li><a href="/user">User Administration</a></li>
@@ -67,8 +69,8 @@
           <% } %>
         </ul>
         <div class="navbar-right">
-          <% if (session.authenticated) { %>
-            <a class="btn btn-default navbar-btn navbar-right" href="/session/destroy">Sign Out</a>
+          <% if (session.user) { %>
+            <a class="btn btn-default navbar-btn navbar-right" href="/logout">Sign Out</a>
           <% } %>
         </div>
       </div>

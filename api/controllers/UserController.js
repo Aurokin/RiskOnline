@@ -24,12 +24,18 @@ module.exports = {
 				bcrypt.compare(req.body.password, user.password, function(err, match) {
 					if (match) {
 						//console.log('login');
+						req.session.name = user.name;
 						req.session.user = user.id;
 						res.view('static/index');
 					}
 				});
 			}
 		});
+	},
+
+	logout: function (req, res) {
+		req.session.destroy();
+		res.view('static/index');
 	}
 
 };
