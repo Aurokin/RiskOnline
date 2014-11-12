@@ -44,6 +44,11 @@ module.exports = {
     regions: {
       collection: 'region',
       via: 'game'
+    },
+
+    inProgress: {
+      type: 'boolean',
+      defaultsTo: false
     }
   },
 
