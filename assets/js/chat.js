@@ -335,7 +335,7 @@ socket.on("joinRoom", function(id){
 					socket.room = room.name;
 					socket.join(socket.room);	
 					user = people[socket.id];
-					io.sockets.in(socket.room).emit("update", user.name + " has connected to " + room.name + ".");
+					io.sockets.in(socket.room).emit("update", user.name + " has connected to " + room.name + "room.");
 					socket.emit("update", "Welcome to " + room.name + ".");
 					socket.emit("sendRoomID", {id: id});
 					var keys = _.keys(chatHistory);

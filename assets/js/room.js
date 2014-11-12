@@ -3,7 +3,7 @@ function Room(name, id, owner){
 	this.id = id;
 	this.owner = owner;
 	this.people = [];
-	this.peopleLimit = 4;
+	this.peopleLimit = 6;
 	this.status = "available";
 	this.private = false;
 };
@@ -35,6 +35,17 @@ Room.prototype.getPerson = function(personID){
 	}
 	return person;
 };
+
+//check availability of room
+Room.prototype.isAvailable = function(){
+	if (this.available === "available") {
+		return true;
+	} 
+	else {
+		return false;
+	}
+};
+
 //private room 
 Room.prototype.isPrivate = function(){
 	if(this.private){
