@@ -14,11 +14,13 @@ module.exports = {
   	},
 
   	round: {
-  		type: 'integer'
+  		type: 'integer',
+      defaultsTo: 0
   	},
 
   	currentUserTurn: {
-  		type: 'integer'
+  		type: 'integer',
+      defaultsTo: 1
   	},
 
   	startDate: {
