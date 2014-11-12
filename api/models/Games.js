@@ -52,6 +52,13 @@ module.exports = {
   beforeCreate: function (values, cb) {
     values.startDate = new Date().toISOString();
     var players = values.players.split(',').map(Number);
+
+    if (players.length != values.numPlayers) {
+      //Make sure submitted players are present and same as numPlayers
+      return cb(new Error('Player Count Is Not Same As Submitted Players'));
+    }
+
+    //Add tempGameID to add realGameID to GameUsersLink in afterCreate
     values.tempGameID = Math.floor((Math.random() * 1000000) + 1000000);
     for (i = 0; i < players.length; i++) {
         GamesUsersLink.create({
