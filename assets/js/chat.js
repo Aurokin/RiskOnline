@@ -174,15 +174,15 @@ io.sockets.on("connection", function (socket){
 				return exists = true;
 		});
 
-		if (exists){
-			var randomNUmber=Math.floor(Math.random()*1001)
+		if (exists){	//provide a unique username
+			var randomNumber=Math.floor(Math.random()*1001)
 			do{
 				proposedName = name+randomNumber;
 				_.find(people, function(key, value) {
 					if (key.name.toLowerCase () === proposedName.toLowerCase())
 						return exists = true;
 			});
-			while (!exists);
+		}	while (!exists);
 			socket.emit("exists", {msg: "The username already exists, please pick another", proposedName : proposedName});
 		}
 
@@ -191,8 +191,8 @@ io.sockets.on("connection", function (socket){
 			people[socket.id] = {"name" : name, "owns" : ownerRoomID, "inroom": inRoomID, "device": device};
 			socket.emit("update", "You have connected to the server.");
 			io.sockets.emit("update", people[socket.id].name + " is online.")
-			sizePeople = _.(people);	
-			sizeRoom = _.(rooms);
+			sizePeople = _.size(people);	
+			sizeRoom = _.size(rooms);
 			io.sockets.emit("update-people", {people: people, count: sizePeople});
 			socket.emit("roomList", {rooms: rooms, count: sizeRooms});
 			socket.emit("joined");
@@ -204,7 +204,7 @@ socket.on("getOnlinePeople", function(fn){
 	fn({people: people});
 });
 
-socket.on("countryUpdate", function(data){
+socket.on("countryUpdate", function(data){	//we know which country the user is from
 	country = data.country.toLowerCase();
 	people[socket.id].country = country;
 	io.sockets.emit("update-people", {people: people, count: sizePeople});
@@ -222,14 +222,14 @@ socket.on("send", function(msg){
 	var found = false;
 	if (whisper) {
 		var whisperTo = whisperStr[1];
-		var keys = Object.keys(people_;
+		var keys = Object.keys(people);
 		if(keys.length != 0){
-			for (var i = 0; i < key.length; i++){
-				if(people[key[i]].name === whisperTo){
+			for (var i = 0; i < keys.length; i++){
+				if(people[keys[i]].name === whisperTo){
 					var whisperID = keys[i];
 					found = true;
 					if (socket.id === whisperId){
-						socket.emit("update", "You can't whisper to yourself. Don't be shy talk to others!");
+						socket.emit("update", "You can't whisper to yourself. Don't be shy, talk to others!");
 					}
 					break;
 				}
@@ -239,7 +239,7 @@ socket.on("send", function(msg){
 		var whisperTo = whisperStr[1];
 		var whisperMsg = whisperStr[2];
 		socket.emit("whisper", {name: "You"}, whisperMsg);
-		io.socket.socket(whisperId).emit("whisper", people[socket.id], whisperMsg);
+		io.sockets.socket(whisperId).emit("whisper", people[socket.id], whisperMsg);
 	}
 	else{
 		socket.emit("update", "Can't find " + whisperTo);
@@ -263,10 +263,12 @@ socket.on("send", function(msg){
 });
 
 socket.on("disconnect", function(){
-	if(typeof people[socket.id] !== "undefined"){
+	if(typeof people[socket.id] !== "undefined"){	//this handles the refresh of the name screen
 		purge(socket, "disconnect");
 	}
 });
+
+//Room functions
 
 socket.on("createRoom", function(name){
 	if(people[socket.id].inroom){
@@ -275,9 +277,11 @@ socket.on("createRoom", function(name){
 	else if(!people[socket.id].owns){
 		var id = uuid.v4();
 		var room = new Room(name, id, socket.id);
-		room[id] = room;
+		rooms[id] = room;
 		sizeRooms = _.size(rooms);
 		io.sockets.emit("roomList", {rooms: rooms, count: sizeRooms});
+
+//Add room to socket and auto join the creator of the room
 		socket.room = name;
 		socket.join(socket.room);
 		people[socket.id].owns = id;
@@ -331,7 +335,7 @@ socket.on("joinRoom", function(id){
 					socket.room = room.name;
 					socket.join(socket.room);	
 					user = people[socket.id];
-					io.sockets.in(socket.room).emit("update", user.name + " has connected to " + room.name + "room.");
+					io.sockets.in(socket.room).emit("update", user.name + " has connected to " + room.name + ".");
 					socket.emit("update", "Welcome to " + room.name + ".");
 					socket.emit("sendRoomID", {id: id});
 					var keys = _.keys(chatHistory);
@@ -351,5 +355,6 @@ socket.on("leaveRoom", function(id){
 	var room = rooms[id];
 	if (room) 
 		purge(socket, "leaveRoom");
+});
 });
 
