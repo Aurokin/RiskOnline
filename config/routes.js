@@ -39,7 +39,8 @@ module.exports.routes = {
     view: 'user/new'
   },
   'post /login': 'UserController.login',
-  '/logout': 'UserController.logout'
+  '/logout': 'UserController.logout',
+  '/gameState': 'GamesController.gameState'
 
   /***************************************************************************
   *                                                                          *
