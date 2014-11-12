@@ -46,12 +46,17 @@ module.exports = {
     inProgress: {
       type: 'boolean',
       defaultsTo: false
+    },
+
+    startingArmies: {
+      type: 'integer'
     }
   },
 
   beforeCreate: function (values, cb) {
     values.startDate = new Date().toISOString();
     var players = values.players.split(',').map(Number);
+    var startingArmies = 0;
 
     if (players.length != values.numPlayers) {
       //Make sure submitted players are present and same as numPlayers
@@ -68,6 +73,25 @@ module.exports = {
           //console.log(gamesUsersLink);
         });
     }
+
+    switch (values.numPlayers) {
+      case 2:
+        startingArmies = 100;
+        break;
+      case 3:
+        startingArmies = 105;
+        break;
+      case 4:
+        startingArmies = 120;
+        break;
+      case 5:
+        startingArmies = 125;
+        break;
+      case 6:
+        startingArmies = 120;
+        break;
+    }
+    values.startingArmies = startingArmies;
     //console.log(values);
     //console.log(players);
     cb();
