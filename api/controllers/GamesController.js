@@ -8,11 +8,27 @@
 module.exports = {
 	gameState: function (req, res) {
 		//Will Report Game, Players, Regions
-		console.log(req);
-		console.log(req.query);
-		console.log(req.query.id);
-		return res.json({
-			gameState: 'Will Be Here'
+		//Requires GET with gameID
+		var gameID = req.query.gameID;
+
+
+		Games.findOne({ id: gameID}).then(function(game){
+			var players = GamesUsersLink.find({
+				gameID: game.id
+			}).then(function(players) {
+				return players;
+			});
+			return [game, players];
+		}).spread(function (game, players) {
+			return res.json({
+				game: game,
+				players: players
+			})
+		}).catch(function (err){
+			console.log(err);
+			return res.json({
+				gameState: 'WIP'
+			});
 		});
 	},
 

@@ -6,15 +6,8 @@
  */
 
 module.exports = {
-	PlayersBasedOnGame: function(req, res) {
-		//Temp Value
-		var gameID = 1;
-		//
-		GamesUsersLink.find({
-			gameID: gameID
-		}).exec(function findCB(err, found) {
-			console.log(found);
-		});
+	PlayersBasedOnGame: function(gameID) {
+
 	}
 };
 
