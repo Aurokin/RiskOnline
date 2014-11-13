@@ -1,4 +1,3 @@
-//This is a change to test merging with master
 
 <script src="/socket.io/socket.io/js">
 <script>
