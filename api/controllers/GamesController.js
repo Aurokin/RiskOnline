@@ -5,15 +5,7 @@
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 
-exports.initGame = function(sio, socket){
-	var io = sio;
-	gameSocket = socket;
-	gameSocket.emit('connect', {message: "You are connected!"});
-
-	gameSocket.on('gameState', gameState);
-
-}
-
+/*Summer had some stuff here but wasn't relevent */
 
 module.exports = {
 	gameState: function (req, res) {
@@ -23,7 +15,7 @@ module.exports = {
 
 
 		Games.findOne({ id: gameID}).populate('regions').populate('players').then(function(game){
-			
+
 			/*
 			http://stackoverflow.com/questions/23446484/sails-js-populate-nested-associations
 			var regions = Region.find({id: _.pluck(game.regions, 'region')
@@ -32,7 +24,7 @@ module.exports = {
 			});
 			return [game, players, regions];
 			*/
-			
+
 			return [game];
 		}).spread(function (game) {
 			/*

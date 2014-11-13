@@ -12,15 +12,6 @@
 
 module.exports.sockets = {
 
-  init: function(){
-    IO.socket = io.connect();
-    IO.bindEvents();
-  },
-
-  bindEvents: function(){
-    IO.socket.on('connected', IO.onConnect);
-  }
-
   /***************************************************************************
   *                                                                          *
   * This custom onConnect function will be run each time AFTER a new socket  *
@@ -33,10 +24,7 @@ module.exports.sockets = {
   onConnect: function(session, socket) {
 
     // By default, do nothing.
-    //added following lines by summer
-    risk.mySocketId = IO.socket.socket.sessionid;
-    console.log(data.message);
-
+    //deleted stuff I had, summer
   },
 
 
