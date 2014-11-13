@@ -42,7 +42,10 @@ module.exports.routes = {
   '/logout': 'UserController.logout',
   '/gameState': 'GamesController.gameState',
   'post /addUserToGame': 'GamesController.addPlayer',
-  'post /removeUserFromGame': 'GamesController.removePlayer'
+  'post /removeUserFromGame': 'GamesController.removePlayer',
+  '/gameList': {
+    view: 'gamelist'
+  }
 
   /***************************************************************************
   *                                                                          *
