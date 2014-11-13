@@ -12,6 +12,10 @@
 
 module.exports.sockets = {
 
+  onClick: function(session, socket){
+    
+  }
+
   /***************************************************************************
   *                                                                          *
   * This custom onConnect function will be run each time AFTER a new socket  *
@@ -24,6 +28,9 @@ module.exports.sockets = {
   onConnect: function(session, socket) {
 
     // By default, do nothing.
+    //added following lines by summer
+    risk.mySocketId = IO.socket.socket.sessionid;
+    console.log(data.message);
 
   },
 
@@ -37,6 +44,7 @@ module.exports.sockets = {
   onDisconnect: function(session, socket) {
 
     // By default: do nothing.
+    console.log(data.message);
   },
 
 
@@ -63,7 +71,7 @@ module.exports.sockets = {
   *                                                                          *
   ***************************************************************************/
 
-  // adapter: 'memory',
+   adapter: 'memory'
 
   /***************************************************************************
   *                                                                          *
