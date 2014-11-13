@@ -21,7 +21,10 @@ module.exports = {
 	continent: {
 		type: 'string',
 		required: true
-	}
+	},
+    region: {
+      collection: 'region',
+      via: 'region'
+    }
   }
 };
-

@@ -1,7 +1,10 @@
+<<<<<<< HEAD
 <script src="/socket.io/socket.io.js"></script>
 //This is a change to test merging with master
+=======
+>>>>>>> lda7d7_sprint1
 
-<script src="/socket.io/socket.io/js">
+<script src="/socket.io/socket.io/js"></script>
 
 <script>
 	var socket = io.connect('http://localhost');  
