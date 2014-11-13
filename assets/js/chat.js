@@ -10,6 +10,7 @@ var express = require('express')
 , Room = require('./room.js')
 , _ = require('underscore')._;
 
+//io.set("log level", 1);
 
 //app.configure(function() {
 	app.set('port', process.env.OPENSHIFT_NODEJS_PORT || 3000);
@@ -32,7 +33,7 @@ server.listen(app.get('port'), app.get('ipaddr'), function(){
 	console.log('Express server listening on IP: ' + app.get('ipaddr') + ' and port ' + app.get('port'));
 });
 
-io.set("log level", 1);
+
 var people = {};
 var rooms = {};
 var sockets = [];
