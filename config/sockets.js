@@ -12,8 +12,13 @@
 
 module.exports.sockets = {
 
-  onClick: function(session, socket){
-    
+  init: function(){
+    IO.socket = io.connect();
+    IO.bindEvents();
+  },
+
+  bindEvents: function(){
+    IO.socket.on('connected', IO.onConnect);
   }
 
   /***************************************************************************

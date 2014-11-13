@@ -5,6 +5,16 @@
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 
+exports.initGame = function(sio, socket){
+	var io = sio;
+	gameSocket = socket;
+	gameSocket.emit('connect', {message: "You are connected!"});
+
+	gameSocket.on('gameState', gameState);
+
+}
+
+
 module.exports = {
 	gameState: function (req, res) {
 		//Will Report Game, Players, Regions
@@ -44,4 +54,3 @@ module.exports = {
 
 	}
 };
-
