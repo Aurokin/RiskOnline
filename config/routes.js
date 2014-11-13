@@ -34,7 +34,13 @@ module.exports.routes = {
 
   '/': {
     view: 'static/index'
-  }
+  },
+  '/register': {
+    view: 'user/new'
+  },
+  'post /login': 'UserController.login',
+  '/logout': 'UserController.logout',
+  '/gameState': 'GamesController.gameState'
 
   /***************************************************************************
   *                                                                          *

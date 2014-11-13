@@ -37,9 +37,9 @@ var chatHistory = {};
 
 function purge(s, action){
 
-	if(people[s.id].inroom){
+	if(people[s.id].inroom){	//user is in a room
 		var room = rooms[people[s.id].inroom]; //check which room user is in
-		if(s.id === room.owner){
+		if(s.id === room.owner){	//user is in a room they own
 			if(action === "disconnect"){
 				io.sockets.in(s.room).emit("update", "The owner (" +people[s.id].name + ") has left the server. The room is removed and you have been disconnected.");
 				var socketids = [];
@@ -56,10 +56,10 @@ function purge(s, action){
 					}
 				}
 				
-				room.people = _.without(room.people, s.id);
-				delete rooms[people[s.id].owns];
-				delete people[s.id];
-				delete chatHistory[room.name];
+				room.people = _.without(room.people, s.id);  //remove people from the room
+				delete rooms[people[s.id].owns];  //delete room
+				delete people[s.id];		//delete user from people collection
+				delete chatHistory[room.name];	//delete chat history
 				sizePeople = _.size(people);
 				sizeRooms = _.size(rooms);
 				io.sockets.emit("update-people", {people: people, count: sizePeople});
@@ -67,7 +67,7 @@ function purge(s, action){
 				var o = _.findWhere(sockets, {'id': s.id});
 				sockets = _.without(sockets, o);
 			}
-			else if (action === "removeRoom"){
+			else if (action === "removeRoom"){	//room owner removes the room
 				io.sockets.in(s.room).emit("update", "The owner (" +people[s.id].name + ") has removed the room.");
 				var socketids = [];
 				for (var i = 0; i < sockets.length; i++){
@@ -85,13 +85,13 @@ function purge(s, action){
 
 				delete rooms[people[s.id].owns];
 				people[s.id].owns = null;
-				room.people = _.wihtout(room.people, s.id);
-				delete chatHistory[room.name];
+				room.people = _.without(room.people, s.id);	//remove people from room
+				delete chatHistory[room.name];	//delete chat history
 				sizeRooms = _.size(rooms);
 				io.sockets.emit("roomList", {rooms: rooms, count: sizeRooms});
 			}
-			else if (action === "leaveRoom"){
-				io.socket.in(s.room).emit("update", "The owner (" +people[s.id].name + ") has left the room.");
+			else if (action === "leaveRoom"){	//room owner leaves room
+				io.sockets.in(s.room).emit("update", "The owner (" +people[s.id].name + ") has left the room.");
 				var socketids = [];
 				for (var i = 0; i < sockets.length; i++){
 					socketids.push(sockets[i].id);
@@ -108,13 +108,14 @@ function purge(s, action){
 		
 				delete rooms[people[s.id].owns];
 				people[s.id].owns = null;
-				room.people = _.without(room.people, s.id);
-				delete chatHistory[room.name];
+				room.people = _.without(room.people, s.id);	//remove people from room
+				delete chatHistory[room.name];	//delete chat history
 				sizeRooms = _.size(rooms);
 				io.sockets.emit("roomList", {rooms:rooms, count: sizeRooms});
 			}
+	}
 
-			else{
+		else{	//user is in room, but does not own the room
 
 				if(action === "disconnect"){
 					io.sockets.emit("update", people[s.id].name + " has disconnected from the server.");
@@ -148,8 +149,8 @@ function purge(s, action){
 			}
 		}
 
-		else {
-
+		else {	//user is not in a room, but disconnected
+			
 			if(action === "disconnect"){
 				io.sockets.emit("update", people[s.id].name + " has disconnected from the server.");
 				delete people[s.id];
@@ -173,15 +174,15 @@ io.sockets.on("connection", function (socket){
 				return exists = true;
 		});
 
-		if (exists){
-			var randomNUmber=Math.floor(Math.random()*1001)
+		if (exists){	//provide a unique username
+			var randomNumber=Math.floor(Math.random()*1001)
 			do{
 				proposedName = name+randomNumber;
 				_.find(people, function(key, value) {
 					if (key.name.toLowerCase () === proposedName.toLowerCase())
 						return exists = true;
 			});
-			while (!exists);
+		}	while (!exists);
 			socket.emit("exists", {msg: "The username already exists, please pick another", proposedName : proposedName});
 		}
 
@@ -190,8 +191,8 @@ io.sockets.on("connection", function (socket){
 			people[socket.id] = {"name" : name, "owns" : ownerRoomID, "inroom": inRoomID, "device": device};
 			socket.emit("update", "You have connected to the server.");
 			io.sockets.emit("update", people[socket.id].name + " is online.")
-			sizePeople = _.(people);	
-			sizeRoom = _.(rooms);
+			sizePeople = _.size(people);	
+			sizeRoom = _.size(rooms);
 			io.sockets.emit("update-people", {people: people, count: sizePeople});
 			socket.emit("roomList", {rooms: rooms, count: sizeRooms});
 			socket.emit("joined");
@@ -203,7 +204,7 @@ socket.on("getOnlinePeople", function(fn){
 	fn({people: people});
 });
 
-socket.on("countryUpdate", function(data){
+socket.on("countryUpdate", function(data){	//we know which country the user is from
 	country = data.country.toLowerCase();
 	people[socket.id].country = country;
 	io.sockets.emit("update-people", {people: people, count: sizePeople});
@@ -221,14 +222,14 @@ socket.on("send", function(msg){
 	var found = false;
 	if (whisper) {
 		var whisperTo = whisperStr[1];
-		var keys = Object.keys(people_;
+		var keys = Object.keys(people);
 		if(keys.length != 0){
-			for (var i = 0; i < key.length; i++){
-				if(people[key[i]].name === whisperTo){
+			for (var i = 0; i < keys.length; i++){
+				if(people[keys[i]].name === whisperTo){
 					var whisperID = keys[i];
 					found = true;
 					if (socket.id === whisperId){
-						socket.emit("update", "You can't whisper to yourself. Don't be shy talk to others!");
+						socket.emit("update", "You can't whisper to yourself. Don't be shy, talk to others!");
 					}
 					break;
 				}
@@ -238,7 +239,7 @@ socket.on("send", function(msg){
 		var whisperTo = whisperStr[1];
 		var whisperMsg = whisperStr[2];
 		socket.emit("whisper", {name: "You"}, whisperMsg);
-		io.socket.socket(whisperId).emit("whisper", people[socket.id], whisperMsg);
+		io.sockets.socket(whisperId).emit("whisper", people[socket.id], whisperMsg);
 	}
 	else{
 		socket.emit("update", "Can't find " + whisperTo);
@@ -262,10 +263,12 @@ socket.on("send", function(msg){
 });
 
 socket.on("disconnect", function(){
-	if(typeof people[socket.id] !== "undefined"){
+	if(typeof people[socket.id] !== "undefined"){	//this handles the refresh of the name screen
 		purge(socket, "disconnect");
 	}
 });
+
+//Room functions
 
 socket.on("createRoom", function(name){
 	if(people[socket.id].inroom){
@@ -274,9 +277,11 @@ socket.on("createRoom", function(name){
 	else if(!people[socket.id].owns){
 		var id = uuid.v4();
 		var room = new Room(name, id, socket.id);
-		room[id] = room;
+		rooms[id] = room;
 		sizeRooms = _.size(rooms);
 		io.sockets.emit("roomList", {rooms: rooms, count: sizeRooms});
+
+//Add room to socket and auto join the creator of the room
 		socket.room = name;
 		socket.join(socket.room);
 		people[socket.id].owns = id;
@@ -350,5 +355,6 @@ socket.on("leaveRoom", function(id){
 	var room = rooms[id];
 	if (room) 
 		purge(socket, "leaveRoom");
+});
 });
 

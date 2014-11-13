@@ -46,7 +46,8 @@
         </button>
         <a class="navbar-brand" href="/">Risk Homepage</a>
       </div>
-      <form class="navbar-form navbar-right" action="/session/create">
+      <% if (!session.user) { %>
+      <form class="navbar-form navbar-right" action="/login" method="POST">
         <div class="form-group">
           <input type="text" placeholder="Email" name="email" class="form-control">
         </div>
@@ -56,10 +57,11 @@
         <button type="submit" class="btn btn-success">Login</button>
         <input type="hidden" name="_csrf" value="<%= _csrf %>"/>
       </form>
+      <% } %>
       <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
-          <% if (session.authenticated) { %>
-            <li class="active"><a href="/user/show/<%= session.User.id %>"><%= session.User.name %></a></li>
+          <% if (session.user) { %>
+            <li class="active"><a href="/user/show/<%= session.user %>"><%= session.name %></a></li>
           <% } %>
           <% if (session.authenticated && session.User.admin) { %>
           <li><a href="/user">User Administration</a></li>
@@ -67,8 +69,8 @@
           <% } %>
         </ul>
         <div class="navbar-right">
-          <% if (session.authenticated) { %>
-            <a class="btn btn-default navbar-btn navbar-right" href="/session/destroy">Sign Out</a>
+          <% if (session.user) { %>
+            <a class="btn btn-default navbar-btn navbar-right" href="/logout">Sign Out</a>
           <% } %>
         </div>
       </div>
@@ -83,6 +85,7 @@
 			<div>
 				<a href="http://104.236.46.205:1337/">Risk Homepage</a>
 				<div>CS4320 Risk Homepage</div>
+        <a href="views/chat.ejs">Chat</a>
 			</div>
 		</footer>
 	</div>
@@ -138,9 +141,9 @@
 
     <!--SCRIPTS-->
     <script src="/js/dependencies/sails.io.js"></script>
+    <script src="/js/dependencies/jquery-2.1.1.min.js"></script>
     <script src="/js/dependencies/bootstrap.js"></script>
     <script src="/js/dependencies/customValidate.js"></script>
-    <script src="/js/dependencies/jquery-2.1.1.min.js"></script>
     <script src="/js/dependencies/jquery.validate.min.js"></script>
     <script src="/js/chat.js"></script>
     <script src="/js/index.js"></script>
@@ -150,20 +153,30 @@
     <!--SCRIPTS END-->
 
   	<!-- TEST: Summer -->
-		<script>
+
+    <script>
+		  socket.on('connect', function()
+        {
+			    console.log('Client has been connected to the server');
+		    });
+      function sendMessageToServer(message)
+        {
+			    socket.send(message);
+		    };
 
 		var  socket = new io.Socket();
 
 		socket.connect('http://localhost:1337');
-	
+
 		socket.on('connect', function(){
 			console.log('Client has been connected to the server');
 		});
-		
+
 		function sendMessageToServer(message){
 			socket.send(message);
 		};
 		</script>
-	<!-- End test: Summer -->
+
+
   </body>
 </html>

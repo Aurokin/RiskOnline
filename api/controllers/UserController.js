@@ -1,94 +1,42 @@
 /**
  * UserController
  *
- * @description :: Server-side logic for managing users
+ * @description :: Server-side logic for managing Users
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 
-module.exports =
-	{
-		'new': function (req, res)
-			{
-				res.view();
-			},
-		create: function (req, res, next)
-			{
-				User.create (req.params.all(), function userCreated (err, user)
-					{
-						if (err)
-							{
-								console.log(err);
-								req.session.flash =
-									{
-										err: err
-									}
-								return res.redirect('/user/new');
-							}
-						//res.json(user);
-						req.session.authenticated = true;
-						req.session.User = user;
+module.exports = {
+	login: function (req, res) {
 
-						res.redirect('/user/show/'+user.id);
-					});
-			},
+		var bcrypt = require('bcrypt');
 
-		show: function(req, res, next)
-			{
-				User.findOne(req.param('id'), function foundUser (err, user)
-					{
-						if(err) return next(err);
-						if(!user) return next();
-						res.view(
-							{
-								user: user
-							});
-					});
-			},
-		index: function (req, res, next)
-			{
-				User.find(function foundUsers (err, users)
-					{
-						if(err) return next(err);
-						res.view(
-							{
-								users: users
-							});
-					});
-			},
-		edit: function(req, res, next)
-			{
-				User.findOne(req.param('id'), function foundUser(err, user)
-					{
-						if(err) return next(err);
-						if(!user) return next('User doesn\'t exist.');
-						res.view(
-							{
-								user: user
-							});
-					});
-			},
-		update: function(req, res, next)
-			{
-				User.update(req.param('id'), req.params.all(), function userUpdated (err)
-					{
-						if(err)
-							{
-								return res.redirect('/user/edit/' + req.param('id'));
-							}
-						res.redirect('/user/show/' + req.param('id'));
-					});
-			},
-		destroy: function(req, res, next)
-			{
-				User.findOne(req.param('id'), function foundUser (err, user)
-					{
-						if(err) return next(err);
-						if(!user) return next('User doesn\'t exist');
-						User.destroy(req.param('id'), function userDestroyed(err)
-							{
-								if(err) return next(err);
-							});
-						res.redirect('/user');
-					});
+		User.findOne({
+			email: req.body.email
+		}, function(err, user) {
+			if (err) {
+				res.json({ error: 'DB error' }, 500);
 			}
-	};
+
+			if (!user) {
+				res.view('static/index');
+			}
+			else {
+				bcrypt.compare(req.body.password, user.password, function(err, match) {
+					if (match) {
+						//console.log('login');
+						req.session.name = user.name;
+						req.session.user = user.id;
+						res.view('static/index');
+					}
+				});
+			}
+		});
+	},
+
+	logout: function (req, res) {
+		req.session.destroy();
+		res.view('static/index');
+	}
+
+};
+
