@@ -31,6 +31,10 @@ module.exports = {
 	admin: {
 		type: 'boolean',
 		defaultsTo: false
+	},
+	games: {
+		collection: 'games',
+		via: 'players'
 	}
   },
 

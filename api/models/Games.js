@@ -55,29 +55,18 @@ module.exports = {
     regions: {
       collection: 'region',
       via: 'game'
+    },
+
+    players: {
+      collection: 'user',
+      via: 'games',
+      dominant: true
     }
   },
 
   beforeCreate: function (values, cb) {
     values.startDate = new Date().toISOString();
-    var players = values.players.split(',').map(Number);
     var startingArmies = 0;
-
-    if (players.length != values.numPlayers) {
-      //Make sure submitted players are present and same as numPlayers
-      return cb(new Error('Player Count Is Not Same As Submitted Players'));
-    }
-
-    //Add tempGameID to add realGameID to GameUsersLink in afterCreate
-    values.tempGameID = Math.floor((Math.random() * 1000000) + 1000000);
-    for (i = 0; i < players.length; i++) {
-        GamesUsersLink.create({
-          gameID: values.tempGameID,
-          playerID: players[i]
-        }).exec(function(err, gamesUsersLink) {
-          //console.log(gamesUsersLink);
-        });
-    }
 
     switch (values.numPlayers) {
       case 2:
@@ -103,13 +92,7 @@ module.exports = {
   },
 
   afterCreate: function (values, cb) {
-    GamesUsersLink.update({gameID: values.tempGameID}, {gameID: values.id}).exec(function afterwards(err, update) {
-      if (err) {
-        return;
-      }
-      //console.log(update);
-    });
-    //console.log(values);
+
     cb();
   }
 };
