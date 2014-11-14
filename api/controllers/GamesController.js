@@ -12,17 +12,26 @@ module.exports = {
 		var gameID = req.query.gameID;
 
 
-		Games.findOne({ id: gameID}).then(function(game){
-			var players = GamesUsersLink.find({
-				gameID: game.id
-			}).then(function(players) {
-				return players;
+		Games.findOne({ id: gameID}).populate('regions').populate('players').then(function(game){
+			
+			/*
+			http://stackoverflow.com/questions/23446484/sails-js-populate-nested-associations
+			var regions = Region.find({id: _.pluck(game.regions, 'region')
+			}).then(function(regions) {
+				return regions;
 			});
-			return [game, players];
-		}).spread(function (game, players) {
+			return [game, players, regions];
+			*/
+			
+			return [game];
+		}).spread(function (game) {
+			/*
+			var regions = _.indexBy(regions, 'id');
+			game.regions = _.map(game.region, function(region) {
+				region.region = regions[region.region];
+			});*/
 			return res.json({
-				game: game,
-				players: players
+				game: game
 			})
 		}).catch(function (err){
 			console.log(err);
@@ -42,6 +51,59 @@ module.exports = {
 
 	endGame: function (req, res) {
 
+	},
+
+	addPlayer: function (req, res) {
+		//Will Add Player To Game
+		//Requires POST with gameID / playerID
+		//console.log(req);
+		var gameID = req.body.gameID;
+		var playerID = req.body.playerID;
+		//console.log('gameID = '+gameID);
+		//console.log('playerID = '+playerID);
+		Games.findOne(gameID).exec(function(err, game) {
+			//console.log(game);
+			if (err) {
+				//Error Goes Here
+				//console.log('first stop');
+			}
+			game.players.add(playerID);
+			//console.log(game);
+			game.save(function(err) {
+				//console.log('second stop');
+				//console.log(err);
+				//Error goes Here
+			});
+			return res.json({
+				game: game
+			});
+		});
+	},
+
+	removePlayer: function (req, res) {
+		//Will Remove Player From Game
+		//Requires POST with gameID / playerID
+		var gameID = req.body.gameID;
+		var playerID = req.body.playerID;
+		//console.log('gameID = '+gameID);
+		//console.log('playerID = '+playerID);
+		Games.findOne(gameID).exec(function(err, game) {
+			//console.log(game);
+			if (err) {
+				//Error Goes Here
+				//console.log('first stop');
+			}
+			game.players.remove(playerID);
+			//console.log(game);
+			game.save(function(err) {
+				//console.log('second stop');
+				//console.log(err);
+				//Error goes Here
+			});
+			return res.json({
+				game: game
+			});
+		});
 	}
 };
 
