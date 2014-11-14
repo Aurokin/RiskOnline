@@ -21,6 +21,9 @@ module.exports = {
 		},
 		game: {
 			model: 'games'
+		},
+		region: {
+			model: 'regions'
 		}
 	}
 };
