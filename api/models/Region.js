@@ -18,6 +18,9 @@ module.exports = {
 		regionID: {
 			type: 'integer',
 			required: true
+		},
+		game: {
+			model: 'games'
 		}
 	}
 };

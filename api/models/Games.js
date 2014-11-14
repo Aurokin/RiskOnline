@@ -50,6 +50,11 @@ module.exports = {
 
     startingArmies: {
       type: 'integer'
+    },
+
+    regions: {
+      collection: 'region',
+      via: 'game'
     }
   },
 
