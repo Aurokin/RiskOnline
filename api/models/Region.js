@@ -15,10 +15,6 @@ module.exports = {
 			defaultsTo:0,
 			required: true
 		},
-		regionID: {
-			type: 'integer',
-			required: true
-		},
 		game: {
 			model: 'games'
 		},
