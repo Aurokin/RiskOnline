@@ -5,7 +5,7 @@ var express = require('express');
 var app = express();
 var http = require('http');
 var server = http.createServer(app);
-var pg = require('pg');
+//var pg = require('pg-que');
 var conString = "postgres://postgres:Password@localhost:1337/postgres"; //
 var client = new pg.Client(conString);
 
