@@ -77,8 +77,8 @@ var game = function(){
             	console.log('%s: Node server started on %s:%d ...',
                         Date(Date.now()), self.ipaddress, self.port);
         });
-    };
-};
+     };
+	};
 
 //main code should be housed here, according to the guide
 var ngame = new game();
@@ -96,47 +96,25 @@ io.socket.on('connection', function(socket) {
 				});
 		});
 
-    socket.on('move', function (data) {
+    socket.on('checkassets', function (data) {
+			if(var pg = client.query(database.sql, database.region) < 100){
+				console.log('hey you still have moves left.');
         var pg = client.query(database.sql, database.)
         console.log(data);
         socket.broadcast.emit("pgsql", data);
+			}
     });
 
     socket.on('disconnect', function () {
         //disconnected users
     });
+
+		socket.on('connection', function(){
+			console.log('Hey, you are connected. Now what?');
+		});
 });
 
-
-/*Following logic is for my thinking purposes
-			send info to database to hold information on where resources are
-			send this updated information to client
-			check to see if it is the end of their turn
-			if(not){
-				allow them to distribute more resources
-				update database
-				check if they have made all moves available to them
-					if(not){
-							allow last distribution of resources
-							update database
-							update gamemap
-							end their turn and send information to other players the new game map
-
-				}
-			else{
-			end turn
-			update gamemap
-		}
-		update all players game map, lock current players id so they cannot play again
-		until others have played
-		update their game map
-		}
-});
-
-	on('disconnect', function(request, respond){
-
-});
-*/
+};
 
 //Following lines are a simple server I was trying to make function;
 //however, something was conflicting in the module under config and
