@@ -1,4 +1,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <!--STYLES-->
     <link rel="stylesheet" href="/styles/bootstrap.css">
     <link rel="stylesheet" href="/styles/importer.css">
@@ -9,7 +11,7 @@
 
 #container {
 	width: 50%;
-	min-height: 200px;
+	min-height: 500px;
 	background-color: gray;
 	border-radius: 20px;
 
@@ -38,9 +40,60 @@
 	<!-- If "JoinGame" selected, hide current games using class='hidden' && Vice-Versa -->
 
 
+	    <table class="col-md-6 center-block table table-hover">
+        <thead>
+            <tr>
+                <th>Game ID</th>
+                <th>Owner</th>
+                <th>Players</th>
+                <th>Status</th>
+                <th>Join</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Hunter</td>
+                <td>2/6</td>
+                <td>Waiting</td>
+                <td>
+                	<div class="col-md-6 center-block">
+    					<button id="game1" name="game1" class="btn btn-primary center-block">
+        					JOIN
+    					</button>
+					</div>
+				</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Hue</td>
+                <td>5/6</td>
+                <td>In Progress</td>
+                <td>
+                	<div class="col-md-6 center-block">
+    					<button id="game1" name="game1" class="btn btn-primary center-block">
+        					JOIN
+    					</button>
+					</div>
+				</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Summer</td>
+                <td>1/6</td>
+                <td>Waiting</td>
+                <td>	
+                	<div class="col-md-6 center-block">
+    					<button id="game1" name="game1" class="btn btn-primary center-block">
+        					JOIN
+    					</button>
+					</div>
+				</td>
+            </tr>
+        </tbody>
+    </table>
 
 </div>
-
 
 
     <script type="text/javascript">
@@ -49,6 +102,10 @@
 
         $("#JoinGame").click(function(){
      		alert("you have clicked Join Game");
+        });
+
+        $("#CurrentGames").click(function(){
+     		alert("you have clicked Currennt Games");
         });
 
     });
