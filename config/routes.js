@@ -35,7 +35,6 @@ module.exports.routes = {
   '/': {
     view: 'static/index'
   },
-<<<<<<< HEAD
   '/register': {
     view: 'user/new'
   },
@@ -43,16 +42,10 @@ module.exports.routes = {
   '/logout': 'UserController.logout',
   '/gameState': 'GamesController.gameState',
   'post /addUserToGame': 'GamesController.addPlayer',
-  'post /removeUserFromGame': 'GamesController.removePlayer'
-'/chat': {
-	view: 'real_time'
-	}
-=======
-'/chat': {
-	view: 'real_time'
-	}
-
->>>>>>> lda7d7_sprint2
+  'post /removeUserFromGame': 'GamesController.removePlayer',
+  '/chat': {
+	   view: 'real_time'
+	 }
 
   /***************************************************************************
   *                                                                          *
