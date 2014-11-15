@@ -5,7 +5,7 @@ var express = require('express');
 var app = express();
 var http = require('http');
 var server = http.createServer(app);
-var pg = require('pg-query');
+var pg = require('pg');
 var conString = "postgres://postgres:Password@localhost:1337/postgres"; //
 var client = new pg.Client(conString);
 
@@ -97,9 +97,9 @@ io.socket.on('connection', function(socket) {
 		});
 
     socket.on('checkassets', function (data) {
-			if(var pg = client.query(database.sql, database.region) < 100){
+			if(pg = client.query(database.sql, database.region) < 100){
 				console.log('hey you still have moves left.');
-        var pg = client.query(database.sql, database.)
+        var pg = client.query(database.sql, database.regions)
         console.log(data);
         socket.broadcast.emit("pgsql", data);
 			}
