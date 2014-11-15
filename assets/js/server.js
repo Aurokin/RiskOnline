@@ -5,11 +5,11 @@ var express = require('express');
 var app = express();
 var http = require('http');
 var server = http.createServer(app);
-//var pg = require('pg-que');
+//var pg = require('pg-query');
 var conString = "postgres://postgres:Password@localhost:1337/postgres"; //
-var client = new pg.Client(conString);
+//var client = new pg.Client(conString);
 
-client.connect();
+//client.connect();
 //above is from a different guide about using psql with socket/node.js
 var game = function(){
 
@@ -90,20 +90,20 @@ var io = socket.listen(ngame.http);
 io.socket.on('connection', function(socket) {
 
 		socket.on('mapclick', function(data){
-				var pg = client.query(database.sql, database.region);
+				var pg = query(database.sql, database.region);
 				pg.on('row', function(row){
 						socket.broadcast.emit("mapclick", row);
 				});
 		});
 
-    socket.on('checkassets', function (data) {
+    /*socket.on('checkassets', function (data) {
 			if(pg = client.query(database.sql, database.region) < 100){
 				console.log('hey you still have moves left.');
         var pg = client.query(database.sql, database.regions)
         console.log(data);
         socket.broadcast.emit("pgsql", data);
 			}
-    });
+    });*/
 
     socket.on('disconnect', function () {
         //disconnected users
