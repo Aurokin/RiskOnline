@@ -1,3 +1,4 @@
+
 $(document).ready(function() {
 	console.log('hello');
 });
@@ -24,5 +25,11 @@ io.socket.get("/games", function(reData, jwres){
 io.socket.on('Games', function notificationRecievedFromServer(message) {
 
 		console.log(message);
+
+});
+
+io.socket.on("/users", function(reData, jwres){
+
+		console.log(reData);
 
 });
