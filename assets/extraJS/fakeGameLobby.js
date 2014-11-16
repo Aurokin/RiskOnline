@@ -10,6 +10,6 @@ io.socket.on('connect', function socketConnected() {
 
 io.socket.on("users", function(event){console.log(event);});
 
-io.socket.get("/user", function(reData, jwres){
+io.socket.get("/fakeGameLobby", function(reData, jwres){
 		console.log(reData);
 });
