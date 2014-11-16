@@ -43,6 +43,15 @@ module.exports = {
 		});
 	},
 
+	gamesList: function (req, res) {
+		Games.find().exec(function (err, games) {
+			Games.subscribe(req.socket, games);
+			return res.json({
+				games: games
+			});
+		});
+	},
+
 	changeTurn: function (req, res) {
 
 	},
@@ -76,6 +85,11 @@ module.exports = {
 				//console.log(err);
 				//Error goes Here
 			});
+
+			Games.publishUpdate(game.id, {
+				id: game.id	
+			});
+
 			return res.json({
 				game: game
 			});
@@ -106,5 +120,9 @@ module.exports = {
 				game: game
 			});
 		});
+	},
+
+	gameList: function (req, res) {
+
 	}
 };
