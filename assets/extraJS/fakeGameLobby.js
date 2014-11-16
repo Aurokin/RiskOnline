@@ -3,12 +3,6 @@ $(document).ready(function() {
 	console.log('hello');
 });
 
-var server = require('http').createServer(app);
-
-server.listen(port, function(){
-	console.log('Server is listening at port %d', port);
-});
-
 io.socket.on('connect', function socketConnected(){
 
 	console.log("This is from the connect: ", this.socket.sessionid);
