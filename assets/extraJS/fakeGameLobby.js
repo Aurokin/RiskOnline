@@ -20,7 +20,7 @@ io.socket.get("/games", function(reData, jwres){
 
 });
 
-io.socket.post("/games", {gameID: 'socket.sessionid'}, function(reData, jwres){
+io.socket.post("/games", function(reData, jwres){
 
 	console.log("This is from socketpost: ", reData);
 
