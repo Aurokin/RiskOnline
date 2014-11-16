@@ -45,7 +45,10 @@ module.exports.routes = {
   'post /removeUserFromGame': 'GamesController.removePlayer',
   '/chat': {
 	   view: 'real_time'
-	 }
+	 },
+   '/fakeGameList': {
+    view: 'static/fakeGameList'
+   }
 
   /***************************************************************************
   *                                                                          *
