@@ -45,19 +45,19 @@ module.exports = {
 
 	initMap : function (req, res) {
 
-	}
+	},
 
-	addTroops :function (req , res){
+	addTroops : function (req , res){
 
-	}
+	},
 
 	attack : function (req, res){
 
-	}
+	},
 
 	move : function (req, res) {
 
-	}
+	},
 	
 	changeTurn: function (req, res) {
 
