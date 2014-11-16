@@ -4,7 +4,7 @@ io.socket.on('currentGame', function(Game){
 	socket.clientname = Game;
 		inprogress.push(numPlayers);
 	io.socket.emit('added', numPlayers,Game)
-}
+});
 
 
 io.socket.on('connect', function socketConnected(){
