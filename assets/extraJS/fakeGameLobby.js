@@ -8,8 +8,10 @@ io.socket.on('connect', function socketConnected() {
 
 });
 
-io.socket.on("users", function(event){console.log(event);});
-
 io.socket.get("/fakeGameLobby", function(reData, jwres){
+
 		console.log(reData);
+
 });
+
+.publishAdd( {id},attribute, idAdded, [request], [options] )

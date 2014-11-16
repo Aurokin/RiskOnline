@@ -5,4 +5,15 @@
 </div>
 
 <%- block('localScripts', '<script src="/extraJS/fakeGameLobby.js"></script>') %>
-var socket = io.connect('http://localhost:1337');
+
+<button onclick="displaySocketId()">What's my socket ID?</button>
+
+<script>
+
+function displaySocketId() {
+    io.socket.on('/fakeGameLobby', function(resData){
+		resData;
+})
+</script>
+
+<p id="demo"></p>
