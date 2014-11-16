@@ -1,6 +1,6 @@
 var numPlayers = [];
 
-socket.on('currentGame', function(Game){
+io.socket.on('currentGame', function(Game){
 	socket.clientname = Game;
 		inprogress.push(numPlayers);
 	io.socket.emit('added', numPlayers,Game)
