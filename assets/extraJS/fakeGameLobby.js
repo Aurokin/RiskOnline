@@ -9,14 +9,15 @@ io.socket.on('connect', function socketConnected(){
 	console.log("This is from the connect: ", this.socket.sessionid);
 	io.socket.get('/getGamesList', function gotResponse(response){
 		console.log(response);
-		io.socket.emit(response);
 	});
 });
 
 
 
 io.socket.get("/games", function(reData, jwres){
-
+		io.socket.post('/games', {gameID: 'socket.sessionid'}, function(resdata){
+			resData;
+		});
 		console.log(reData);
 
 });
