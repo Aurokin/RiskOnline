@@ -8,10 +8,14 @@ io.socket.on('connect', function socketConnected() {
 
 });
 
-io.socket.get("/fakeGameLobby", function(reData, jwres){
+io.socket.get("/games", function(reData, jwres){
 
 		console.log(reData);
 
 });
 
-.publishAdd( {id},attribute, idAdded, [request], [options] )
+io.socket.on('Games', function notificationRecievedFromServer(message) {
+
+		console.log(message);
+
+});
