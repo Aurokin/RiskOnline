@@ -20,9 +20,9 @@ io.socket.get("/games", function(reData, jwres){
 
 });
 
-io.socket.post("/games", {gameID: 'socket.sessionid'}, function(redata){
+io.socket.post("/games", {gameID: 'socket.sessionid'}, function(reData, jwres){
 
-	console.log(reData);
+	console.log("This is from socketpost: ", reData);
 
 });
 
