@@ -12,21 +12,13 @@ io.socket.on('connect', function socketConnected(){
 	});
 });
 
-
-
-io.socket.get("/games", function(reData, jwres){
-
-		console.log(reData);
-
-});
-
 io.socket.post("/games", function(reData, jwres){
 
-	console.log("This is from socketpost: ", reData);
+		console.log("This is from socketpost: ", reData);
 
 });
 
-io.socket.on('Games', function notificationRecievedFromServer(message) {
+io.socket.on("/Games", function notificationRecievedFromServer(message) {
 
 		console.log(message);
 
