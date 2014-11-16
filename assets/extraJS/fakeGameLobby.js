@@ -8,7 +8,7 @@ io.socket.on('connect', function socketConnected() {
 
 });
 
-io.socket.on('connection', function(socket){
+io.socket.on('connection', function(){
 		socket.on('hi', function(){
 			data = { name: 'Test', message: 'Hi Too'};
 			io.socket.emit('init', data);
