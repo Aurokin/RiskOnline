@@ -44,7 +44,25 @@ module.exports = {
 	},
 
 	startGame: function (req, res) {
+		//Starts Game
+		//Requires gameID
+
 		var gameID = req.body.gameID;
+		console.log('Starting Game #'+gameID);
+
+		Games.findOne(gameID).exec(function(err, game) {
+			if (err) {
+				console.log(err);
+			}
+
+			game.inProgress = true;
+			game.save(function(err) {
+				//console.log(err);
+				Games.publishUpdate(game.id, game);
+
+				return res.json(game);
+			})
+		})
 	},
 
 	changeTurn: function (req, res) {
@@ -114,9 +132,5 @@ module.exports = {
 				});
 			});
 		});
-	},
-
-	gameList: function (req, res) {
-
 	}
 };
