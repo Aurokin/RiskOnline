@@ -5,13 +5,7 @@
 
 	<script src="/socket.io/socket.io.js"></script>
 	<script>
-		var socket = io('http://localhost');
-		//may have to change local host
-		socket.on('news', function(data){
-			console.log(data);
-			socket.emit('my other event', {my: 'data'}
-			);
-		});
+		var socket - io.connect();
 	</script>
 
 	<script src="jquery-1.11.1.min.js"></script>
@@ -23,7 +17,7 @@
 	<script src="assetManager.js"></script>
 	<script src="main.js"></script>
 	<script src="../socket.io/socket.io.js"></script>
-	<script>
+<!--	<script>
 		var socket = io('http://localhost:1337');
 		socket.on('news', function(data)
 		{
@@ -31,7 +25,7 @@
 				socket.emit('my other event', {my: 'data' });
 
 		});
-	</script>
+	</script> -->
 	<style>
 		body
 		{
