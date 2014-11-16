@@ -1,6 +1,11 @@
-$(document).ready(function() {
-	console.log('hello');
-});
+var numPlayers = [];
+
+io.socket.on('currentGame', function(Game){
+	socket.clientname = Game;
+		inprogress.push(numPlayers);
+	io.socket.emit('added', numPlayers,Game)
+}
+
 
 io.socket.on('connect', function socketConnected(){
 
@@ -11,5 +16,5 @@ io.socket.on('connect', function socketConnected(){
 io.socket.post("/games", function(reData, jwres){
 
 		console.log(reData);
-	
+
 });
