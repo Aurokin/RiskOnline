@@ -18,7 +18,7 @@ io.socket.get("/games", function(reData, jwres){
 		io.socket.post('/games', {gameID: 'socket.sessionid'}, function(resdata){
 			resData;
 		});
-		console.log(reData);
+		console.log(resdata);
 
 });
 
