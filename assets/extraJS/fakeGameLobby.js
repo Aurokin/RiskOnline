@@ -8,6 +8,4 @@ io.socket.on('connect', function socketConnected() {
 
 });
 
-io.socket.on('connection', function(socket){
-		console.log('user connected');
-});
+var io = require('socket.io');
