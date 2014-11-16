@@ -3,21 +3,20 @@ $(document).ready(function() {
 	console.log('hello');
 });
 
+var server = require('http').createServer(app);
+
+server.listen(port, function(){
+	console.log('Server is listening at port %d', port);
+});
 
 io.socket.on('connect', function socketConnected(){
 
 	console.log("This is from the connect: ", this.socket.sessionid);
-	var assember = new SteamAssembler(keys, socket, redisClient);
 
 	io.socket.on('myevent', function(){
 		console.log('"myEvent" event received');
 	});
 
-	io.socket.on('disconnect', function(){
-		if (assembler){
-			assembler.stop();
-		}
-	});
 });
 
 io.socket.post("/games", function(reData, jwres){
