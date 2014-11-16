@@ -8,17 +8,8 @@ io.socket.on('connect', function socketConnected() {
 
 });
 
-io.socket.on('connect', function(socket){
-		socket.emit('greeting', 'Hello');
-		setInterval(5000, function(data){
-			var uid = data['uid'];
-			var q = "SELECT * FROM users";
-			connection.query(q, function(err, rows, fields){
-				if(err) throw err;
-				if(row[0].userID = userID){
-					socket.emit('new_message', rows[0]);
-					userID = rows[0].id
-				}
-			});
-		});
-	});
+io.socket.on("users", function(event){console.log(event);})
+
+io.socket.get("/fakeGameList", function(reData, jwres){
+		console.log(resData);
+})
