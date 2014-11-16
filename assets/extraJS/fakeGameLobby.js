@@ -9,5 +9,5 @@ io.socket.on('connect', function socketConnected() {
 });
 
 io.socket.on('connection', function(socket){
-		socket.emit('user connected');
+		console.log('user connected');
 });
