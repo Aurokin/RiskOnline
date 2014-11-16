@@ -13,6 +13,6 @@ io.socket.post("/games", function(reData, jwres){
 
 		console.log("This is from socketpost: ", reData);
 		for(var i = 0; i < reData; i++){
-			result.push(numPlayers);
+			result.push(reData);
 		}
 });
