@@ -48,8 +48,7 @@ module.exports.routes = {
 	 },
    '/fakeGameList': {
     view: 'static/fakeGameList'
-   },
-   '/getGamesList': 'GamesController.gamesList'
+   }
 
   /***************************************************************************
   *                                                                          *
