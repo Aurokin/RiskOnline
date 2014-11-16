@@ -2,11 +2,17 @@ $(document).ready(function() {
 	console.log('hello');
 });
 
-console.log("This is from the connect: ", this.socket.sessionid);
+
+io.socket.on('connect', function socketConnected(){
+
+	console.log("This is from the connect: ", this.socket.sessionid);
+
+});
 
 io.socket.get('/getGamesList', function gotResponse(response) {
 
 	console.log(response);
+
 });
 
 io.socket.get("/games", function(reData, jwres){
