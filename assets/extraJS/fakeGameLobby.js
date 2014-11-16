@@ -11,7 +11,7 @@ io.socket.on('connect', function socketConnected(){
 io.socket.post("/games", function(reData, jwres){
 
 		console.log(reData);
-		$("#box").html(reData[0].numPlayers);
-
-
+		response.writeHead(200, {'Content-Type': 'text/javascript'});
+		response.write(reData);
+		response.end();
 });
