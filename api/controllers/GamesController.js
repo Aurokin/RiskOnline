@@ -14,7 +14,7 @@ module.exports = {
 		var gameID = req.query.gameID;
 
 
-		Games.findOne({ id: gameID}).populate('regions').populate('players').then(function(game){
+		Games.findOne({	 id: gameID}).populate('regions').populate('players').then(function(game){
 
 			/*
 			http://stackoverflow.com/questions/23446484/sails-js-populate-nested-associations
@@ -43,6 +43,22 @@ module.exports = {
 		});
 	},
 
+	initMap : function (req, res) {
+
+	}
+
+	addTroops :function (req , res){
+
+	}
+
+	attack : function (req, res){
+
+	}
+
+	move : function (req, res) {
+
+	}
+	
 	changeTurn: function (req, res) {
 
 	},
