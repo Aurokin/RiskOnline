@@ -40,8 +40,8 @@ io.sockets.on('connection', function(socket) {
 
 	//define event handlers
 
-	socket.on('message', function(message) {
-		console.log("Received message: " + message + " - from client " + socket.id);
+	socket.on('chat message', function(msg) {
+		console.log("Received message: " + msg + " - from client " + socket.id);
 	});
 
 	socket.on('disconnect', function() {
