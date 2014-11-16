@@ -43,10 +43,21 @@ module.exports.routes = {
   '/gameState': 'GamesController.gameState',
   'post /addUserToGame': 'GamesController.addPlayer',
   'post /removeUserFromGame': 'GamesController.removePlayer',
+<<<<<<< HEAD
    'post /attack': 'GamesController.attack',
    'post /move': 'GamesController.move',
    'post /addTroops': 'GamesController.addTroops'
 
+=======
+   '/chat': {
+	   view: 'real_time'
+	 },
+   '/fakeGameList': {
+    view: 'static/fakeGameList'
+   },
+  '/gameboard': {
+	  view: 'map'}
+>>>>>>> 30bff097a38c9353b3fd34e3038123469f781614
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *

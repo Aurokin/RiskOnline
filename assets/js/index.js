@@ -14,7 +14,7 @@ server = http.createServer(function(req, res){
 				res.end();
 		});
 		//break;
-	default: send404(res);
+	//default: send404(res);
 		
 	}
 ),
@@ -28,7 +28,9 @@ send404 = function(res) {
 server.listen(1337);
 
 //socket.io
-var io = require('/Users/Summer/Documents/Workspace/cs4320-groupdanny/node_modules/sails/node_modules/socket.io').listen(server);
+//var io = require('/Users/Summer/Documents/Workspace/cs4320-groupdanny/node_modules/sails/node_modules/socket.io').listen(server);
+
+var io = require('socket.io').listen(server);
 
 //on a 'connection' event
 
@@ -37,8 +39,8 @@ io.sockets.on('connection', function(socket) {
 
 	//define event handlers
 
-	socket.on('message', function(message) {
-		console.log("Received message: " + message + " - from client " + socket.id);
+	socket.on('chat message', function(msg) {
+		console.log("Received message: " + msg + " - from client " + socket.id);
 	});
 
 	socket.on('disconnect', function() {

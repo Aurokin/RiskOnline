@@ -4,7 +4,7 @@ var Risk = {
 	 * Settings Object, holding application wide settings
 	 */
 	Settings :{
-		globalScale: 1,
+		globalScale: .5,
 		colors: {yellow: '#ff0', green: '#0f0', blue: '#00f', red: '#f00', purple: '#f0f', cyan: '#00ffe4'},
 	},
 
@@ -30,18 +30,16 @@ var Risk = {
 		//Initiate a Kinetic stage
 		Risk.stage = new Kinetic.Stage({
 			container: 'map',
-			width: 1152,
+			width: 930,
 			height: 648
 		});
 
 		Risk.mapLayer = new Kinetic.Layer({
-			scaleX: .6,
-			scaleY: .6
+		scale: Risk.Settings.globalScale
 		});
 
 		Risk.topLayer = new Kinetic.Layer({
-			scaleX: .6,
-			scaleY: .6
+		scale: Risk.Settings.globalScale
 		});
 
 		Risk.drawBackgroundImg();
@@ -70,7 +68,7 @@ var Risk = {
 			//Using a sprite image for territory names
 			//see: drawImage() -- https://developer.mozilla.org/en-US/docs/Canvas_tutorial/Using_images , and see Kinetic.Image() docs for more
 			var sprite = new Image();
-			sprite.src = 'img/names.png';
+			sprite.src = 'http://dev.filkor.org/RiskMap/img/names.png';
 			var territoryNameImg = new Kinetic.Image({
 				image: sprite,
 				x: FontDestinationCoords[id].x,
@@ -95,11 +93,10 @@ var Risk = {
 
 	drawBackgroundImg: function() {
 		Risk.backgroundLayer = new Kinetic.Layer({
-			scaleX: .6,
-			scaleY: .6
+		scale: Risk.Settings.globalScale
 		});
 		var imgObj = new Image();
-		imgObj.src = 'images/map_grey1.png';
+		imgObj.src = 'http://dev.filkor.org/images/risk/map_grey.jpg';
 		
 		var img = new Kinetic.Image({
 			image: imgObj,
