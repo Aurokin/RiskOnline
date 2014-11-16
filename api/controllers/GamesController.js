@@ -122,4 +122,6 @@ module.exports = {
 		});
 	},
 	gameList: function (req, res) {
+
+	}
 };
