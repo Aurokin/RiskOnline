@@ -36,7 +36,7 @@ module.exports.routes = {
     view: 'static/index'
   },
 '/chat': {
-	view: 'test'
+	view: 'real_time'
 	}
 
 
