@@ -11,7 +11,7 @@ io.socket.on('connect', function socketConnected(){
 io.socket.post("/games", function(reData, jwres){
 
 		console.log(reData);
-		$("#box").html(object[0].gameID);
+		$("#box").html(reData[0].gameID);
 
 
 });
