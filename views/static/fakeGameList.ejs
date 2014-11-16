@@ -4,16 +4,17 @@
 	</div>
 </div>
 
+<script>
+
+function displaySocketId() {
+		io.socket.on('/fakeGameLobby', function(resData){
+		resData;
+});
+</script>
 <%- block('localScripts', '<script src="/extraJS/fakeGameLobby.js"></script>') %>
 
 <button onclick="displaySocketId()">What's my socket ID?</button>
 
-<script>
 
-function displaySocketId() {
-    io.socket.on('/fakeGameLobby', function(resData){
-		resData;
-})
-</script>
 
 <p id="demo"></p>
