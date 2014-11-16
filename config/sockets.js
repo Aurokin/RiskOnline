@@ -23,8 +23,6 @@ module.exports.sockets = {
   ***************************************************************************/
   onConnect: function(session, socket) {
 
-    // By default, do nothing.
-    //deleted stuff I had, summer
   },
 
 
@@ -36,8 +34,7 @@ module.exports.sockets = {
   ***************************************************************************/
   onDisconnect: function(session, socket) {
 
-    // By default: do nothing.
-   // console.log(data.message);
+
   },
 
 
