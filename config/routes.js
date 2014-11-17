@@ -50,6 +50,9 @@ module.exports.routes = {
     view: 'static/fakeGameList'
   },
   '/getGamesList' : 'GamesController.gameList',
+  '/mainroom' : {
+    view: 'sPractice/mainroom'
+  },
 
    //},
 //  '/gameboard': {
