@@ -1,4 +1,4 @@
-/* github.com/tamaspiros/advanced-chat/blob/master/server.js for reference if I have issues */
+/* github.com/tamaspiros/advanced-chat/blob/master/server.js for reference if I have issues
 
 var express = require('express')
 , app = express()
@@ -361,4 +361,4 @@ socket.on("leaveRoom", function(id){
 		purge(socket, "leaveRoom");
 });
 });
-
+*/

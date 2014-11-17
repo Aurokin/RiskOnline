@@ -43,9 +43,11 @@ module.exports.routes = {
   '/gameState': 'GamesController.gameState',
   'post /addUserToGame': 'GamesController.addPlayer',
   'post /removeUserFromGame': 'GamesController.removePlayer',
+
    'post /attack': 'GamesController.attack',
    'post /move': 'GamesController.move',
    'post /addTroops': 'GamesController.addTroops',
+
 
 
    '/chat': {
@@ -60,6 +62,11 @@ module.exports.routes = {
 	  view: 'map'
   },
    '/game/startGame': 'GamesController.startGame',
+
+  '/gamelist': {
+    view: 'gamelist'
+  },
+
 
   /***************************************************************************
   *                                                                          *
