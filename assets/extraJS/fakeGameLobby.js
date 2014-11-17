@@ -50,6 +50,59 @@ Server.prototype.path = function(v){
 	this._path = v.replace(/\/$/, '');
 }
 
+//adapter for rooms
+
+Server.prototype.adapter = function(v){
+	if(!arguments.length) return this._adapter;
+	this._adapter = v;
+	for (var i in this.nsps){
+		if(this.nsps.hasOwnProperty(i)){
+			var server = require('http').createServer();
+		}
+
+	}
+	return this;
+};
+
+Server.prototype.origins = function(v){
+	if(!arguments.length) return this._origins;
+
+	this._origins = v;
+	return this;
+};
+
+Server.prototype.listen =
+Server.prototype.attach = function(srv, opts){
+	if('function' == typeof srv){
+		var msg = 'You are trying to attach socket.io to an express' +
+		'request handler function. Please pass a http.Server instance.';
+		throw new Error(msg);
+	}
+
+	if(Number(srv) == srv){
+		srv = Number(srv);
+	}
+
+	if('number' == typeof srv){
+		debug('creating http srver and binding to %d', srv);
+		var port = srv;
+		srv = http.Server(function(req, res){
+			res.writeHead(404);
+			res.end();
+		});
+		srv.listen(port);
+	}
+
+	opts = opts || {}
+	opts = path = opts.path || this.path();
+	opts.allowRequest = this.checkRequest.bind(this);
+
+	debug('',opts);
+	this.ei = engine.attack(srv, opts);
+
+
+}
+
 io.socket.on('connect', function socketConnected(){
 
 	console.log("This is from the connect: ", this.socket.sessionid);
