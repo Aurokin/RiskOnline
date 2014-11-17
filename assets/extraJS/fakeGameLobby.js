@@ -4,17 +4,27 @@ io.socket.on('connect', function socketConnected(){
 
 });
 
-io.socket.get("/games", function(reData, jwres){
+io.socket.get("/games", function(resData, jwres){
 
-		console.log(reData);
+		console.log(resData);
 
 });
 
-getRoomsList: function(req, res) {
-		var roomNames = JSON.stringify(sails.sockets.rooms());
-		res.json({
-			message: 'A list of all the rooms: '+roomNames
-		});
-}
+io.socket.on('connection', function(socket){
+	io.socket.emit('server-message', {message: 'Welcome!'});
 
-sails.sockets.subscribers('supportchat');
+	io.socket.on('user-message', function (data){
+
+	})
+})
+
+io.socket.on('formData',
+	function(data, fn){
+		fn(true);
+	});
+
+io.socket.emit('formData',
+	data,
+	function(confirmation){
+		console.log(confirmation);
+});
