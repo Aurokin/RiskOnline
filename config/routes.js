@@ -50,7 +50,9 @@ module.exports.routes = {
     view: 'static/fakeGameList'
    },
   '/gameboard': {
-	  view: 'map'}
+	  view: 'map'
+  },
+   '/game/startGame': 'GamesController.startGame'
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *

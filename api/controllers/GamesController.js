@@ -57,6 +57,29 @@ module.exports = {
 
 	},
 	
+	startGame: function (req, res) {
+		//Starts Game
+		//Requires gameID
+
+		var gameID = req.body.gameID;
+		console.log('Starting Game #'+gameID);
+
+		Games.findOne(gameID).exec(function(err, game) {
+			if (err) {
+				console.log(err);
+			}
+
+			game.inProgress = true;
+			game.save(function(err) {
+				//console.log(err);
+				Games.publishUpdate(game.id, game);
+
+				return res.json(game);
+			})
+		})
+	},
+
+
 	changeTurn: function (req, res) {
 
 	},
@@ -72,27 +95,29 @@ module.exports = {
 	addPlayer: function (req, res) {
 		//Will Add Player To Game
 		//Requires POST with gameID / playerID
-		//console.log(req);
+
 		var gameID = req.body.gameID;
 		var playerID = req.body.playerID;
-		//console.log('gameID = '+gameID);
-		//console.log('playerID = '+playerID);
+
 		Games.findOne(gameID).exec(function(err, game) {
-			//console.log(game);
+
 			if (err) {
-				//Error Goes Here
 				//console.log('first stop');
 			}
 			game.players.add(playerID);
-			//console.log(game);
+
 			game.save(function(err) {
 				//console.log('second stop');
 				//console.log(err);
-				//Error goes Here
+
+				Games.findOne(gameID).populate('players').exec(function(err, game){
+					
+					Games.publishUpdate(game.id, game);
+
+					return res.json(game);
+				});
 			});
-			return res.json({
-				game: game
-			});
+
 		});
 	},
 
@@ -101,23 +126,25 @@ module.exports = {
 		//Requires POST with gameID / playerID
 		var gameID = req.body.gameID;
 		var playerID = req.body.playerID;
-		//console.log('gameID = '+gameID);
-		//console.log('playerID = '+playerID);
+
 		Games.findOne(gameID).exec(function(err, game) {
-			//console.log(game);
+
 			if (err) {
-				//Error Goes Here
-				//console.log('first stop');
+
 			}
+
 			game.players.remove(playerID);
-			//console.log(game);
+
 			game.save(function(err) {
 				//console.log('second stop');
 				//console.log(err);
-				//Error goes Here
-			});
-			return res.json({
-				game: game
+
+				Games.findOne(gameID).populate('players').exec(function(err, game){
+					
+					Games.publishUpdate(game.id, game);
+
+					return res.json(game);
+				});
 			});
 		});
 	}

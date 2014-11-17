@@ -92,7 +92,15 @@ module.exports = {
   },
 
   afterCreate: function (values, cb) {
-
+    /*
+    console.log(values);
+    Games.publishUpdate(values.id, {
+      numPlayers: values.numPlayers,
+      startDate: values.startDate,
+      password: values.password,
+      inProgress: values.inProgress
+    });
+    */
     cb();
   }
 };
