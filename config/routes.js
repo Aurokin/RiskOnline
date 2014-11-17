@@ -53,11 +53,14 @@ module.exports.routes = {
 	 },
    '/fakeGameList': {
     view: 'static/fakeGameList'
-   },
+  },
+  '/getGamesList' : 'GamesController.gameList',
+  '/mainroom' : 'sPractice/mainroom',
   '/gameboard': {
 	  view: 'map'
   },
-   '/game/startGame': 'GamesController.startGame'
+   '/game/startGame': 'GamesController.startGame',
+
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *

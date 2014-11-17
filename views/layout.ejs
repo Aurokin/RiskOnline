@@ -61,7 +61,17 @@
     <script src="/js/dependencies/bootstrap.js"></script>
     <script src="/js/dependencies/customValidate.js"></script>
     <script src="/js/dependencies/jquery.validate.min.js"></script>
+<<<<<<< HEAD
     <script src="/js/siteSocket.js"></script>
+=======
+    <script src="/js/chat.js"></script>
+    <script src="/js/index.js"></script>
+    <script src="/js/real_time.js"></script>
+    <script src="/js/room.js"></script>
+    <script src="/js/sPractice/serverlogic.js"></script>
+    <script src="/js/server.js"></script>
+    <script src="/js/testing_log.js"></script>
+>>>>>>> srst2c_sprint2
     <!--SCRIPTS END-->
 
     <% blocks.localScripts %>
@@ -173,31 +183,43 @@
     
     <!--TEMPLATES END-->
 
-  	<!-- TEST: Summer -->
-    <!--
-    <script>
-		  socket.on('connect', function()
-        {
-			    console.log('Client has been connected to the server');
-		    });
-      function sendMessageToServer(message)
-        {
-			    socket.send(message);
-		    };
+<!--
+      Client-side Javascript
+      ========================
 
-		var  socket = new io.Socket();
+      You can always bring in JS files manually with `script` tags, or asynchronously
+      on the client using a solution like AMD (RequireJS).  Or, if you like, you can
+      take advantage of Sails' conventional asset pipeline (boilerplate Gruntfile).
 
-		socket.connect('http://localhost:1337');
+      By default, files in your `assets/js` folder are included here
+      automatically (between SCRIPTS and SCRIPTS END).  Both JavaScript (.js) and
+      CoffeeScript (.coffee) are supported. In production, your scripts will be minified
+      and concatenated into a single file.
 
-		socket.on('connect', function(){
-			console.log('Client has been connected to the server');
-		});
+      To customize any part of the built-in behavior, just edit `tasks/pipeline.js`.
+      For example, here are a few things you could do:
 
-		function sendMessageToServer(message){
-			socket.send(message);
-		};
-		</script>-->
+          + Change the order of your scripts
+          + Import scripts from other directories
+          + Use a different preprocessor, like TypeScript
 
+    -->
+
+    <!--SCRIPTS-->
+    <script src="/js/dependencies/sails.io.js"></script>
+    <script src="/js/dependencies/jquery-2.1.1.min.js"></script>
+    <script src="/js/dependencies/bootstrap.js"></script>
+    <script src="/js/dependencies/customValidate.js"></script>
+    <script src="/js/dependencies/jquery.validate.min.js"></script>
+    <script src="/js/chat.js"></script>
+    <script src="/js/index.js"></script>
+    <script src="/js/real_time.js"></script>
+    <script src="/js/room.js"></script>
+    <script src="/js/server.js"></script>
+    <script src="/js/testing_log.js"></script>
+    <!--SCRIPTS END-->
+
+    <%- blocks.localScripts %>
 
   </body>
 </html>

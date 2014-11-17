@@ -80,6 +80,15 @@ module.exports = {
 	},
 
 
+	gamesList: function (req, res) {
+					Games.find().exec(function (err, games) {
+					Games.subscribe(req.socket, games);
+					return res.json({
+						games: games
+					});
+				});
+	},
+
 	changeTurn: function (req, res) {
 
 	},
@@ -89,7 +98,17 @@ module.exports = {
 	},
 
 	endGame: function (req, res) {
+		/*summer */
+		var gameID = req.body.gameID;
+		var playerID = req.body.playerID;
 
+		Games.findOne(gameID).exec(function(err, gameID){
+			Games.destroy(gameID).exec(function(err){
+				Games.publishDestroy(gameID);
+			});
+		});
+
+		/*hopefully we can take the logic from here*/
 	},
 
 	addPlayer: function (req, res) {
@@ -116,6 +135,15 @@ module.exports = {
 
 					return res.json(game);
 				});
+				//Error goes Here
+			});
+
+			Games.publishUpdate(game.id, {
+				id: game.id
+			});
+
+			return res.json({
+				game: game
 			});
 
 		});
@@ -147,5 +175,8 @@ module.exports = {
 				});
 			});
 		});
+	},
+	gameList: function (req, res) {
+
 	}
 };
