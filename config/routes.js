@@ -53,9 +53,6 @@ module.exports.routes = {
    '/chat': {
 	   view: 'real_time'
 	 },
-   '/GameList': {
-    view: 'static/fakeGameList'
-   },
   '/gameboard': {
 	  view: 'map'
   },
