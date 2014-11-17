@@ -1,4 +1,4 @@
-/**
+/*
  * Route Mappings
  * (sails.config.routes)
  *
@@ -43,6 +43,12 @@ module.exports.routes = {
   '/gameState': 'GamesController.gameState',
   'post /addUserToGame': 'GamesController.addPlayer',
   'post /removeUserFromGame': 'GamesController.removePlayer',
+
+   'post /attack': 'GamesController.attack',
+   'post /move': 'GamesController.move',
+   'post /addTroops': 'GamesController.addTroops',
+
+
 
    '/chat': {
 	   view: 'real_time'
