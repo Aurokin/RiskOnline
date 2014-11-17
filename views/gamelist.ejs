@@ -23,6 +23,16 @@
 .mainBtn {
 	margin-top: 50px;
 }
+
+th {
+	text-align: center;
+	font-size: large;
+}
+
+td{
+	font-size: large;
+}
+
 </style>
 
 <div id="container">
@@ -37,10 +47,62 @@
     	</button>
 	</div>
 
-	<!-- If "JoinGame" selected, hide current games using class='hidden' && Vice-Versa -->
+	<!-- CURRENT GAMES TABLE -->
+		    <table id="currentTable" class="col-md-12 center text-center table table-hover">
+        <thead>
+            <tr>
+                <th>Game ID</th>
+                <th>Owner</th>
+                <th>Round</th>
+                <th>Player's Turn</th>
+                <th>Join</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Hunter</td>
+                <td>3</td>
+                <td>JJ</td>
+                <td>
+                	<div class="col-md-6 center-block">
+    					<button id="game1" name="game1" class="btn btn-primary center-block">
+        					Play
+    					</button>
+					</div>
+				</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Hue</td>
+                <td>1</td>
+                <td>Your Turn!</td>
+                <td>
+                	<div class="col-md-6 center-block">
+    					<button id="game1" name="game1" class="btn btn-primary center-block">
+        					Play
+    					</button>
+					</div>
+				</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Summer</td>
+                <td>4</td>
+                <td>Matt</td>
+                <td>	
+                	<div class="col-md-6 center-block">
+    					<button id="game1" name="game1" class="btn btn-primary center-block">
+        					Play
+    					</button>
+					</div>
+				</td>
+            </tr>
+        </tbody>
+    </table>
 
-
-	    <table class="col-md-6 center-block table table-hover">
+	<!-- JOIN GAME TABLE -->
+	    <table id="joinTable" class="col-md-6 center text-center table table-hover hidden">
         <thead>
             <tr>
                 <th>Game ID</th>
@@ -59,7 +121,7 @@
                 <td>
                 	<div class="col-md-6 center-block">
     					<button id="game1" name="game1" class="btn btn-primary center-block">
-        					JOIN
+        					Join
     					</button>
 					</div>
 				</td>
@@ -72,7 +134,7 @@
                 <td>
                 	<div class="col-md-6 center-block">
     					<button id="game1" name="game1" class="btn btn-primary center-block">
-        					JOIN
+        					Join
     					</button>
 					</div>
 				</td>
@@ -85,7 +147,7 @@
                 <td>	
                 	<div class="col-md-6 center-block">
     					<button id="game1" name="game1" class="btn btn-primary center-block">
-        					JOIN
+        					Join
     					</button>
 					</div>
 				</td>
@@ -101,11 +163,13 @@
     $(document).ready(function(){
 
         $("#JoinGame").click(function(){
-     		alert("you have clicked Join Game");
+     		$("#joinTable").removeClass("hidden");
+     		$("#currentTable").addClass("hidden");
         });
 
         $("#CurrentGames").click(function(){
-     		alert("you have clicked Currennt Games");
+     		$("#currentTable").removeClass("hidden");
+     		$("#joinTable").addClass("hidden");
         });
 
     });
