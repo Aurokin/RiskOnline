@@ -1,22 +1,14 @@
 io.socket.on('connect', function socketConnected(){
-
+	socket.emit('server-message', {message: 'Welcome!'});
 	console.log("This is from the connect: ", this.socket.sessionid);
 
 });
 
-io.socket.get("/games", function(resData, jwres){
+io.socket.get("/Games", function(resData, jwres){
 
 		console.log(resData);
 
 });
-
-io.socket.on('connection', function(socket){
-	io.socket.emit('server-message', {message: 'Welcome!'});
-
-	io.socket.on('user-message', function (data){
-
-	})
-})
 
 io.socket.on('formData',
 	function(data, fn){
@@ -28,3 +20,11 @@ io.socket.emit('formData',
 	function(confirmation){
 		console.log(confirmation);
 });
+
+var server = require('http').createServer();
+var io = require('socket.io')(server);
+io.on('connection', function(socket){
+	socket.on('event', function(data){});
+	socket.on('disconnect', function(){});
+});
+server.listen(1337);
