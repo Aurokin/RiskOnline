@@ -45,7 +45,7 @@ module.exports = {
 
 	},
 
-	addTroops :function (req , res){
+	addTroops : function (req , res){
 
 	},
 
