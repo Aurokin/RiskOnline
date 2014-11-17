@@ -43,7 +43,7 @@ module.exports.routes = {
   '/gameState': 'GamesController.gameState',
   'post /addUserToGame': 'GamesController.addPlayer',
   'post /removeUserFromGame': 'GamesController.removePlayer',
-  '/chat': {
+   '/chat': {
 	   view: 'real_time'
 	 },
    '/fakeGameList': {
@@ -51,6 +51,9 @@ module.exports.routes = {
   },
   '/getGamesList' : 'GamesController.gameList'
 
+   },
+  '/gameboard': {
+	  view: 'map'}
 
   /***************************************************************************
   *                                                                          *
