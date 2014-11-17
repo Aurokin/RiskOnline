@@ -100,8 +100,102 @@ Server.prototype.attach = function(srv, opts){
 	debug('',opts);
 	this.ei = engine.attack(srv, opts);
 
+	if(this._serveClient) this.attachServe(srv);
 
-}
+	this.httpServer = srv;
+
+	this.bind(this.eio);
+
+	return this;
+};
+
+Server.prototype.attachServe = function(srv){
+	debug('attaching client serving req handler');
+	var url = this._path + '/socket.io.js';
+	var evs = srv.listeners('request').slice(0);
+	var self = this;
+	srv.removeAllListeners('request');
+	srv.on('request', function(req, res){
+		if(0 == req.url.indexOf(url)){
+			self.serve(req, res);
+		}else{
+				for(var i = 0; i < evs.length; i++){
+					evs[i].call(srv,req,res);
+				}
+			}
+		});
+};
+
+Server.prototype.server = function(req, res){
+	var etag = req.headers['if-none-match'];
+	if(etag){
+		if(clientVersion == etag){
+			debug('serve client 304');
+			res.writeHead(304);
+			res.end();
+			return;
+		}
+	}
+
+	debug('serve client source');
+	res.setHeader('Content-Type', 'application/javascript');
+	res.setheader('ETag', clientVersion);
+	res.writeHead(200);
+	res.end(clientSource);
+};
+
+Server.prototype.bind = function(engine){
+	this.engine = engine;
+	this.engine.on('connection', this.connection.bind(this));
+	return this;
+};
+
+Server.prototype.onconnection = function(conn){
+	debug('incoming connection with id %s', conn.id);
+	var client = new Client(this, conn);
+	client.connect('/');
+	return this;
+};
+
+Server.prototype.of = function(name, fn){
+	if(String(name)[0] !== '/') name = '/' + name;
+
+	if(!this.nsps[name]){
+		debug('initializing namespace %s', name);
+		var nsp = new Namespace(this, name);
+		this.nsps[name] = nsp;
+	}
+	if (fn) this.nsps[name].on('connect', fn);
+	return this.nsps[name];
+};
+
+Server.prototype.close = function(){
+	this.nsps['/'].sockets.forEach(function(socket){
+		socket.onclose();
+	});
+
+	this.engine.close ();
+
+	if(this.httpServer){
+		this.httpServer.close();
+	}
+};
+
+['on','to','in','use', 'emit', 'send', 'write'].forEach(function(fn){
+	Server.prototype[fn] = function(){
+		var nsp = this.sockets[fn];
+		return nsp.apply(this.sockets, arguments);
+	};
+});
+
+Namespace.flags.forEach(function(flag){
+	Server.prototype.__defineGetter__(flag, function(name){
+		this.flags.push(name);
+		return this;
+	});
+});
+
+Server.listen = Server;
 
 io.socket.on('connect', function socketConnected(){
 
