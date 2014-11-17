@@ -41,7 +41,9 @@ module.exports =
 			},
 	logout: function (req, res)
 		{
-			req.session.destroy();
-			res.view('static/index');
+			//console.log(req.session);
+			req.session.destroy(function() {
+				res.view('static/index');
+			});
 		}
 };
