@@ -22,9 +22,10 @@ io.socket.emit('formData',
 });*/
 
 var server = require('http').createServer();
+app.set('port', process.env.PORT || 1337);
 var io = require('socket.io')(server);
 io.on('connection', function(socket){
 	socket.on('event', function(data){});
 	socket.on('disconnect', function(){});
 });
-server.listen(1337);
+server.listen(app.get('port'));
