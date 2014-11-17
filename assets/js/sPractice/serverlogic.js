@@ -1,4 +1,4 @@
-var socket = require('socket.io');
+/*var socket = require('socket.io');
 
 io.socket.on('connect', function socketConnected(){
 
@@ -19,4 +19,4 @@ getRoomsList: function(req, res {
     });
 });
 
-sails.sockets.subscribers('supportchat');
+sails.sockets.subscribers('supportchat');*/
