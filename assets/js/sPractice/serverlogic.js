@@ -1,3 +1,5 @@
+var socket = require('socket.io');
+
 io.socket.on('connect', function socketConnected(){
 
   console.log("This is from the connect: ", this.socket.sessionid);
@@ -16,3 +18,5 @@ getRoomsList: function(req, res) {
       message: 'A list of all the rooms: '+roomNames
     });
 }
+
+sails.sockets.subscribers('supportchat');
