@@ -1,5 +1,5 @@
 io.socket.on('connect', function socketConnected(){
-	socket.emit('server-message', {message: 'Welcome!'});
+	io.socket.emit('server-message', {message: 'Welcome!'});
 	console.log("This is from the connect: ", this.socket.sessionid);
 
 });
@@ -10,7 +10,7 @@ io.socket.get("/Games", function(resData, jwres){
 
 });
 
-io.socket.on('formData',
+/*io.socket.on('formData',
 	function(data, fn){
 		fn(true);
 	});
@@ -19,7 +19,7 @@ io.socket.emit('formData',
 	data,
 	function(confirmation){
 		console.log(confirmation);
-});
+});*/
 
 var server = require('http').createServer();
 var io = require('socket.io')(server);
