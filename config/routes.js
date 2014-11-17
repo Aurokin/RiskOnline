@@ -51,10 +51,8 @@ module.exports.routes = {
   },
   '/getGamesList' : 'GamesController.gameList',
   '/mainroom' : 'sPractice/mainroom',
-
-   //},
-//  '/gameboard': {
-//	  view: 'map'},
+  '/gameboard': {
+	  view: 'map'},
 
   /***************************************************************************
   *                                                                          *
