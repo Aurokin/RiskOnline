@@ -53,15 +53,15 @@ module.exports.routes = {
    '/chat': {
 	   view: 'real_time'
 	 },
-   '/fakeGameList': {
+   '/GameList': {
     view: 'static/fakeGameList'
    },
   '/gameboard': {
 	  view: 'map'
   },
-   '/game/startGame': 'GamesController.startGame'
+   '/game/startGame': 'GamesController.startGame',
 
-  '/gameList': {
+  '/gamelist': {
     view: 'gamelist'
   }
 
