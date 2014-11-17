@@ -52,8 +52,8 @@ module.exports.routes = {
   '/getGamesList' : 'GamesController.gameList'
 
    },
-  '/gameboard': {
-	  view: 'map'},
+//  '/gameboard': {
+//	  view: 'map'},
 
   /***************************************************************************
   *                                                                          *
