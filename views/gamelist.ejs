@@ -1,0 +1,187 @@
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <!--STYLES-->
+    <link rel="stylesheet" href="/styles/bootstrap.css">
+    <link rel="stylesheet" href="/styles/importer.css">
+    <!--STYLES END-->
+
+
+<style>
+
+#container {
+	width: 50%;
+	min-height: 500px;
+	background-color: gray;
+	border-radius: 20px;
+
+	margin-top: auto;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.mainBtn {
+	margin-top: 50px;
+}
+
+th {
+	text-align: center;
+	font-size: large;
+}
+
+td{
+	font-size: large;
+}
+
+</style>
+
+<div id="container">
+	<div class="col-md-6 center-block">
+    	<button id="JoinGame" name="JoinGame" class="btn btn-primary btn-lg center-block mainBtn">
+        	Join New Game
+    	</button>
+	</div>
+	<div class="col-md-6 center-block">
+    	<button id="CurrentGames" name="CurrentGames" class="btn btn-primary btn-lg center-block mainBtn">
+        	Current Games
+    	</button>
+	</div>
+
+	<!-- CURRENT GAMES TABLE -->
+		    <table id="currentTable" class="col-md-12 center text-center table table-hover">
+        <thead>
+            <tr>
+                <th>Game ID</th>
+                <th>Owner</th>
+                <th>Round</th>
+                <th>Player's Turn</th>
+                <th>Join</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Hunter</td>
+                <td>2</td>
+                <td>JJ</td>
+                <td>
+                	<div class="col-md-6 center-block">
+    					<button id="game1" name="game1" class="btn btn-primary center-block">
+        					Play
+    					</button>
+					</div>
+				</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Hue</td>
+                <td>1</td>
+                <td>Your Turn!</td>
+                <td>
+                	<div class="col-md-6 center-block">
+    					<button id="game1" name="game1" class="btn btn-primary center-block">
+        					Play
+    					</button>
+					</div>
+				</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Summer</td>
+                <td>4</td>
+                <td>Matt</td>
+                <td>	
+                	<div class="col-md-6 center-block">
+    					<button id="game1" name="game1" class="btn btn-primary center-block">
+        					Play
+    					</button>
+					</div>
+				</td>
+            </tr>
+        </tbody>
+    </table>
+
+	<!-- JOIN GAME TABLE -->
+	    <table id="joinTable" class="col-md-6 center text-center table table-hover hidden">
+        <thead>
+            <tr>
+                <th>Game ID</th>
+                <th>Owner</th>
+                <th>Players</th>
+                <th>Status</th>
+                <th>Join</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Hunter</td>
+                <td>2/6</td>
+                <td>Waiting</td>
+                <td>
+                	<div class="col-md-6 center-block">
+    					<button id="game1" name="game1" class="btn btn-primary center-block">
+        					Join
+    					</button>
+					</div>
+				</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Hue</td>
+                <td>5/6</td>
+                <td>In Progress</td>
+                <td>
+                	<div class="col-md-6 center-block">
+    					<button id="game1" name="game1" class="btn btn-primary center-block">
+        					Join
+    					</button>
+					</div>
+				</td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Summer</td>
+                <td>1/6</td>
+                <td>Waiting</td>
+                <td>	
+                	<div class="col-md-6 center-block">
+    					<button id="game1" name="game1" class="btn btn-primary center-block">
+        					Join
+    					</button>
+					</div>
+				</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <div class="col-md-12 center-block">
+    	<button id="createGame" name="createGame" class="btn btn-primary center-block btn-lg">
+        	Create Game
+    	</button>
+	</div>
+
+</div>
+
+
+    <script type="text/javascript">
+
+    $(document).ready(function(){
+
+        $("#JoinGame").click(function(){
+     		$("#joinTable").removeClass("hidden");
+     		$("#currentTable").addClass("hidden");
+        });
+
+        $("#CurrentGames").click(function(){
+     		$("#currentTable").removeClass("hidden");
+     		$("#joinTable").addClass("hidden");
+        });
+
+    });
+
+    </script>
+
+
+

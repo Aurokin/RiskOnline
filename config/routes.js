@@ -43,6 +43,7 @@ module.exports.routes = {
   '/gameState': 'GamesController.gameState',
   'post /addUserToGame': 'GamesController.addPlayer',
   'post /removeUserFromGame': 'GamesController.removePlayer',
+<<<<<<< HEAD
    '/chat': {
 	   view: 'real_time'
 	 },
@@ -53,6 +54,12 @@ module.exports.routes = {
 	  view: 'map'
   },
    '/game/startGame': 'GamesController.startGame'
+=======
+  '/gameList': {
+    view: 'gamelist'
+  }
+
+>>>>>>> jjokb8_sprint2
   /***************************************************************************
   *                                                                          *
   * Custom routes here...                                                    *
