@@ -1,50 +1,27 @@
-var http = require('http');
-var url = require('url');
-var fs = require('fs');
-var server;
+var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
-server = http.createServer(function(req, res){
-	//our personal server will go here
-	var path = url.parse(req.url).pathname;
-		fs.readFile(__dirname + path, function(err, data){
-				if (err) return send404(res);
-				res.write('Stuff is working!\n');
-				res.writeHead(200, {'Content-Type' : path == 'json.js' ? 'text/javascript' : 'text/html'});
-				res.write(data, 'utf8');
-				res.end();
-		});
-		//break;
-	//default: send404(res);
-		
-	}
-),
 
-send404 = function(res) {
-	res.writeHead(404);
-	res.write('404');
-	res.end();
-};
+app.get('/', function(req, res){
+        res.sendFile(__dirname + '/real_time.ejs');
 
-server.listen(1337);
-
-//socket.io
-//var io = require('/Users/Summer/Documents/Workspace/cs4320-groupdanny/node_modules/sails/node_modules/socket.io').listen(server);
-
-var io = require('socket.io').listen(server);
-
-//on a 'connection' event
-
-io.sockets.on('connection', function(socket) {
-	console.log("Connection " + socket.id + " accepted.");
-
-	//define event handlers
-
-	socket.on('chat message', function(msg) {
-		console.log("Received message: " + msg + " - from client " + socket.id);
+io.on('connection', function(socket){
+	console.log('a user connected');
+	socket.on('disconnect', function(){
+		console.log('user disconnected');
 	});
 
-	socket.on('disconnect', function() {
-		console.log("Connection " + socket.id + " terminated.");
-
+      	socket.on('chat message', function(msg){
+		console.log('message: ' + msg);
 	});
+
+          socket.on('chat message', function(msg){
+                io.emit('chat message', msg);
+                });
+});
+});
+
+http.listen(1337, function(){
+        console.log('lisening on *:1337');
 });

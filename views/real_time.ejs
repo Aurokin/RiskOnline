@@ -1,74 +1,40 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>Chat 2.0</title>
-  <link rel="stylesheet" type="text/css" href="components/bootstrap/dist/css/bootstrap.css">
-  <link rel="stylesheet" href="components/font-awesome/css/font-awesome.css">
-  <link rel="stylesheet" href="css/app.css">
-	<style>
-		#chatBox {position:absolute; width:100%; height:200px; bottom:0px; right:25%; left:50%; margin-left: -150px;}
-	</style>
-</head>
-<body>
-<div id = "chatBox"> 
 
-    <div class="row" id="main-chat-screen">
-      <div class="col-md-3">
-        <ul id="rooms" class="list-group"></ul>
-        <ul id="people" class="list-group"></ul>
-      </div>
-      <div class="col-md-6">
-        <div id="conversation">
-          <ul id="msgs" class="list-unstyled"></ul>
-        </div>
-        <form id="chatForm" class="form-inline" action="">
-          <div class="form-group">
-           <form>
-		 <input type="text" class="form-control input-lg" placeholder="Your message" id="msg">
-	   </form>  
-	 </div>
-          <input type="submit" name="send" id="send" value="Send" class="btn btn-success btn-lg">
-        </form>
-      </div>
-       <div class="col-md-2">
-        <ul class="list-unstyled" id="updates"></ul>
-      </div>
-    </div>
-  </div>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      body { font: 13px Helvetica, Arial;}
+      #chatBox { background: #FFF; border-style: solid; border-width: 3px; border-color: #000; position: fixed; bottom:0; width: 100%; height: 120px; }
+      #test { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      #test input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      #test button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; position:fixed; bottom:0; width:100%; }
+      #messages li:nth-child(odd) { background: #eee; }
+    </style>
+  </head>
+  <body>
+   <div id="chatBox">
+     <ul id="messages"></ul>
+	hi
+   </div>
+     <form id = "test" action="">
+       <input id="m" autocomplete="off" /><button>Send</button>
+     </form>
 
-  <!-- Modal start 
-  <div class="modal fade" id="roomModal" tabindex="-1" role="dialog" aria-labelledby="createRoomLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="createRoomLabel">Create room</h4>
-        </div>
-        <div class="modal-body">
-          You can create a chat room here. Names have to be unique.
-          <form class="form-inline" id="createRoomForm"><input type="text" class="form-control input-lg"  placeholder="Room name" id="createRoomName"></form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-lg btn-default" data-dismiss="modal">Close</button>
-          <button data-dismiss="modal" id="createRoomBtn" class="btn btn-success btn-lg">Create room</button>
-        </div>
-      </div>
-    </div>
-  </div>
-   Modal end -->
-
-  <script src="components/jquery/dist/jquery.js"></script>
-  <script src="components/bootstrap/dist/js/bootstrap.js"></script>
-  <script src="/socket.io/socket.io.js"></script>  
-  <script src="js/client.js"></script>
+  <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+  <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
   <script>
-	var socket = io();
-	$('form').submit(function(){
-		socket.emit('chat message', $('#msg').val());
-		$('#msg').val('');
-		return false;
+        var socket = io();
+        $('#test').submit(function(){
+                socket.emit('chat message', $('#m').val());
+                $('#m').val('');
+                return false;
+        });
+	socket.on('chat message', function(msg){
+		$('#messages').append($('<li>').text(msg));
 	});
   </script>
-</div>
-</body>
+  </body>
 </html>
