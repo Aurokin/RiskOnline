@@ -5,8 +5,6 @@
  * @help        :: See http://links.sailsjs.org/docs/controllers
  */
 
-/*Summer had some stuff here but wasn't relevent */
-
 module.exports = {
 	gameState: function (req, res) {
 		//Will Report Game, Players, Regions
@@ -45,19 +43,19 @@ module.exports = {
 
 	initMap : function (req, res) {
 
-	}
+	},
 
 	addTroops :function (req , res){
 
-	}
+	},
 
 	attack : function (req, res){
 
-	}
+	},
 
 	move : function (req, res) {
 
-	}
+	},
 	
 	changeTurn: function (req, res) {
 
