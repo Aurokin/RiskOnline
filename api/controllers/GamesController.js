@@ -61,7 +61,17 @@ module.exports = {
 	},
 
 	endGame: function (req, res) {
+		/*summer */
+		var gameID = req.body.gameID;
+		var playerID = req.body.playerID;
 
+		Games.findOne(gameID).exec(function(err, gameID){
+			Games.destroy(gameID).exec(function(err){
+				Games.publishDestroy(gameID);
+			});
+		});
+
+		/*hopefully we can take the logic from here*/
 	},
 
 	addPlayer: function (req, res) {
