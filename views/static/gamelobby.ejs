@@ -1,3 +1,4 @@
+<!--Using custom styling here-->
 <style>
   .wrapper
     {
@@ -25,6 +26,7 @@
 </style>
 
 <div class = "container">
+  <h3>RISK Game Lobbies</h3>
   <div class = "jumbotron">
     Fake Game Lobby
   </div>
@@ -34,7 +36,32 @@
   <div class"right">
     Players Div
   </div>
+  <table class="table">
+    <tr>
+      <th></th>
+      <th>Game ID</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
   <div class="center">
     Chat Div
   <div>
+</div>
+
+    <% _.each(games, function(games)
+      { %>
+        <tr data-id="<%= gameState.gameID %>" data-model="GamesController">
+          <td><%= gameState.gameID %></td>
+          <td><a href="/game/show/<%= gameState.gameID %>" class="btn btn-sm btn-primary">Join Game</a></td>
+          <td>
+              <form action="/user/destroy/<%= gameState.gameID %>" method="POST">
+                <input type="hidden" name="_method" value="delete"/>
+                <input type="submit" class="btn btn-sm btn-danger" value="Delete Game"/>
+                <input type="hidden" name="_csrf" value="<%= _csrf %>" />
+              </form>
+          </td>
+        </tr>
+    <% }) %>
+  </table>
 </div>
