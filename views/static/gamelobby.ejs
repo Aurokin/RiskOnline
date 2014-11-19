@@ -1,67 +1,25 @@
 <!--Using custom styling here-->
-<style>
-  .wrapper
-    {
-      position: relative;
-    }
-  .right, .left, .center
-    {
-      width:50%;
-      position: absolute;
-    }
-  .right
-    {
-      right: 0;
-    }
-  .left
-    {
-      left: 0;
-    }
-  .center
-    {
-      margin-left: auto;
-      margin-right: auto;
-      width: 70%;
-    }
-</style>
+<%- block('localStyles', '<link href="/extraCSS/gameLobby.css" rel="stylesheet"') %>
 
 <div class = "container">
-  <h3>RISK Game Lobbies</h3>
   <div class = "jumbotron">
-    Fake Game Lobby
+    <h3>Risk Game Lobby</h3>
   </div>
-  <div class="left">
-    Game Info Div
+  <div id="wrapperGL" class="clearfix">
+    <div id="leftGL" class="clearfix">
+      <p>Name: </p>
+      <p>Players: </p>
+    </div>
+    <div id="rightGL" class="clearfix">
+      <p>Player 1</p>
+      <p>Player 2</p>
+      <p>Player 3</p>
+      <p>Player 4</p>
+      <p>Player 5</p>
+      <p>Player 6</p>
+    </div>
   </div>
-  <div class"right">
-    Players Div
-  </div>
-  <table class="table">
-    <tr>
-      <th></th>
-      <th>Game ID</th>
-      <th></th>
-      <th></th>
-      <th></th>
-    </tr>
-  <div class="center">
+  <div id="chatGL" class="clearfix">
     Chat Div
-  </div>
-  <div>
-    <% _.each(games, function(games)
-      { %>
-        <tr data-id="<%= gameState.gameID %>" data-model="GamesController">
-          <td><%= gameState.gameID %></td>
-          <td><a href="/game/show/<%= gameState.gameID %>" class="btn btn-sm btn-primary">Join Game</a></td>
-          <td>
-              <form action="/user/destroy/<%= gameState.gameID %>" method="POST">
-                <input type="hidden" name="_method" value="delete"/>
-                <input type="submit" class="btn btn-sm btn-danger" value="Delete Game"/>
-                <input type="hidden" name="_csrf" value="<%= _csrf %>" />
-              </form>
-          </td>
-        </tr>
-    <% }) %>
-  </table>
   </div>
 </div>

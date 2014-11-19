@@ -62,6 +62,9 @@ module.exports.routes = {
   '/gamelist': {
     view: 'gamelist'
   },
+  '/game/lobby': {
+    view: 'static/gamelobby'
+  }
 
 
   /***************************************************************************
