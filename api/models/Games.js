@@ -9,6 +9,10 @@ module.exports = {
 
   attributes: {
 
+    name: {
+      type: 'string'
+    },
+
   	numPlayers: {
   		type: 'integer'
   	},
