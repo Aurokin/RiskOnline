@@ -56,7 +56,7 @@ module.exports = {
 	move : function (req, res) {
 
 	},
-	
+
 	startGame: function (req, res) {
 		//Starts Game
 		//Requires gameID
@@ -130,7 +130,7 @@ module.exports = {
 				//console.log(err);
 
 				Games.findOne(gameID).populate('players').exec(function(err, game){
-					
+
 					Games.publishUpdate(game.id, game);
 
 					return res.json(game);
@@ -168,7 +168,7 @@ module.exports = {
 				//console.log(err);
 
 				Games.findOne(gameID).populate('players').exec(function(err, game){
-					
+
 					Games.publishUpdate(game.id, game);
 
 					return res.json(game);
@@ -178,5 +178,44 @@ module.exports = {
 	},
 	gameList: function (req, res) {
 
+	},
+
+	joinGame: function (req, res) {
+		//Requires GameID, PlayerID, Password
+		var gameID = req.body.gameID;
+		var playerID = req.body.playerID;
+		var password = req.body.password;
+		var roomName = req.param('game'+gameID+'info');
+
+		Games.findOne(gameID).exec(function(err, game) {
+
+			if (err) {
+
+			}
+
+			if (game.password == password) {
+				if (games.players.length < numPlayers) {
+
+					game.players.add(playerID);
+					game.save(function(err) {
+						Games.publishUpdate(game.id, {player: 1});
+						sails.sockets.join(req.socket, roomName);
+						//Should Emit Player Name Later
+						sails.sockets.emit(roomName, 'playerJoined', {
+							playerID: playerID
+						});
+					return res.view('static/gamelobby');
+					});
+
+				}
+				else {
+					return res.send('Game Is Full');
+				}
+			}
+			else {
+				return res.send('Password Incorrect');
+			}
+
+		})
 	}
 };
