@@ -63,6 +63,10 @@ module.exports.routes = {
     view: 'gamelist'
   },
 
+  '/game/create':{
+    view: 'static/gameCreate'
+  }
+
 
   /***************************************************************************
   *                                                                          *
