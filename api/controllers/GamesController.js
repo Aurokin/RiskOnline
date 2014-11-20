@@ -43,6 +43,8 @@ module.exports = {
 
 	initMap : function (req, res) {
 
+		console.log(req.body);
+
 	},
 
 	addTroops : function (req , res){
@@ -56,7 +58,7 @@ module.exports = {
 	move : function (req, res) {
 
 	},
-	
+
 	startGame: function (req, res) {
 		//Starts Game
 		//Requires gameID
@@ -111,7 +113,7 @@ module.exports = {
 				//console.log(err);
 
 				Games.findOne(gameID).populate('players').exec(function(err, game){
-					
+
 					Games.publishUpdate(game.id, game);
 
 					return res.json(game);
@@ -140,7 +142,7 @@ module.exports = {
 				//console.log(err);
 
 				Games.findOne(gameID).populate('players').exec(function(err, game){
-					
+
 					Games.publishUpdate(game.id, game);
 
 					return res.json(game);

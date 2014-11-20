@@ -60,7 +60,13 @@ module.exports.routes = {
 
   '/gamelist': {
     view: 'gamelist'
-  }
+  },
+
+  '/server': {
+    view: 'TAp'
+  },
+
+  '/a': 'GamesController.initMap',
 
 
   /***************************************************************************
