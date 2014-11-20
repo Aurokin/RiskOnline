@@ -16,19 +16,20 @@ $('.joinGame').click(function() {
 	//console.log(this.getAttribute("value"));
 
 	var gameID = this.getAttribute("value");
-	var playerID = session.user;
-	var playerName = session.name;
+	var playerID = parseInt($('#userID').text());
+	var playerName = $('#userName').text();
+	var password = '';
 
-	var data = {
+	var postData = {
 		gameID: gameID,
 		playerID: playerID,
 		password: password
 	}
 
-	console.log(data);
+	console.log(postData);
 
 
-	io.socket.post("http://localhost:1337/game/join", data, function (data, jwres) {
+	io.socket.post("/game/join", postData, function (data, jwres) {
 		console.log('Posted');
 		console.log(data);
 		console.log(jwres);

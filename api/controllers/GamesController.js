@@ -193,8 +193,11 @@ module.exports = {
 
 			}
 
-			if (game.password == password) {
-				if (games.players.length < numPlayers) {
+			console.log(password);
+			console.log(game.password);
+
+			if (game.password == password || game.password == null) {
+				if (game.players.length < game.numPlayers) {
 
 					game.players.add(playerID);
 					game.save(function(err) {
@@ -204,7 +207,7 @@ module.exports = {
 						sails.sockets.emit(roomName, 'playerJoined', {
 							playerID: playerID
 						});
-					return res.view('static/gamelobby');
+					return res.redirect('/game/lobby');
 					});
 
 				}

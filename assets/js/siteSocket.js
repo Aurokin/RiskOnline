@@ -9,7 +9,3 @@ io.socket.on("/games", function(resData, jwres){
 		console.log(resData);
 
 });
-
-io.socket.on('disconnect', function(){
-	this.onclose('forced server close');
-});
