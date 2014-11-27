@@ -14,6 +14,7 @@ io.socket.on('connect', function socketConnected() {
 $('.joinGame').click(function() {
 	//console.log(this);
 	//console.log(this.getAttribute("value"));
+	console.log($('#userID').text());
 
 	var gameID = this.getAttribute("value");
 	var playerID = parseInt($('#userID').text());

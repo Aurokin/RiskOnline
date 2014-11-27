@@ -187,6 +187,15 @@ module.exports = {
 		var password = req.body.password;
 		var roomName = req.param('game'+gameID+'info');
 
+		console.log('gameID: '+gameID);
+		console.log('playerID: '+playerID);
+		console.log('password: '+password);
+		console.log(typeof playerID);
+
+		if (typeof playerID === 'object' || typeof gameID === 'object') {
+			return res.send('Invalid Player Or GameID');
+		}
+
 		Games.findOne(gameID).exec(function(err, game) {
 
 			if (err) {
@@ -219,6 +228,7 @@ module.exports = {
 				return res.send('Password Incorrect');
 			}
 
-		})
+		});
 	}
+
 };
