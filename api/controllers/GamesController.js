@@ -252,13 +252,33 @@ module.exports = {
 	enterLobby: function (req, res) {
 		var gameID = req.query.gameID;
 		var playerID = req.session.user;
-		var isFull = req.query.isFull;
+		var isFull;
 
 		if (typeof playerID === 'undefined') {
-			return res.view('static/invalidUser');
+			return res.view('static/error', {error: 'PlayerID Is Not Logged In'});
 		}
 
-		return res.view('static/gamelobby', {isFull: isFull});
+		//Find Game
+		Games.findOne(gameID).populate('players').exec(function(err, game) {
+			//Error Check
+			if (err) {
+				return res.view('static/error', {error: err});
+			}
+
+			console.log('numPlayers: '+game.numPlayers);
+			console.log('players in game: '+game.players.length);
+
+			//Check If Game Is Full
+			if (game.numPlayers == game.players.length) {
+				isFull = 'true';
+			}
+			else {
+				isFull = 'false';
+			}
+
+			return res.view('static/gamelobby', {isFull: isFull});
+
+		});
 	}
 
 };
