@@ -33,6 +33,5 @@ $('.joinGame').click(function() {
 	io.socket.post("/game/join", postData, function (data, jwres) {
 		console.log('Posted');
 		console.log(data);
-		console.log(jwres);
 	});
 });

@@ -187,37 +187,54 @@ module.exports = {
 		var password = req.body.password;
 		var roomName = req.param('game'+gameID+'info');
 
+		/*
 		console.log('gameID: '+gameID);
 		console.log('playerID: '+playerID);
 		console.log('password: '+password);
 		console.log(typeof playerID);
+		*/
 
+		//Error Out For Invalid Player ID / Game ID
 		if (typeof playerID === 'object' || typeof gameID === 'object') {
 			return res.send('Invalid Player Or GameID');
 		}
 
-		Games.findOne(gameID).exec(function(err, game) {
+		Games.findOne(gameID).populate('players').exec(function(err, game) {
 
 			if (err) {
-
+				console.log(err);
 			}
 
+			/*
+			console.log(game);
 			console.log(password);
 			console.log(game.password);
+			*/
 
+			//Make Sure Password Is Correct
 			if (game.password == password || game.password == null) {
+				//Make Sure Lobby Isn't Full
 				if (game.players.length < game.numPlayers) {
 
 					//Should only add if it does not already exist
+					//Incomplete
 					game.players.add(playerID);
+
+
+
 					game.save(function(err) {
+						var status = {join: true, full: false};
+						//If the Lobby Is Full
+						if (game.players.length + 1 == game.numPlayers) {
+							status.full = true;
+						}
 						Games.publishUpdate(game.id, {player: 1});
 						sails.sockets.join(req.socket, roomName);
 						//Should Emit Player Name Later
 						sails.sockets.emit(roomName, 'playerJoined', {
 							playerID: playerID
 						});
-					return res.redirect('/game/lobby');
+					return res.send(status);
 					});
 
 				}
@@ -230,6 +247,18 @@ module.exports = {
 			}
 
 		});
+	},
+
+	enterLobby: function (req, res) {
+		var gameID = req.query.gameID;
+		var playerID = req.session.user;
+		var isFull = req.query.isFull;
+
+		if (typeof playerID === 'undefined') {
+			return res.view('static/invalidUser');
+		}
+
+		return res.view('static/gamelobby', {isFull: isFull});
 	}
 
 };

@@ -65,7 +65,8 @@ module.exports.routes = {
   '/game/lobby': {
     view: 'static/gamelobby'
   },
-  '/game/join': 'GamesController.joinGame'
+  '/game/join': 'GamesController.joinGame',
+  '/game': 'GamesController.enterLobby'
 
 
   /***************************************************************************
