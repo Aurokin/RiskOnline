@@ -252,7 +252,7 @@ module.exports = {
 	enterLobby: function (req, res) {
 		var gameID = req.query.gameID;
 		var playerID = req.session.user;
-		var isFull;
+		var isFull = 'false';
 
 		if (typeof playerID === 'undefined') {
 			return res.view('static/error', {error: 'PlayerID Is Not Logged In'});
@@ -272,11 +272,18 @@ module.exports = {
 			if (game.numPlayers == game.players.length) {
 				isFull = 'true';
 			}
-			else {
-				isFull = 'false';
-			}
 
-			return res.view('static/gamelobby', {isFull: isFull});
+			game.players.forEach(function (player, index, array) {
+				//Ensure Player Is In Game
+				if (player.id == playerID) {
+					return res.view('static/gamelobby', {isFull: isFull});
+				}
+				else {
+					return res.view('static/error', {error: 'Player Not In Game'});
+				}
+			});
+
+			return res.view('static/error', {error: 'Unknown Error'});
 
 		});
 	}
