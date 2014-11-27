@@ -208,6 +208,7 @@ module.exports = {
 			if (game.password == password || game.password == null) {
 				if (game.players.length < game.numPlayers) {
 
+					//Should only add if it does not already exist
 					game.players.add(playerID);
 					game.save(function(err) {
 						Games.publishUpdate(game.id, {player: 1});
