@@ -253,6 +253,7 @@ module.exports = {
 		var gameID = req.query.gameID;
 		var playerID = req.session.user;
 		var isFull = 'false';
+		var match = 'false';
 
 		if (typeof playerID === 'undefined') {
 			return res.view('static/error', {error: 'PlayerID Is Not Logged In'});
@@ -265,8 +266,8 @@ module.exports = {
 				return res.view('static/error', {error: err});
 			}
 
-			console.log('numPlayers: '+game.numPlayers);
-			console.log('players in game: '+game.players.length);
+			//console.log('numPlayers: '+game.numPlayers);
+			//console.log('players in game: '+game.players.length);
 
 			//Check If Game Is Full
 			if (game.numPlayers == game.players.length) {
@@ -274,16 +275,21 @@ module.exports = {
 			}
 
 			game.players.forEach(function (player, index, array) {
+				//console.log('Player ID: '+player.id+' - Player ID: '+playerID);
+				//console.log(typeof player.id+' - '+typeof playerID);
 				//Ensure Player Is In Game
 				if (player.id == playerID) {
-					return res.view('static/gamelobby', {isFull: isFull});
-				}
-				else {
-					return res.view('static/error', {error: 'Player Not In Game'});
+					//console.log('Match');
+					match = 'true';
 				}
 			});
 
-			return res.view('static/error', {error: 'Unknown Error'});
+			if (match == 'true') {
+				return res.view('static/gamelobby', {isFull: isFull});
+			}
+			else {
+				return res.view('static/error', {error: 'Player Not In Game'});
+			}
 
 		});
 	}
