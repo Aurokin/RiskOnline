@@ -1,6 +1,6 @@
-<SCRIPT LANGUAGE = "JavaScript">
 
-var num_player=game.players.length;
+
+var num_player=3; //was game.players.length trying to debug
 
 //function that initialize the map
 //calculate number of troops that each player can add
@@ -11,18 +11,21 @@ function init (){
 	for (var i=0 ; i < num_troops; i++){
 		for(game.currentUserTurn ;game.currentUserTurn<num_player; game.currentUserTurn++){
 			//calling object
-			game.regions[//input].controlledBy=game.currentUserTurn;
-			addTroops (game.currentUserTurn, game.regions[//input]);
+			//game.regions[/*input*/].controlledBy=game.currentUserTurn;
+			//addTroops (game.currentUserTurn, game.regions[/*input*/]);
 		}
 	}
 }
 
 //function that addtroops into territory
 //check if territory is free or belong to that player
-function addTroops (player, territory){  
-	if(territoy.controlledBy==player){
+function addTroops (player, territory){
+	console.log('Inside addTroops - Logic.js');
+	if(territory.controlledBy==player){
+		console.log('Inside addTroops - if statement - Logic.js');
 		territory.armyCount++;
 		//calling database to add troops into territory
+		io.socket.post('/gamescontrollerAddtroops', { "playerName": player , "territoryName": territory });
 	}
 }
 //player turn that do addTroops, attack and move
@@ -38,7 +41,9 @@ function turn (player_id){
 function attack(player, from, to){
 	var random_num_dice1 = Math.floor(Math.random() * 6);
 	var random_num_dice2 = Math.floor(Math.random() * 6);
-	//check adj list territory 
+	//check adj list territory
+
+
 	if (game.regions[from] > game.regions[to] && game.regions.controlledBy == player){
 		if(random_num_dice1>random_num_dice2){
 			game.regions[to].armyCount--;
@@ -54,6 +59,8 @@ function attack(player, from, to){
 
 function move (player, from, to , number){
 //need add "and check" for adj list
+
+
 	if(game.regions[to].armyCount ==0 && game.regions[from].armyCount>2 ){
 		game.regions[to]+=number;
 		game.regions[to].controlledBy=player;
@@ -62,6 +69,7 @@ function move (player, from, to , number){
 	else {
 		alert("You can't move to this territory");
 	}
+
 }
 
 function finish_game (){
@@ -75,4 +83,3 @@ function finish_game (){
 		game.currentUserTurn++;
 	}
 }
-</script>

@@ -49,21 +49,24 @@ module.exports = {
 
 	addTroops : function (req , res){
 
-		var user = res.body.username;
-		var regionID = res.body.regionID;
+		console.log(req.playerName);
+		console.log(req.TerritoryName);
+		return;
+	/*	var user = req.body.username;
+		var regionID = req.body.regionID;
 
 		Game.get({id: gameId}, function(game){
 
 			if (ControlledBy == username){
 
-				socket.push()//pretty sure need to push to database
+
 
 			}
 
 		});
 
 		Games.publishUpdate(game.id, game);
-		return res.json(game);
+		return res.json(game);*/
 	},
 
 	attack : function (req, res){
