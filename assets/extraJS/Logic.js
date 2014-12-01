@@ -43,7 +43,6 @@ function attack(player, from, to){
 	var random_num_dice2 = Math.floor(Math.random() * 6);
 	//check adj list territory
 
-
 	if (game.regions[from] > game.regions[to] && game.regions.controlledBy == player){
 		if(random_num_dice1>random_num_dice2){
 			game.regions[to].armyCount--;
@@ -59,8 +58,6 @@ function attack(player, from, to){
 
 function move (player, from, to , number){
 //need add "and check" for adj list
-
-
 	if(game.regions[to].armyCount ==0 && game.regions[from].armyCount>2 ){
 		game.regions[to]+=number;
 		game.regions[to].controlledBy=player;

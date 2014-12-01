@@ -52,32 +52,41 @@ module.exports = {
 		console.log(req.playerName);
 		console.log(req.TerritoryName);
 		return;
-	/*	var user = req.body.username;
+
+
+
+		req.body;
+	/*	post(user, region_id, troops)
+		session(game_id)
+		*/
+
+		var user = req.body.username;
 		var regionID = req.body.regionID;
 
 		Game.get({id: gameId}, function(game){
 
-			if (ControlledBy == username){
+			if (regionID.controlledBy == username){
 
-
+					regionID.armyCount++;
 
 			}
 
 		});
 
 		Games.publishUpdate(game.id, game);
-		return res.json(game);*/
+		return res.json(game);
 	},
 
 	attack : function (req, res){
 
-
+		var user = req.body.username;
+		var regionID = req.body.regionID;
 
 	},
 
 	move : function (req, res) {
 
-
+		
 
 	},
 
@@ -104,16 +113,46 @@ module.exports = {
 	},
 
 
+	gamesList: function (req, res) {
+					Games.find().exec(function (err, games) {
+					Games.subscribe(req.socket, games);
+					return res.json({
+						games: games
+					});
+				});
+	},
+
 	changeTurn: function (req, res) {
 
+		var gameID = req.body.gameID;
+		var playerID = req.body.playerID;
+
+		Games.findOne(gameID).exec(function(err, gameID){
+
+				//check to see if all players have gone
+				//if yes then move turn back to player one
+				//update gamestate
+		})
 	},
 
 	increaseRound: function (req, res) {
 
+		//if changeTurn has been activated
+		//update round information
+
 	},
 
 	endGame: function (req, res) {
+		/*summer */
+		var gameID = req.body.gameID;
+		var playerID = req.body.playerID;
 
+		Games.findOne(gameID).exec(function(err, gameID){
+			Games.destroy(gameID).exec(function(err){
+				Games.publishDestroy(gameID);
+			});
+		});
+		/*hopefully we can take the logic from here*/
 	},
 
 	addPlayer: function (req, res) {
@@ -140,6 +179,15 @@ module.exports = {
 
 					return res.json(game);
 				});
+				//Error goes Here
+			});
+
+			Games.publishUpdate(game.id, {
+				id: game.id
+			});
+
+			return res.json({
+				game: game
 			});
 
 		});
@@ -171,5 +219,8 @@ module.exports = {
 				});
 			});
 		});
+	},
+	gameList: function (req, res) {
+
 	}
 };
