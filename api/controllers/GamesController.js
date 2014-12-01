@@ -291,7 +291,7 @@ module.exports = {
 			});
 
 			if (match == 'true') {
-				return res.view('static/gamelobby', {isFull: isFull});
+				return res.view('static/gamelobby', {isFull: isFull, gameID: gameID});
 			}
 			else {
 				return res.view('static/error', {error: 'Player Not In Game'});
