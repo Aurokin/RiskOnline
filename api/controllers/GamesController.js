@@ -30,9 +30,7 @@ module.exports = {
 			game.regions = _.map(game.region, function(region) {
 				region.region = regions[region.region];
 			});*/
-			return res.json({
-				game: game
-			})
+			return res.json(game)
 		}).catch(function (err){
 			console.log(err);
 			return res.json({
@@ -185,7 +183,9 @@ module.exports = {
 			});
 
 			Games.publishUpdate(game.id, {
-				id: game.id
+				id: game.id,
+				update: player,
+				status: add
 			});
 
 			return res.json({
@@ -215,7 +215,11 @@ module.exports = {
 
 				Games.findOne(gameID).populate('players').exec(function(err, game){
 
-					Games.publishUpdate(game.id, game);
+					Games.publishUpdate(game.id, {
+						id: game.id,
+						update: player,
+						status: add
+					});
 
 					return res.json(game);
 				});
@@ -228,7 +232,7 @@ module.exports = {
 		var gameID = req.body.gameID;
 		var playerID = req.body.playerID;
 		var password = req.body.password;
-		var roomName = req.param('game'+gameID+'info');
+		//var roomName = 'game'+gameID+'info';
 
 		/*
 		console.log('gameID: '+gameID);
@@ -272,12 +276,17 @@ module.exports = {
 							status.full = true;
 						}
 						Games.publishUpdate(game.id, {player: 1});
-						sails.sockets.join(req.socket, roomName);
+
+						Games.subscribe(req.socket, game);
+						Games.message(game, {id: gameID, playerID: playerID, status: 'add'}, req.socket);
+
+						/*sails.sockets.join(req.socket, roomName);
 						//Should Emit Player Name Later
 						sails.sockets.emit(roomName, 'playerJoined', {
 							playerID: playerID
 						});
-					return res.send(status);
+						console.log(sails.sockets.rooms());*/
+						return res.send(status);
 					});
 
 				}
@@ -297,6 +306,7 @@ module.exports = {
 		var playerID = req.session.user;
 		var isFull = 'false';
 		var match = 'false';
+		//var roomName = req.param('game'+gameID+'info');
 
 		if (typeof playerID === 'undefined') {
 			return res.view('static/error', {error: 'PlayerID Is Not Logged In'});
@@ -328,7 +338,8 @@ module.exports = {
 			});
 
 			if (match == 'true') {
-				return res.view('static/gamelobby', {isFull: isFull});
+				//sails.sockets.join(req.socket, roomName);
+				return res.view('static/gamelobby', {isFull: isFull, gameID: gameID});
 			}
 			else {
 				return res.view('static/error', {error: 'Player Not In Game'});
