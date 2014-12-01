@@ -52,7 +52,7 @@ module.exports.routes = {
   '/fakeGameList': {
     view: 'static/fakeGameList'
   },
-  '/getGamesList' : 'GamesController.gameList',
+  '/getGamesList' : 'GamesController.gamesList',
   '/mainroom' : 'sPractice/mainroom',
   '/gameboard': {
 	  view: 'map'
@@ -65,6 +65,8 @@ module.exports.routes = {
   '/game/lobby': {
     view: 'static/gamelobby'
   },
+  '/game/join': 'GamesController.joinGame',
+  '/game': 'GamesController.enterLobby',
 
   '/game/create':{
     view: 'static/gameCreate'

@@ -111,6 +111,7 @@ module.exports = {
 						games: games
 					});
 				});
+//				Games.publishUpdate(games);
 	},
 
 	changeTurn: function (req, res) {
@@ -200,7 +201,119 @@ module.exports = {
 			});
 		});
 	},
-	gameList: function (req, res) {
 
+	joinGame: function (req, res) {
+		//Requires GameID, PlayerID, Password
+		var gameID = req.body.gameID;
+		var playerID = req.body.playerID;
+		var password = req.body.password;
+		var roomName = req.param('game'+gameID+'info');
+
+		/*
+		console.log('gameID: '+gameID);
+		console.log('playerID: '+playerID);
+		console.log('password: '+password);
+		console.log(typeof playerID);
+		*/
+
+		//Error Out For Invalid Player ID / Game ID
+		if (typeof playerID === 'object' || typeof gameID === 'object') {
+			return res.send('Invalid Player Or GameID');
+		}
+
+		Games.findOne(gameID).populate('players').exec(function(err, game) {
+
+			if (err) {
+				console.log(err);
+			}
+
+			/*
+			console.log(game);
+			console.log(password);
+			console.log(game.password);
+			*/
+
+			//Make Sure Password Is Correct
+			if (game.password == password || game.password == null) {
+				//Make Sure Lobby Isn't Full
+				if (game.players.length < game.numPlayers) {
+
+					//Should only add if it does not already exist
+					//Incomplete
+					game.players.add(playerID);
+
+
+
+					game.save(function(err) {
+						var status = {join: true, full: false};
+						//If the Lobby Is Full
+						if (game.players.length + 1 == game.numPlayers) {
+							status.full = true;
+						}
+						Games.publishUpdate(game.id, {player: 1});
+						sails.sockets.join(req.socket, roomName);
+						//Should Emit Player Name Later
+						sails.sockets.emit(roomName, 'playerJoined', {
+							playerID: playerID
+						});
+					return res.send(status);
+					});
+
+				}
+				else {
+					return res.send('Game Is Full');
+				}
+			}
+			else {
+				return res.send('Password Incorrect');
+			}
+
+		});
+	},
+
+	enterLobby: function (req, res) {
+		var gameID = req.query.gameID;
+		var playerID = req.session.user;
+		var isFull = 'false';
+		var match = 'false';
+
+		if (typeof playerID === 'undefined') {
+			return res.view('static/error', {error: 'PlayerID Is Not Logged In'});
+		}
+
+		//Find Game
+		Games.findOne(gameID).populate('players').exec(function(err, game) {
+			//Error Check
+			if (err) {
+				return res.view('static/error', {error: err});
+			}
+
+			//console.log('numPlayers: '+game.numPlayers);
+			//console.log('players in game: '+game.players.length);
+
+			//Check If Game Is Full
+			if (game.numPlayers == game.players.length) {
+				isFull = 'true';
+			}
+
+			game.players.forEach(function (player, index, array) {
+				//console.log('Player ID: '+player.id+' - Player ID: '+playerID);
+				//console.log(typeof player.id+' - '+typeof playerID);
+				//Ensure Player Is In Game
+				if (player.id == playerID) {
+					//console.log('Match');
+					match = 'true';
+				}
+			});
+
+			if (match == 'true') {
+				return res.view('static/gamelobby', {isFull: isFull});
+			}
+			else {
+				return res.view('static/error', {error: 'Player Not In Game'});
+			}
+
+		});
 	}
+
 };
