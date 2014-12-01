@@ -19,9 +19,8 @@ io.socket.on('connect', function socketConnected() {
     });
   });
 
+  io.socket.on('games', function playerJoinedGame(message) {
+    console.log(message);
+  });
 
-});
-
-io.socket.on('playerJoined', function playerJoinedGame(message) {
-  console.log(message);
 });
