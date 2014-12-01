@@ -12,5 +12,6 @@ io.socket.on('connect', function socketConnected() {
   console.log(gameID);
   io.socket.get("/gameState?gameID=1", function(resData, jwres) {
     console.log(resData);
+    console.log(resData.players);
   });
 });
