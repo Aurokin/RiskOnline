@@ -30,9 +30,7 @@ module.exports = {
 			game.regions = _.map(game.region, function(region) {
 				region.region = regions[region.region];
 			});*/
-			return res.json({
-				game: game
-			})
+			return res.json(game)
 		}).catch(function (err){
 			console.log(err);
 			return res.json({
