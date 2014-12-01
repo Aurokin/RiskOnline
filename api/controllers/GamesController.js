@@ -139,7 +139,9 @@ module.exports = {
 			});
 
 			Games.publishUpdate(game.id, {
-				id: game.id
+				id: game.id,
+				update: player,
+				status: add
 			});
 
 			return res.json({
@@ -169,7 +171,11 @@ module.exports = {
 
 				Games.findOne(gameID).populate('players').exec(function(err, game){
 
-					Games.publishUpdate(game.id, game);
+					Games.publishUpdate(game.id, {
+						id: game.id,
+						update: player,
+						status: add
+					});
 
 					return res.json(game);
 				});
