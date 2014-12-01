@@ -111,15 +111,36 @@ module.exports = {
 						games: games
 					});
 				});
-//				Games.publishUpdate(games);
+				Games.publishUpdate(games);
 	},
 
 	changeTurn: function (req, res) {
+		var gameID = req.body.gameID;
 
+		Games.findOne(gameID).exec(function(err, game) {
+			if (err) {
+				console.log(err);
+			}
+			else {
+				//Games.publishUpdate(game);
+				return res.json(game);
+			}
+		})
 	},
 
 	increaseRound: function (req, res) {
+	/*	var gameID = req.body.gameID;
 
+		Games.findOne(gameID).exec(function(err, game) {
+			if (err) {
+				console.log(err);
+			}
+			else {
+				//Games.publishUpdate(game);
+				return res.json(game);
+			}
+		})
+	*/
 	},
 
 	endGame: function (req, res) {
@@ -312,6 +333,7 @@ module.exports = {
 			else {
 				return res.view('static/error', {error: 'Player Not In Game'});
 			}
+Games.publishUpdate(games);
 
 		});
 	}
