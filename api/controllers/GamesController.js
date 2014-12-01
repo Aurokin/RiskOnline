@@ -232,8 +232,11 @@ module.exports = {
 						if (game.players.length + 1 == game.numPlayers) {
 							status.full = true;
 						}
+
+						//Maybe message isn't needed, just publishUpdate
 						Games.publishUpdate(game.id, {player: 1});
 
+						//.subscribe maybe not necesscary?
 						Games.subscribe(req.socket, game.id, ['message']);
 						Games.message(game.id, {id: gameID, playerID: playerID, status: 'add'}, req.socket);
 
