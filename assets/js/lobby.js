@@ -10,6 +10,7 @@ $(document).ready(function() {
 io.socket.on('connect', function socketConnected() {
   var gameID = parseInt($('#gameID').text());
   console.log(gameID);
+  //Move This Logic Into The Next .get
   io.socket.get("/gameState?gameID=1", function(resData, jwres) {
     console.log(resData);
     console.log(resData.players);
@@ -17,6 +18,10 @@ io.socket.on('connect', function socketConnected() {
       console.log(player);
       $('#rightGL').append('<p id="player'+player.id+'">'+player.name+'</p>');
     });
+  });
+
+  io.socket.get("/games/1", function(resData, jwres) {
+    console.log(resData);
   });
 
   io.socket.on('games', function playerJoinedGame(message) {
