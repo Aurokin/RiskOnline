@@ -43,20 +43,44 @@ module.exports = {
 
 	initMap : function (req, res) {
 
+		console.log(req.body);
+
 	},
 
 	addTroops : function (req , res){
 
+		console.log(req.playerName);
+		console.log(req.TerritoryName);
+		return;
+	/*	var user = req.body.username;
+		var regionID = req.body.regionID;
+
+		Game.get({id: gameId}, function(game){
+
+			if (ControlledBy == username){
+
+
+
+			}
+
+		});
+
+		Games.publishUpdate(game.id, game);
+		return res.json(game);*/
 	},
 
 	attack : function (req, res){
+
+
 
 	},
 
 	move : function (req, res) {
 
+
+
 	},
-	
+
 	startGame: function (req, res) {
 		//Starts Game
 		//Requires gameID
@@ -130,7 +154,7 @@ module.exports = {
 				//console.log(err);
 
 				Games.findOne(gameID).populate('players').exec(function(err, game){
-					
+
 					Games.publishUpdate(game.id, game);
 
 					return res.json(game);
@@ -168,7 +192,7 @@ module.exports = {
 				//console.log(err);
 
 				Games.findOne(gameID).populate('players').exec(function(err, game){
-					
+
 					Games.publishUpdate(game.id, game);
 
 					return res.json(game);

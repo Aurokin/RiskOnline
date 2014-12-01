@@ -68,7 +68,9 @@ module.exports.routes = {
 
   '/game/create':{
     view: 'static/gameCreate'
-  }
+  },
+
+  '/gamescontrollerAddtroops' : '/GamesController.addTroops',
 
 
   /***************************************************************************
