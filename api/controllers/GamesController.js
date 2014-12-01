@@ -234,8 +234,8 @@ module.exports = {
 						}
 						Games.publishUpdate(game.id, {player: 1});
 
-						Games.subscribe(req.socket, game);
-						Games.message(game, {id: gameID, playerID: playerID, status: 'add'}, req.socket);
+						Games.subscribe(req.socket, game.id, ['message']);
+						Games.message(game.id, {id: gameID, playerID: playerID, status: 'add'}, req.socket);
 
 						/*sails.sockets.join(req.socket, roomName);
 						//Should Emit Player Name Later

@@ -19,6 +19,10 @@ io.socket.on('connect', function socketConnected() {
     });
   });
 
+  io.socket.get("/games/1", function(resData, jwres) {
+    console.log(resData);
+  });
+
   io.socket.on('games', function playerJoinedGame(message) {
     console.log(message);
   });
