@@ -43,17 +43,41 @@ module.exports = {
 
 	initMap : function (req, res) {
 
+		console.log(req.body);
+
 	},
 
 	addTroops : function (req , res){
 
+		console.log(req.playerName);
+		console.log(req.TerritoryName);
+		return;
+	/*	var user = req.body.username;
+		var regionID = req.body.regionID;
+
+		Game.get({id: gameId}, function(game){
+
+			if (ControlledBy == username){
+
+
+
+			}
+
+		});
+
+		Games.publishUpdate(game.id, game);
+		return res.json(game);*/
 	},
 
 	attack : function (req, res){
 
+
+
 	},
 
 	move : function (req, res) {
+
+
 
 	},
 
@@ -87,6 +111,7 @@ module.exports = {
 						games: games
 					});
 				});
+//				Games.publishUpdate(games);
 	},
 
 	changeTurn: function (req, res) {
@@ -175,9 +200,6 @@ module.exports = {
 				});
 			});
 		});
-	},
-	gameList: function (req, res) {
-
 	},
 
 	joinGame: function (req, res) {

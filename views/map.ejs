@@ -5,9 +5,10 @@
 	<script src="/map/risk.js"></script>
 	<script src="/map/assetManager.js"></script>
 	<script src="/map/main.js"></script>
-	
+	<script src="/extraJS/Logic.js"></script>
+
 	<div id="map"style="float: left; position: relative; "></div>
-	
+
 <% /*$(custom.css).css("background", "url('images/back.jpg')");*/%>
 
 <%
@@ -31,8 +32,8 @@
 		<tr>
 			<td></td><td>armyCount</td>
 		</tr>
-		
-		
+
+
 		<tr>
 			<td><strong>Countries: </strong></td><td></td>
 		</tr>
@@ -42,8 +43,8 @@
 		<tr>
 			<td></td><td>country[]</td>
 		</tr>
-		
-		
+
+
 		<tr>
 			<td><strong>Continents: </strong></td><td></td>
 		</tr>
@@ -61,6 +62,11 @@
 		}-->
 	</table>
 	<hr>
+
+
+	<button type="button" name="addTroops" onclick="addTroops('tyler','japan')">Click me</button>
+
+
 	<div id = "turnBox">
 	<!--
 		if(person[].turn == true)
@@ -68,7 +74,7 @@
 			<h4 style="text-align: center">It is currently {Player's} Turn.</h4>
 		}
 		if(myTurn == true)
-		{	
+		{
 			turnPosition = 'place';
 				<h4 id="instruct" style ="text-align: center;">Where would you like to place your armies?</h4>
 				set var
@@ -108,6 +114,6 @@
 								set var
 				myTurn = 'false';
 		}-->
-		
+
 	</div>
 </div>
