@@ -258,6 +258,7 @@ module.exports = {
 		var playerID = req.session.user;
 		var isFull = 'false';
 		var match = 'false';
+		var roomName = req.param('game'+gameID+'info');
 
 		if (typeof playerID === 'undefined') {
 			return res.view('static/error', {error: 'PlayerID Is Not Logged In'});
@@ -289,6 +290,7 @@ module.exports = {
 			});
 
 			if (match == 'true') {
+				//sails.sockets.join(req.socket, roomName);
 				return res.view('static/gamelobby', {isFull: isFull, gameID: gameID});
 			}
 			else {

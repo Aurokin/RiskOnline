@@ -13,5 +13,13 @@ io.socket.on('connect', function socketConnected() {
   io.socket.get("/gameState?gameID=1", function(resData, jwres) {
     console.log(resData);
     console.log(resData.players);
+    resData.players.forEach(function (player, index, array) {
+      console.log(player);
+      $('#rightGL').append('<p id="player'+player.id+'">'+player.name+'</p>');
+    });
+  });
+  
+  io.socket.on('playerJoined', function notificationRecievedFromServer(message) {
+    console.log(message);
   });
 });
