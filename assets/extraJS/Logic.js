@@ -46,7 +46,6 @@ function attack(player, from, to){
 	var random_num_dice2 = Math.floor(Math.random() * 6);
 	//check adj list territory
 
-
 	if (game.regions[from] > game.regions[to] && game.regions.controlledBy == player){
 		if(random_num_dice1>random_num_dice2){
 			game.regions[to].armyCount--;
