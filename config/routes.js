@@ -64,7 +64,7 @@ module.exports.routes = {
   },
   '/game/lobby': {
     view: 'static/gamelobby'
-  }
+  },
 
   '/game/create':{
     view: 'static/gameCreate'
