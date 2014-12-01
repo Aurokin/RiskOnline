@@ -189,7 +189,7 @@ module.exports = {
 		var gameID = req.body.gameID;
 		var playerID = req.body.playerID;
 		var password = req.body.password;
-		var roomName = req.param('game'+gameID+'info');
+		var roomName = 'game'+gameID+'info';
 
 		/*
 		console.log('gameID: '+gameID);
@@ -238,7 +238,8 @@ module.exports = {
 						sails.sockets.emit(roomName, 'playerJoined', {
 							playerID: playerID
 						});
-					return res.send(status);
+						console.log(sails.sockets.rooms());
+						return res.send(status);
 					});
 
 				}

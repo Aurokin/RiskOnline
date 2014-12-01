@@ -18,7 +18,7 @@ io.socket.on('connect', function socketConnected() {
       $('#rightGL').append('<p id="player'+player.id+'">'+player.name+'</p>');
     });
   });
-  
+
   io.socket.on('playerJoined', function notificationRecievedFromServer(message) {
     console.log(message);
   });
