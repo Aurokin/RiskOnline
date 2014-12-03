@@ -140,7 +140,7 @@ module.exports = {
 				//check to see if all players have gone
 				//if yes then move turn back to player one
 				//update gamestate
-		})
+		});
 	},
 
 	increaseRound: function (req, res) {
