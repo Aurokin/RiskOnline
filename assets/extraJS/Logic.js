@@ -15,7 +15,7 @@ function init (){
 			game.regions[].controlledBy=game.currentUserTurn;
 			addTroops (game.currentUserTurn, game.regions[territory]);
 			//game.regions[/*input*/].controlledBy=game.currentUserTurn;
-		
+
 		}
 	}
 }
@@ -62,7 +62,6 @@ function attack(player, from, to){
 function move (player, from, to , number){
 //need add "and check" for adj list
 //should we not check on server side?
-
 
 	if(game.regions[to].armyCount ==0 && game.regions[from].armyCount>2 ){
 		game.regions[to]+=number;
