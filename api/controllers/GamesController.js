@@ -175,23 +175,17 @@ module.exports = {
 
 				Games.findOne(gameID).populate('players').exec(function(err, game){
 
-					Games.publishUpdate(game.id, game);
+					Games.publishUpdate(game.id, {
+						id: game.id,
+						update: 'player',
+						status: 'add'
+
+					});
 
 					return res.json(game);
 				});
 				//Error goes Here
 			});
-
-			Games.publishUpdate(game.id, {
-				id: game.id,
-				update: player,
-				status: add
-			});
-
-			return res.json({
-				game: game
-			});
-
 		});
 	},
 
@@ -217,8 +211,8 @@ module.exports = {
 
 					Games.publishUpdate(game.id, {
 						id: game.id,
-						update: player,
-						status: add
+						update: 'player',
+						status: 'remove'
 					});
 
 					return res.json(game);
