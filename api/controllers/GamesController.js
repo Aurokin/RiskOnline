@@ -122,7 +122,7 @@ module.exports = {
 	},
 
 	changeTurn: function (req, res) {
-		var gameID = req.body.gameID;
+	/*	var gameID = req.body.gameID;
 
 		Games.findOne(gameID).exec(function(err, game) {
 			if (err) {
@@ -141,7 +141,7 @@ module.exports = {
 				//if yes then move turn back to player one
 				//update gamestate
 			});
-		}
+		}*/
 	},
 	increaseRound: function (req, res) {
 	/*	var gameID = req.body.gameID;
