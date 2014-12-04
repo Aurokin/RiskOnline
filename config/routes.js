@@ -76,6 +76,8 @@ module.exports.routes = {
 
   '/gamescontrollerAddtroops' : '/GamesController.addTroops',
 
+  '/game/changeTurn' : 'GamesController.changeTurn',
+
 
   /***************************************************************************
   *                                                                          *

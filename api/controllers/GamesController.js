@@ -153,48 +153,37 @@ module.exports = {
 		var gameID = req.body.gameID;
 		var playerID = req.body.playerID;
 
-		Games.findOne(gameID).exec(function(err, gameID){
+		Games.findOne(gameID).populate('players').exec(function(err, game){
 
-			if(game.player.playerID == game.player.currentUserTurn){
-				if( /*end turn button selected*/){
+			if (err) {
+				console.log(err);
+			}
+
+			if(playerID == game.player.currentUserTurn) {
+
+				//Change Turn
+
 					game.save(function(err){
-						console.log("inside change turn");
-							Games.findOne(gameID).exec(function(err, game){
-								if (err){
+								//emit new players turn
+
+								if (err) {
+									console.log(err);
+								}
+
+								if (game.numPlayers == game.currentUserTurn) {
+
+									//increase round if it should be.
+									//If playerID original > then new playerID then increase round
+
+									//emit round increase message
 
 								}
-								if(game.numPlayers == game.currentUserTurn){
-									/*var currentRound = game.round+1;
-									Games.publishUpdate(game.id,{
-										round: currentRound,
-										currentUserTurn: 1, //what if player 1 loses?*/
-										increaseRound(gameID, /*what to add?*/)
-
-								});
-								else{
-
-									Games.publishUpdate(game.id,{
-										currentUserTurn: array[], //number that comes next
-								});
-
-							});
-						});
 					});
-				};
-			};
+				}
 
 				//if yes then move turn back to player one
 				//update gamestate
 		});
-	},
-
-	increaseRound: function (req, res) {
-
-		//if changeTurn has been activated
-		//update round information
-		//Games.publishUpdate(gameID, currentUserTurn, round)
-
-
 	},
 
 	endGame: function (req, res) {
