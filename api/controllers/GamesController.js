@@ -1,9 +1,9 @@
 /**
- * GamesController
- *
- * @description :: Server-side logic for managing Games
- * @help        :: See http://links.sailsjs.org/docs/controllers
- */
+* GamesController
+*
+* @description :: Server-side logic for managing Games
+* @help        :: See http://links.sailsjs.org/docs/controllers
+*/
 
 module.exports = {
 	gameState: function (req, res) {
@@ -17,254 +17,371 @@ module.exports = {
 			/*
 			http://stackoverflow.com/questions/23446484/sails-js-populate-nested-associations
 			var regions = Region.find({id: _.pluck(game.regions, 'region')
-			}).then(function(regions) {
-				return regions;
-			});
-			return [game, players, regions];
-			*/
+		}).then(function(regions) {
+		return regions;
+	});
+	return [game, players, regions];
+	*/
 
-			return [game];
-		}).spread(function (game) {
-			/*
-			var regions = _.indexBy(regions, 'id');
-			game.regions = _.map(game.region, function(region) {
-				region.region = regions[region.region];
-			});*/
-			return res.json({
-				game: game
-			})
-		}).catch(function (err){
+	return [game];
+}).spread(function (game) {
+	/*
+	var regions = _.indexBy(regions, 'id');
+	game.regions = _.map(game.region, function(region) {
+	region.region = regions[region.region];
+});*/
+return res.json(game)
+}).catch(function (err){
+	console.log(err);
+	return res.json({
+		gameState: 'WIP'
+	});
+});
+},
+
+initMap : function (req, res) {
+
+	console.log(req.body);
+
+},
+
+addTroops : function (req , res){
+
+	console.log(req.playerName);
+	console.log(req.TerritoryName);
+	return;
+	/*	var user = req.body.username;
+	var regionID = req.body.regionID;
+
+	Game.get({id: gameId}, function(game){
+
+	if (ControlledBy == username){
+
+
+
+}
+
+});
+
+Games.publishUpdate(game.id, game);
+return res.json(game);*/
+},
+
+attack : function (req, res){
+
+
+
+},
+
+move : function (req, res) {
+
+
+
+},
+
+startGame: function (req, res) {
+	//Starts Game
+	//Requires gameID
+
+	var gameID = req.body.gameID;
+	console.log('Starting Game #'+gameID);
+
+	Games.findOne(gameID).exec(function(err, game) {
+		if (err) {
 			console.log(err);
-			return res.json({
-				gameState: 'WIP'
-			});
+		}
+
+		game.inProgress = true;
+		game.save(function(err) {
+			//console.log(err);
+			Games.publishUpdate(game.id, game);
+
+			return res.json(game);
+		})
+	})
+},
+
+
+gamesList: function (req, res) {
+	Games.find().exec(function (err, games) {
+		Games.subscribe(req.socket, games);
+		return res.json({
+			games: games
 		});
-	},
+	});
+	Games.publishUpdate(games);
+},
 
-	initMap : function (req, res) {
+changeTurn: function (req, res) {
+	var gameID = req.body.gameID;
 
-		console.log(req.body);
-		//call startGame
-		//then call addtroops
-		//then call changeTurn
+	Games.findOne(gameID).exec(function(err, game) {
+		if (err) {
+			console.log(err);
+		}
+		else {
+			//Games.publishUpdate(game);
+			return res.json(game);
+		}
+	})
+},
 
+increaseRound: function (req, res) {
+	/*	var gameID = req.body.gameID;
 
+	Games.findOne(gameID).exec(function(err, game) {
+	if (err) {
+	console.log(err);
+}
+else {
+//Games.publishUpdate(game);
+return res.json(game);
+}
+})
+*/
+},
 
-	},
+endGame: function (req, res) {
+	/*summer */
+	var gameID = req.body.gameID;
+	var playerID = req.body.playerID;
 
-	addTroops : function (req , res){
-
-		console.log(req.playerName);
-		console.log(req.TerritoryName);
-		return;
-
-
-
-		req.body;
-	/*	post(user, region_id, troops)
-		session(game_id)
-		*/
-
-		var user = req.body.username;
-		var regionID = req.body.regionID;
-
-		Game.get({id: gameId}, function(game){
-
-			if (regionID.controlledBy == username){
-
-					regionID.armyCount++;
-
-			}
-
+	Games.findOne(gameID).exec(function(err, gameID){
+		Games.destroy(gameID).exec(function(err){
+			Games.publishDestroy(gameID);
 		});
+	});
 
-		Games.publishUpdate(game.id, game);
-		return res.json(game);
-	},
+	/*hopefully we can take the logic from here*/
+},
 
-	attack : function (req, res){
+addPlayer: function (req, res) {
+	//Will Add Player To Game
+	//Requires POST with gameID / playerID
 
-		var user = req.body.username;
-		var regionID = req.body.regionID;
+	var gameID = req.body.gameID;
+	var playerID = req.body.playerID;
 
-		//region occupied
-		//who is attacking, being attacked?
-		//make sure it isn't owned by the same person
-		//check if region is adjacent
-		//Math?
-		//change color of one country
-		//update database with publishUpdate
+	Games.findOne(gameID).exec(function(err, game) {
 
-	},
+		if (err) {
+			//console.log('first stop');
+		}
+		game.players.add(playerID);
 
-	move : function (req, res) {
+		game.save(function(err) {
+			//console.log('second stop');
+			//console.log(err);
 
-		var playerID = req.body.playerID;
+			Games.findOne(gameID).populate('players').exec(function(err, game){
 
-		//person, country1, country2, number of troops
-		/*
-		req.url gets everything past the /
-		Maybe use req.param
+				Games.publishUpdate(game.id, {
+					id: game.id,
+					update: 'player',
+					status: 'add'
 
-
-		if(game.regions[to].armyCount ==0 && game.regions[from].armyCount>2 ){
-		game.regions[to]+=number;
-		game.regions[to].controlledBy=player;
-		game.regions[from]-=number;
-	}*/
-
-
-	},
-
-	startGame: function (req, res) {
-		//Starts Game
-		//Requires gameID
-
-		var gameID = req.body.gameID;
-		console.log('Starting Game #'+gameID);
-
-		Games.findOne(gameID).exec(function(err, game) {
-			if (err) {
-				console.log(err);
-			}
-
-			game.inProgress = true;
-			game.save(function(err) {
-				//console.log(err);
-				Games.publishUpdate(game.id, game);
+				});
 
 				return res.json(game);
-			})
-		})
-	},
+			});
+			//Error goes Here
+		});
+	});
+},
 
+removePlayer: function (req, res) {
+	//Will Remove Player From Game
+	//Requires POST with gameID / playerID
+	var gameID = req.body.gameID;
+	var playerID = req.body.playerID;
 
-	gamesList: function (req, res) {
-					Games.find().exec(function (err, games) {
-					Games.subscribe(req.socket, games);
-					return res.json({
-						games: games
-					});
+	Games.findOne(gameID).exec(function(err, game) {
+
+		if (err) {
+
+		}
+
+		game.players.remove(playerID);
+
+		game.save(function(err) {
+			//console.log('second stop');
+			//console.log(err);
+
+			Games.findOne(gameID).populate('players').exec(function(err, game){
+
+				Games.publishUpdate(game.id, {
+					id: game.id,
+					update: 'player',
+					status: 'remove'
 				});
-	},
 
-	changeTurn: function (req, res) {
+				return res.json(game);
+			});
+		});
+	});
+},
 
-		var gameID = req.body.gameID;
-		var playerID = req.body.playerID;
+joinGame: function (req, res) {
+	//Requires GameID, PlayerID, Password
+	var gameID = req.body.gameID;
+	var playerID = req.body.playerID;
+	var password = req.body.password;
+	//var roomName = 'game'+gameID+'info';
 
-		Games.findOne(gameID).populate('players').exec(function(err, game){
+	/*
+	console.log('gameID: '+gameID);
+	console.log('playerID: '+playerID);
+	console.log('password: '+password);
+	console.log(typeof playerID);
+	*/
 
-			if (err) {
-				console.log(err);
+	//Error Out For Invalid Player ID / Game ID
+	if (typeof playerID === 'object' || typeof gameID === 'object') {
+		return res.send('Invalid Player Or GameID');
+	}
+
+	Games.findOne(gameID).populate('players').exec(function(err, game) {
+
+		if (err) {
+			console.log(err);
+		}
+
+		/*
+		console.log(game);
+		console.log(password);
+		console.log(game.password);
+		*/
+
+		//Make Sure Password Is Correct
+		if (game.password == password || game.password == null) {
+			//Make Sure Lobby Isn't Full
+			if (game.players.length < game.numPlayers) {
+
+				//Should only add if it does not already exist
+				//Incomplete
+				game.players.add(playerID);
+
+
+
+				game.save(function(err) {
+					var status = {join: true, full: false};
+					//If the Lobby Is Full
+					if (game.players.length + 1 == game.numPlayers) {
+						status.full = true;
+					}
+
+					//Maybe message isn't needed, just publishUpdate
+					Games.publishUpdate(game.id, {player: 1});
+
+					//.subscribe maybe not necesscary?
+					Games.subscribe(req.socket, game.id, ['message']);
+					Games.message(game.id, {id: gameID, playerID: playerID, status: 'add'}, req.socket);
+
+					/*sails.sockets.join(req.socket, roomName);
+					//Should Emit Player Name Later
+					sails.sockets.emit(roomName, 'playerJoined', {
+					playerID: playerID
+				});
+				console.log(sails.sockets.rooms());*/
+				return res.send(status);
+			});
+
+		}
+		else {
+			return res.send('Game Is Full');
+		}
+	}
+	else {
+		return res.send('Password Incorrect');
+	}
+
+	});
+},
+
+enterLobby: function (req, res) {
+	var gameID = req.query.gameID;
+	var playerID = req.session.user;
+	var isFull = 'false';
+	var match = 'false';
+	//var roomName = req.param('game'+gameID+'info');
+
+	if (typeof playerID === 'undefined') {
+		return res.view('static/error', {error: 'PlayerID Is Not Logged In'});
+	}
+
+	//Find Game
+	Games.findOne(gameID).populate('players').exec(function(err, game) {
+		//Error Check
+		if (err) {
+			return res.view('static/error', {error: err});
+		}
+
+		//console.log('numPlayers: '+game.numPlayers);
+		//console.log('players in game: '+game.players.length);
+
+		//Check If Game Is Full
+		if (game.numPlayers == game.players.length) {
+			isFull = 'true';
+		}
+
+		game.players.forEach(function (player, index, array) {
+			//console.log('Player ID: '+player.id+' - Player ID: '+playerID);
+			//console.log(typeof player.id+' - '+typeof playerID);
+			//Ensure Player Is In Game
+			if (player.id == playerID) {
+				//console.log('Match');
+				match = 'true';
 			}
+		});
 
-			if(playerID == game.player.currentUserTurn) {
+		if (match == 'true') {
+			//sails.sockets.join(req.socket, roomName);
+			return res.view('static/gamelobby', {isFull: isFull, gameID: gameID});
+		}
+		else {
+			return res.view('static/error', {error: 'Player Not In Game'});
+		}
+		Games.publishUpdate(games);
 
-				//Change Turn
+	});
+},
 
-					game.save(function(err){
-								//emit new players turn
+changeTurn: function (req, res) {
 
-								if (err) {
-									console.log(err);
-								}
+	var gameID = req.body.gameID;
+	var playerID = req.body.playerID;
 
-								if (game.numPlayers == game.currentUserTurn) {
+	Games.findOne(gameID).populate('players').exec(function(err, game){
 
-									//increase round if it should be.
-									//If playerID original > then new playerID then increase round
+		if (err) {
+			console.log(err);
+		}
 
-									//emit round increase message
+		if(playerID == game.player.currentUserTurn) {
 
-								}
-					});
+			//Change Turn
+
+			game.save(function(err){
+				//emit new players turn
+
+				if (err) {
+					console.log(err);
 				}
 
-				//if yes then move turn back to player one
-				//update gamestate
-		});
-	},
+				if (game.numPlayers == game.currentUserTurn) {
 
-	endGame: function (req, res) {
-		/*summer */
-		var gameID = req.body.gameID;
-		var playerID = req.body.playerID;
+					//increase round if it should be.
+					//If playerID original > then new playerID then increase round
 
-		Games.findOne(gameID).exec(function(err, gameID){
-			Games.destroy(gameID).exec(function(err){
-				Games.publishDestroy(gameID);
+					//emit round increase message
+
+				}
 			});
-		});
-		/*hopefully we can take the logic from here*/
-	},
+		}
 
-	addPlayer: function (req, res) {
-		//Will Add Player To Game
-		//Requires POST with gameID / playerID
+		//if yes then move turn back to player one
+		//update gamestate
+	});
+}
 
-		var gameID = req.body.gameID;
-		var playerID = req.body.playerID;
-
-		Games.findOne(gameID).exec(function(err, game) {
-
-			if (err) {
-				//console.log('first stop');
-			}
-			game.players.add(playerID);
-
-			game.save(function(err) {
-				//console.log('second stop');
-				//console.log(err);
-
-				Games.findOne(gameID).populate('players').exec(function(err, game){
-
-					Games.publishUpdate(game.id, game);
-
-					return res.json(game);
-				});
-				//Error goes Here
-			});
-
-			Games.publishUpdate(game.id, {
-				id: game.id
-			});
-
-			return res.json({
-				game: game
-			});
-
-		});
-	},
-
-	removePlayer: function (req, res) {
-		//Will Remove Player From Game
-		//Requires POST with gameID / playerID
-		var gameID = req.body.gameID;
-		var playerID = req.body.playerID;
-
-		Games.findOne(gameID).exec(function(err, game) {
-
-			if (err) {
-
-			}
-
-			game.players.remove(playerID);
-
-			game.save(function(err) {
-				//console.log('second stop');
-				//console.log(err);
-
-				Games.findOne(gameID).populate('players').exec(function(err, game){
-
-					Games.publishUpdate(game.id, game);
-
-					return res.json(game);
-				});
-			});
-		});
-	},
-	gameList: function (req, res) {
-
-	},
 };
