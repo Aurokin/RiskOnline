@@ -5,4 +5,21 @@ $('#create-game').submit(function(e) {
   var numPlayers = parseInt($('#numPlayers').val());
   console.log(gameName+' '+password+' '+numPlayers);
   console.log('Submitted Form');
+
+  var postData = {
+    gameName: gameName,
+    password: password,
+    numPlayers: numPlayers
+  }
+
+  io.socket.post("/game/create", postData, function (data, jwres) {
+
+    /*console.log('Posted');
+    console.log(data);*/
+
+    if (data.create == true) {
+      window.location.href = 'http://localhost:1337/game?gameID='+data.id;
+    }
+  });
+
 });

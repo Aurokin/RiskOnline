@@ -412,9 +412,24 @@ module.exports = {
 		var numPlayers = req.body.numPlayers;
 		var playerID = req.session.user;
 
+		if (typeof playerID === 'undefined') {
+			res.send('User Is Not Logged In!');
+		}
+
 		console.log(gameName+' '+password+' '+numPlayers+' '+playerID);
 
-		res.send('Create Game');
+		Games.create({
+			name: gameName,
+			password: password,
+			numPlayers: numPlayers,
+			players: playerID
+		}).exec(function(err, game) {
+			if (err) {
+				res.send('Database Error: Couldnt Create Game');
+			}
+			Games.publishCreate({id: game.id, name: game.name, password: game.password, numPlayers: game.numPlayers, currentPlayers: 1});
+			res.send({create: true, id: game.id});
+		});
 	}
 
 };
