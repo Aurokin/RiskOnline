@@ -422,7 +422,8 @@ module.exports = {
 			name: gameName,
 			password: password,
 			numPlayers: numPlayers,
-			players: playerID
+			players: playerID,
+			currentUserTurn: playerID
 		}).exec(function(err, game) {
 			if (err) {
 				res.send('Database Error: Couldnt Create Game');

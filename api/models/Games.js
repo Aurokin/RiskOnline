@@ -10,21 +10,26 @@ module.exports = {
   attributes: {
 
     name: {
-      type: 'string'
+      type: 'string',
+      required: true,
+      unique: true
     },
 
   	numPlayers: {
-  		type: 'integer'
+  		type: 'integer',
+      required: true,
+      min: 2,
+      max: 6
   	},
 
   	round: {
   		type: 'integer',
-      defaultsTo: 0
+      equals: 0
   	},
 
   	currentUserTurn: {
   		type: 'integer',
-      defaultsTo: 1
+      required: true
   	},
 
   	startDate: {
