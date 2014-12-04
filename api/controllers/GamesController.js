@@ -261,7 +261,9 @@ module.exports = {
 					//Incomplete
 					game.players.add(playerID);
 
-
+					if (parseInt(playerID) < game.currentUserTurn) {
+						game.currentUserTurn = parseInt(playerID);
+					}
 
 					game.save(function(err) {
 						var status = {join: true, full: false};
