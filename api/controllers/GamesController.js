@@ -112,20 +112,6 @@ gamesList: function (req, res) {
 	Games.publishUpdate(games);
 },
 
-changeTurn: function (req, res) {
-	var gameID = req.body.gameID;
-
-	Games.findOne(gameID).exec(function(err, game) {
-		if (err) {
-			console.log(err);
-		}
-		else {
-			//Games.publishUpdate(game);
-			return res.json(game);
-		}
-	})
-},
-
 increaseRound: function (req, res) {
 	/*	var gameID = req.body.gameID;
 
