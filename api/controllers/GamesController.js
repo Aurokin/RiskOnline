@@ -77,6 +77,7 @@ module.exports = {
 
 
 
+
 	},
 
 	startGame: function (req, res) {
@@ -110,35 +111,6 @@ module.exports = {
 					});
 				});
 				Games.publishUpdate(games);
-	},
-
-	changeTurn: function (req, res) {
-		var gameID = req.body.gameID;
-
-		Games.findOne(gameID).exec(function(err, game) {
-			if (err) {
-				console.log(err);
-			}
-			else {
-				//Games.publishUpdate(game);
-				return res.json(game);
-			}
-		})
-	},
-
-	increaseRound: function (req, res) {
-	/*	var gameID = req.body.gameID;
-
-		Games.findOne(gameID).exec(function(err, game) {
-			if (err) {
-				console.log(err);
-			}
-			else {
-				//Games.publishUpdate(game);
-				return res.json(game);
-			}
-		})
-	*/
 	},
 
 	endGame: function (req, res) {
@@ -345,6 +317,91 @@ module.exports = {
 			}
 			Games.publishUpdate(games);
 
+		});
+	},
+
+	changeTurn: function (req, res) {
+
+		var gameID = req.body.gameID;
+		var playerID = req.body.playerID;
+		var playerIDs = [];
+		var currentIndex;
+		var newRound = false;
+
+		Games.findOne(gameID).populate('players').exec(function(err, game){
+
+			if (err) {
+				console.log(err);
+				res.send('Game Not Found With Given ID');
+			}
+
+			//console.log(game);
+
+			//If (game.round == 0 && game.startArmies > 0) Then Initial Map Logic
+
+			if(playerID == game.currentUserTurn) {
+
+				game.players.forEach(function (player, index, array) {
+					playerIDs.push(player.id);
+				});
+
+				currentIndex = playerIDs.indexOf(parseInt(playerID));
+
+				/*
+				console.log(currentIndex);
+				console.log(playerIDs[currentIndex + 0]);
+				console.log(playerIDs[currentIndex + 1]);
+				console.log(playerIDs[currentIndex + 2]);
+				*/
+
+				if (typeof playerIDs[currentIndex + 1] === 'undefined') {
+					console.log('Change Round, Reset To First Player');
+					game.currentUserTurn = playerIDs[0];
+					newRound = true;
+					game.round = game.round + 1;
+
+					if (currentIndex == 0) {
+						console.log('Declare Winner');
+					}
+				}
+				else {
+					game.currentUserTurn = playerIDs[currentIndex+1];
+				}
+
+				console.log(playerIDs);
+
+				//Change Turn
+
+				game.save(function(err){
+					//emit new players turn
+					Games.publishUpdate(game.id, {
+						id: game.id,
+						playerID: game.currentUserTurn,
+						update: 'changeTurn'
+					});
+
+					if (err) {
+						console.log(err);
+						res.send('Database Was Not Able To Save Change');
+					}
+
+					if (newRound == true) {
+						//Emit New Round Message
+						Games.publishUpdate(game.id, {
+							id: game.id,
+							round: game.round,
+							update: 'changeRound'
+						});
+					}
+					res.send(game);
+				});
+			}
+
+			else {
+				res.send('It Is Not Players Turn');
+			}
+			//if yes then move turn back to player one
+			//update gamestate
 		});
 	}
 
