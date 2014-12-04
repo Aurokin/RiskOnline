@@ -16,7 +16,7 @@ io.socket.on('connect', function socketConnected() {
   var gameID = parseInt($('#gameID').text());
   console.log(gameID);
 
-  io.socket.get("/games/1", function(resData, jwres) {
+  io.socket.get("/games/"+gameID, function(resData, jwres) {
     console.log(resData);
     resData.players.forEach(function (player, index, array) {
       console.log(player);
