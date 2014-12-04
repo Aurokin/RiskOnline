@@ -85,19 +85,24 @@ module.exports = {
 		//Requires gameID
 
 		var gameID = req.body.gameID;
-		console.log('Starting Game #'+gameID);
+		//console.log('Starting Game #'+gameID);
 
 		Games.findOne(gameID).exec(function(err, game) {
 			if (err) {
 				console.log(err);
+				return res.send('Game Not Found');
 			}
 
 			game.inProgress = true;
 			game.save(function(err) {
 				//console.log(err);
-				Games.publishUpdate(game.id, game);
+				Games.publishUpdate(game.id, {
+					id: game.id,
+					update: 'inProgress',
+					status: 'true'
+				});
 
-				return res.json(game);
+				return res.send('Game Started');
 			})
 		})
 	},
@@ -245,18 +250,11 @@ module.exports = {
 						}
 
 						//Maybe message isn't needed, just publishUpdate
-						Games.publishUpdate(game.id, {player: 1});
+						Games.publishUpdate(game.id, {id: gameID, playerID: playerID, status: 'add'});
 
 						//.subscribe maybe not necesscary?
-						Games.subscribe(req.socket, game.id, ['message']);
-						Games.message(game.id, {id: gameID, playerID: playerID, status: 'add'}, req.socket);
+						Games.subscribe(req.socket, game.id);
 
-						/*sails.sockets.join(req.socket, roomName);
-						//Should Emit Player Name Later
-						sails.sockets.emit(roomName, 'playerJoined', {
-							playerID: playerID
-						});
-						console.log(sails.sockets.rooms());*/
 						return res.send(status);
 					});
 
@@ -309,7 +307,11 @@ module.exports = {
 			});
 
 			if (match == 'true') {
-				//sails.sockets.join(req.socket, roomName);
+
+				if (game.inProgress == true) {
+					return res.view('map', {gameID: gameID});
+				}
+
 				return res.view('static/gamelobby', {isFull: isFull, gameID: gameID});
 			}
 			else {

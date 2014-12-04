@@ -58,8 +58,6 @@ module.exports.routes = {
   '/gameboard': {
 	  view: 'map'
   },
-   '/game/startGame': 'GamesController.startGame',
-
   '/gamelist': {
     view: 'gamelist'
   },
@@ -75,7 +73,9 @@ module.exports.routes = {
 
   '/gamescontrollerAddtroops' : '/GamesController.addTroops',
 
-  'post /game/create': 'GamesController.createGame'
+  'post /game/create': 'GamesController.createGame',
+
+  'post /game/start': 'GamesController.startGame'
 
 
   /***************************************************************************
