@@ -49,8 +49,9 @@ module.exports = {
 
 		console.log(req.playerName);
 		console.log(req.TerritoryName);
-		return;
-	/*	var user = req.body.username;
+		//return;
+		/*
+		var user = req.body.username;
 		var regionID = req.body.regionID;
 
 		Game.get({id: gameId}, function(game){
@@ -65,6 +66,26 @@ module.exports = {
 
 		Games.publishUpdate(game.id, game);
 		return res.json(game);*/
+
+		//get game and playerID
+		var gameID = req.body.gameID;
+		var playerID = req.body.playerID;
+		var playerIDs = [];
+
+		//find game
+		Games.findOne(gameID).populate('players').exec (function (err,game){
+			if(err){
+				console.log(err);
+				res.send('Game Not Found With Given ID');
+			}
+			if(playerID == game.currentUserTurn){
+				game.players.forEach(function(player, index, array){
+					playerIDs.push(player.id);
+				})
+				//check if territory belong to that player then add 1
+				//if(game.regions.controlledBy==)
+				}
+		})
 	},
 
 	attack : function (req, res){
