@@ -403,6 +403,18 @@ module.exports = {
 			//if yes then move turn back to player one
 			//update gamestate
 		});
+	},
+
+	createGame: function (req, res) {
+
+		var gameName = req.body.gameName;
+		var password = req.body.password;
+		var numPlayers = req.body.numPlayers;
+		var playerID = req.session.user;
+
+		console.log(gameName+' '+password+' '+numPlayers+' '+playerID);
+
+		res.send('Create Game');
 	}
 
 };
