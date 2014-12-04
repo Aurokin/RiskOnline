@@ -355,7 +355,7 @@ module.exports = {
 				*/
 
 				if (typeof playerIDs[currentIndex + 1] === 'undefined') {
-					console.log('Change Round, Reset To First Player');
+					//console.log('Change Round, Reset To First Player');
 					game.currentUserTurn = playerIDs[0];
 					newRound = true;
 					game.round = game.round + 1;
@@ -368,7 +368,7 @@ module.exports = {
 					game.currentUserTurn = playerIDs[currentIndex+1];
 				}
 
-				console.log(playerIDs);
+				//console.log(playerIDs);
 
 				//Change Turn
 
