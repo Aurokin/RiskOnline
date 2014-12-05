@@ -75,7 +75,9 @@ module.exports.routes = {
 
   'post /game/create': 'GamesController.createGame',
 
-  'post /game/start': 'GamesController.startGame'
+  'post /game/start': 'GamesController.startGame',
+
+  'post /game/chat': 'GamesController.sendChatMessage'
 
 
   /***************************************************************************

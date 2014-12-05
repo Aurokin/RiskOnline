@@ -17,8 +17,10 @@
     </div>
   </div>
   <div id="chatGL" class="clearfix">
-    Chat Div
   </div>
+  <form id="chatForm">
+    <input id="chatInput" autocomplete="off" /><button>Send</button>
+  </form>
 </div>
 
-<%- block('localScripts', '<script src="/js/lobby.js"></script>') %>
+<%- block('localScripts', '<script src="/js/lobby.js"></script><script src="/js/chat.js"></script>') %>

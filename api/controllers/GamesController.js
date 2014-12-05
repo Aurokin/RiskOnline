@@ -433,6 +433,22 @@ module.exports = {
 			Games.publishCreate({id: game.id, name: game.name, password: game.password, numPlayers: game.numPlayers, currentPlayers: 1});
 			res.send({create: true, id: game.id});
 		});
-	}
+	},
 
+	sendChatMessage: function (req, res) {
+		var gameID = req.body.gameID;
+		var playerID = req.session.user;
+		var playerName = req.session.name;
+		var message = req.body.message;
+		var chatMessage = playerName+' - '+message;
+
+		Games.findOne(gameID).exec(function(err, game){
+			if (err) {
+				res.send('Game Not Found');
+			}
+
+			Games.message(gameID, {message: chatMessage, update: 'chat', status: 'message'});
+			res.send('Message Sent');
+		});
+	}
 };

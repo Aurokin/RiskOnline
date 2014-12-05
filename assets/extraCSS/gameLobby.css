@@ -13,3 +13,7 @@
   height: 200px;
   background-color: grey;
 }
+
+#chatInput {
+  width: 80%;
+}
