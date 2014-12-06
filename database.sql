@@ -32,7 +32,9 @@ CREATE TABLE region (
 	regionID SERIAL PRIMARY KEY integer,
 	controlledBy VARCHAR(50),
 	armyCount integer,
-	FOREIGN KEY (controlledBy) REFERENCES users(username)
+	gameID SERIAL,
+	FOREIGN KEY (controlledBy) REFERENCES users(username),
+	FOREIGN KEY (gameID) REFERENCES games(gameID)
 );
 
 CREATE TABLE AdjRegions (
@@ -41,4 +43,3 @@ CREATE TABLE AdjRegions (
 	adjRegionID2 integer,
 	adjRegionID3 integer
 );
-

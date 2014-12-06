@@ -14,6 +14,7 @@ io.socket.on('connect', function socketConnected() {
 $('.joinGame').click(function() {
 	//console.log(this);
 	//console.log(this.getAttribute("value"));
+	console.log($('#userID').text());
 
 	var gameID = this.getAttribute("value");
 	var playerID = parseInt($('#userID').text());
@@ -32,6 +33,8 @@ $('.joinGame').click(function() {
 	io.socket.post("/game/join", postData, function (data, jwres) {
 		console.log('Posted');
 		console.log(data);
-		console.log(jwres);
+		if (data.join == true) {
+			window.location.href = 'http://localhost:1337/game?gameID='+gameID;
+		}
 	});
 });

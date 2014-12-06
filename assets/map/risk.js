@@ -13,7 +13,7 @@ var Risk = {
 	 * It looks like:
 	 * Territories: {
 	 *     Alaska: {path: Object, color: String, name: 'Alaska', ...},
-	 *	   ... 
+	 *	   ...
 	 *	}
 	 */
 	Territories: {},
@@ -55,7 +55,7 @@ var Risk = {
 	},
 
 	/**
-	 * Initiate the  Risk.Territories Object, this will contain essential informations about the territories 
+	 * Initiate the  Risk.Territories Object, this will contain essential informations about the territories
 	 */
 	setUpTerritoriesObj: function() {
 		for(id in TerritoryNames) {
@@ -73,7 +73,7 @@ var Risk = {
 				image: sprite,
 				x: FontDestinationCoords[id].x,
 				y: FontDestinationCoords[id].y,
-				width: FontSpriteCoords[id].sWidth, //'destiantion Width' 
+				width: FontSpriteCoords[id].sWidth, //'destiantion Width'
 				height: FontSpriteCoords[id].sHeight, //'destination Height'
 				crop: [FontSpriteCoords[id].sx, FontSpriteCoords[id].sy, FontSpriteCoords[id].sWidth, FontSpriteCoords[id].sHeight]
 
@@ -88,7 +88,7 @@ var Risk = {
 				armyNum: null
 			};
 		}
-		
+
 	},
 
 	drawBackgroundImg: function() {
@@ -97,7 +97,7 @@ var Risk = {
 		});
 		var imgObj = new Image();
 		imgObj.src = 'http://dev.filkor.org/images/risk/map_grey.jpg';
-		
+
 		var img = new Kinetic.Image({
 			image: imgObj,
 			//alpha: 0.8
@@ -107,34 +107,35 @@ var Risk = {
 
 	drawTerritories: function() {
 		for (t in Risk.Territories) {
-			
+
 			var path = Risk.Territories[t].path;
 			var nameImg = Risk.Territories[t].nameImg;
 			var group = new Kinetic.Group();
 
-			//We have to set up a group for proper mouseover on territories and sprite name images 
+			//We have to set up a group for proper mouseover on territories and sprite name images
 			group.add(path);
 			group.add(nameImg);
 			Risk.mapLayer.add(group);
-		
-			//Basic animations 
+
+			//Basic animations
 			//Wrap the 'path', 't' and 'group' variables inside a closure, and set up the mouseover / mouseout events for the demo
 			//when you make a bigger application you should move this functionality out from here, and maybe put these 'actions' in a seperate function/'class'
 			(function(path, t, group) {
 				group.on('mouseover', function() {
-					
+
 				});
 
 				group.on('mouseout', function() {
-					
+
 				});
 
 				group.on('click', function() {
+					//need to send this "click" to GamesController
 					console.log(path.attrs.id);
 					location.hash = path.attrs.id;
 				});
 			})(path, t, group);
-		}				
+		}
 	},
 
 	divideTerritories: function() {
@@ -143,7 +144,7 @@ var Risk = {
 
 		for(var id in Risk.Territories) {
 			var color = Risk.Territories[id].color;
-			
+
 			var neighbours = Risk.Territories[id].neighbours;
 
 			//a VERY simple algorithm to make the map more equal
@@ -165,7 +166,7 @@ var Risk = {
 				Risk.Territories[id].color = newColor;
 
 				Risk.Territories[id].path.setFill(Risk.Settings.colors[newColor]);
-				Risk.Territories[id].path.setOpacity(0.4);				
+				Risk.Territories[id].path.setOpacity(0.4);
 			}
 		}
 
@@ -176,7 +177,7 @@ var Risk = {
 				var color = getRandomColor();
 				Risk.Territories[id].color = color;
 				Risk.Territories[id].path.setFill(Risk.Settings.colors[color]);
-				Risk.Territories[id].path.setOpacity(0.4);			
+				Risk.Territories[id].path.setOpacity(0.4);
 
 			}
 		}
@@ -187,7 +188,7 @@ var Risk = {
 		function getRandomColor() {
 			var colors = ['yellow', 'green', 'blue', 'red'];
 			//Math.random() returns between [0, 1), so don't worry
-			var randomNum = Math.floor(Math.random()*(colors.length)); 
+			var randomNum = Math.floor(Math.random()*(colors.length));
 			return colors[randomNum];
 		}
 	}

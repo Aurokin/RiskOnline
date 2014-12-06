@@ -1,3 +1,5 @@
+<div id="gameID" class="hideMe"><%= gameID %></div>
+
 	<script src="/map/kinetic-v5.1.0.min.js"></script>
 	<script src="/map/gameData.js"></script>
 	<script src="/map/paths.js"></script>
@@ -5,9 +7,10 @@
 	<script src="/map/risk.js"></script>
 	<script src="/map/assetManager.js"></script>
 	<script src="/map/main.js"></script>
-	
+	<script src="/extraJS/Logic.js"></script>
+
 	<div id="map"style="float: left; position: relative; "></div>
-	
+
 <% /*$(custom.css).css("background", "url('images/back.jpg')");*/%>
 
 <%
@@ -19,7 +22,7 @@
 		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })
 %>
-<div id ="information" style="float: right; z-index:10; position: relative; left: -45px; width: 300px; min-height: 600px">
+<div id ="information" style="float: right; z-index:10; position: relative; left: -45px; width: 300px; min-height: 600px; background-color: #FAFFBD; border-radius: 20px;padding:10px;">
 	<h1 style="text-align: center;">
 		Username
 	</h1>
@@ -31,8 +34,8 @@
 		<tr>
 			<td></td><td>armyCount</td>
 		</tr>
-		
-		
+
+
 		<tr>
 			<td><strong>Countries: </strong></td><td></td>
 		</tr>
@@ -42,8 +45,8 @@
 		<tr>
 			<td></td><td>country[]</td>
 		</tr>
-		
-		
+
+
 		<tr>
 			<td><strong>Continents: </strong></td><td></td>
 		</tr>
@@ -61,14 +64,21 @@
 		}-->
 	</table>
 	<hr>
+	<button type="button" name="addTroops" onclick="addTroops('tyler','japan')">Click me</button>
+
+
 	<div id = "turnBox">
+
+	<div style="height: 10px; opacity:0;"></div>
+	<div id = "turnBox" style = "text-align: center;">
+	yo!
 	<!--
 		if(person[].turn == true)
 		{
 			<h4 style="text-align: center">It is currently {Player's} Turn.</h4>
 		}
 		if(myTurn == true)
-		{	
+		{
 			turnPosition = 'place';
 				<h4 id="instruct" style ="text-align: center;">Where would you like to place your armies?</h4>
 				set var
@@ -108,6 +118,8 @@
 								set var
 				myTurn = 'false';
 		}-->
-		
+
 	</div>
 </div>
+
+<%- block('localScripts', '<script src="/js/game.js"></script>') %>

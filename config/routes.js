@@ -45,31 +45,39 @@ module.exports.routes = {
   'post /removeUserFromGame': 'GamesController.removePlayer',
   'post /attack': 'GamesController.attack',
   'post /move': 'GamesController.move',
-  'post /addTroops': 'GamesController.addTroops',
+  'post /game/changeTurn': 'GamesController.changeTurn',
+
   '/chat': {
 	  view: 'real_time'
 	},
   '/fakeGameList': {
     view: 'static/fakeGameList'
   },
-  '/getGamesList' : 'GamesController.gameList',
+  '/getGamesList' : 'GamesController.gamesList',
   '/mainroom' : 'sPractice/mainroom',
   '/gameboard': {
 	  view: 'map'
   },
-   '/game/startGame': 'GamesController.startGame',
-
   '/gamelist': {
     view: 'gamelist'
   },
   '/game/lobby': {
     view: 'static/gamelobby'
   },
-  '/game/join': 'GamesController.joinGame'
+  '/game/join': 'GamesController.joinGame',
+  '/game': 'GamesController.enterLobby',
 
-  '/game/create':{
+  'get /game/create':{
     view: 'static/gameCreate'
-  }
+  },
+
+  '/gamescontrollerAddtroops' : '/GamesController.addTroops',
+
+  'post /game/create': 'GamesController.createGame',
+
+  'post /game/start': 'GamesController.startGame',
+
+  'post /game/chat': 'GamesController.sendChatMessage'
 
 
   /***************************************************************************

@@ -1,5 +1,8 @@
 <!--Using custom styling here-->
-<%- block('localStyles', '<link href="/extraCSS/gameLobby.css" rel="stylesheet"') %>
+<%- block('localStyles', '<link href="/extraCSS/gameLobby.css" rel="stylesheet">') %>
+
+<div id="isFull" class="hideMe"><%= isFull %></div>
+<div id="gameID" class="hideMe"><%= gameID %></div>
 
 <div class = "container">
   <div class = "jumbotron">
@@ -7,19 +10,17 @@
   </div>
   <div id="wrapperGL" class="clearfix">
     <div id="leftGL" class="clearfix">
-      <p>Name: </p>
       <p>Players: </p>
     </div>
     <div id="rightGL" class="clearfix">
-      <p>Player 1</p>
-      <p>Player 2</p>
-      <p>Player 3</p>
-      <p>Player 4</p>
-      <p>Player 5</p>
-      <p>Player 6</p>
+
     </div>
   </div>
   <div id="chatGL" class="clearfix">
-    Chat Div
   </div>
+  <form id="chatForm">
+    <input id="chatInput" autocomplete="off" /><button>Send</button>
+  </form>
 </div>
+
+<%- block('localScripts', '<script src="/js/lobby.js"></script><script src="/js/chat.js"></script>') %>
