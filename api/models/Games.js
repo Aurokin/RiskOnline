@@ -24,7 +24,7 @@ module.exports = {
 
   	round: {
   		type: 'integer',
-      equals: 0
+      defaultsTo: 0
   	},
 
   	currentUserTurn: {
