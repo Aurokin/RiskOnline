@@ -47,10 +47,60 @@ module.exports = {
 
 	addTroops : function (req , res){
 
-		console.log(req.playerName);
-		console.log(req.TerritoryName);
-		return;
+		//get game and playerID
+		var gameID = req.body.gameID;
+		var playerID = req.body.playerID;
+		var playerIDs = [];
+		var army = parseInt(req.body.army);
+		var regionID = req.body.regionID;
 
+		//find game
+		Games.findOne(gameID).populate('players').exec (function (err,game){
+			if(err){
+				//console.log(err);
+				res.send('Game Not Found With Given ID');
+			}
+			if(playerID == game.currentUserTurn){
+				Region.findOne({game : gameID, region : regionID}).exec(function(err, region) {
+					if (err) {
+						res.send('Region Not Found');
+						//console.log('Not found region');
+					}
+
+					if (typeof region === 'undefined') {
+						//Region Doesn't Exist
+						//Give Region To Player
+						Region.create({game: gameID, region : regionID, armyCount : army, controlledBy : playerID}).exec(function(err,newRegion){
+							if(err){
+								//console.log(err);
+								res.send('Could Not Create Region');
+							}
+							Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'create', region: newRegion});
+							res.send(newRegion);
+							//res.send('New Region Created');
+						});
+					}
+					else {
+						//Region Exists, Check If Belong To Player
+						//If So Add Troops To Region
+						if (region.controlledBy == playerID) {
+							region.armyCount = region.armyCount + army;
+							region.save(function(err) {
+								if (err) {
+									res.send('Region Could Not Be Added');
+								}
+								Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'add', region: region});
+								res.send(region);
+								//res.send('Army Added To Region');
+							});
+						}
+						else {
+							return res.send('Region Not Controlled By Player');
+						}
+					}
+				});
+			}
+		});
 	},
 
 	attack : function (req, res){
@@ -60,7 +110,6 @@ module.exports = {
 	},
 
 	move : function (req, res) {
-
 
 
 
@@ -123,7 +172,7 @@ module.exports = {
 				})
 
 			}
-			
+
 
 			game.players.remove(playerID);
 
@@ -339,9 +388,6 @@ module.exports = {
 				res.send('Game Not Found With Given ID');
 			}
 
-			//console.log(game);
-
-
 			if(playerID == game.currentUserTurn) {
 				game.players.forEach(function (player, index, array) {
 					playerIDs.push(player.id);
@@ -420,8 +466,6 @@ module.exports = {
 			else {
 				res.send('It Is Not Players Turn');
 			}
-			//if yes then move turn back to player one
-			//update gamestate
 		});
 	},
 
