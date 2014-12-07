@@ -50,21 +50,7 @@ module.exports = {
 		console.log(req.playerName);
 		console.log(req.TerritoryName);
 		return;
-	/*	var user = req.body.username;
-		var regionID = req.body.regionID;
 
-		Game.get({id: gameId}, function(game){
-
-			if (ControlledBy == username){
-
-
-
-			}
-
-		});
-
-		Games.publishUpdate(game.id, game);
-		return res.json(game);*/
 	},
 
 	attack : function (req, res){
@@ -119,17 +105,16 @@ module.exports = {
 	},
 
 	endGame: function (req, res) {
-		/*summer */
+
 		var gameID = req.body.gameID;
 		var playerID = req.body.playerID;
 
 		Games.findOne(gameID).exec(function(err, gameID){
 			Games.destroy(gameID).exec(function(err){
 				Games.publishDestroy(gameID);
+
 			});
 		});
-
-		/*hopefully we can take the logic from here*/
 	},
 
 	addPlayer: function (req, res) {
@@ -339,10 +324,8 @@ module.exports = {
 
 			//console.log(game);
 
-			//If (game.round == 0 && game.startArmies > 0) Then Initial Map Logic
 
 			if(playerID == game.currentUserTurn) {
-
 				game.players.forEach(function (player, index, array) {
 					playerIDs.push(player.id);
 				});
@@ -360,7 +343,6 @@ module.exports = {
 					//console.log('Change Round, Reset To First Player');
 					game.currentUserTurn = playerIDs[0];
 					newRound = true;
-					game.round = game.round + 1;
 
 					if (currentIndex == 0) {
 						console.log('Declare Winner');
@@ -370,6 +352,23 @@ module.exports = {
 					game.currentUserTurn = playerIDs[currentIndex+1];
 				}
 
+				if (game.round == 0 && game.startArmies > 1){
+
+					newRound = false;
+
+				}
+
+				if(newRound == true){
+
+					game.round = game.round + 1;
+
+				}
+
+				if(game.startArmies == 1){
+
+					game.startArmies = 0;
+
+				}
 				//console.log(playerIDs);
 
 				//Change Turn
