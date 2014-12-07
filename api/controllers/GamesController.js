@@ -537,24 +537,20 @@ module.exports = {
 					game.currentUserTurn = playerIDs[currentIndex+1];
 				}
 
+				game.phase = 1;
+
 				if(game.startingArmies == 1){
-
 					game.startingArmies = 0;
-					game.phase = 1;
-
 				}
 
 				if (game.round == 0 && game.startingArmies > 1){
-
+					game.phase = 0;
 					newRound = false;
 					game.startingArmies = game.startingArmies - 1;
-
 				}
 
 				if(newRound == true){
-
 					game.round = game.round + 1;
-
 				}
 
 				//console.log(playerIDs);
@@ -579,7 +575,8 @@ module.exports = {
 						Games.publishUpdate(game.id, {
 							id: game.id,
 							round: game.round,
-							update: 'changeRound'
+							update: 'changeRound',
+							phase: game.phase
 						});
 					}
 					res.send(game);
@@ -634,6 +631,33 @@ module.exports = {
 
 			Games.message(gameID, {message: chatMessage, update: 'chat', status: 'message'});
 			res.send('Message Sent');
+		});
+	},
+
+	moveToAttackPhase: function (req, res) {
+		var gameID = req.body.gameID;
+
+		Games.findOne(gameID).exec(function(err, game){
+			if (err) {
+				res.send('Game Not Found');
+			}
+
+			game.phase = 2;
+
+			game.save(function(err){
+					if (err) {
+						res.send("Game Phase Couldn't Be Saved");
+					}
+
+					Games.publishUpdate(game.id, {
+						id: game.id,
+						phase: game.phase,
+						update: 'phaseChange',
+						status: 'update'
+					});
+
+					res.send("Phase Change");
+			});
 		});
 	}
 };

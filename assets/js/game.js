@@ -177,7 +177,7 @@ function modifyButton(region) {
   //Initial Phase Unclaimed Territory
   if (phase == 0) {
     var currRegions = _.every(regions, regionsFullTest);
-    console.log('currRegions '+currRegions);
+    //console.log('currRegions '+currRegions);
     if (region[0].controlledBy == null || (region[0].controlledBy == userID && currRegions == true)) {
       $('#placeArmyBtn').removeClass("disabled").prop("disabled", false);
     }
