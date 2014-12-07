@@ -75,6 +75,10 @@ module.exports = {
     phase: {
       type: 'integer',
       defaultsTo: 0
+    },
+
+    armiesRemaining: {
+      type: 'integer'
     }
   },
 
