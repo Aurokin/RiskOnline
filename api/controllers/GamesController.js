@@ -110,6 +110,23 @@ module.exports = {
 		var playerID = req.body.playerID;
 
 		Games.findOne(gameID).exec(function(err, gameID){
+
+			if(game.numPlayers < 2){
+
+				//game.players.remove(playerID);
+
+				Games.publishUpdate(gameID,{
+					id: game.id,
+					winner: 'playerID',
+					status: 'complete',
+					endDate: 'values.startDate = new Date().toISOString()',
+				})
+
+			}
+			
+
+			game.players.remove(playerID);
+
 			Games.destroy(gameID).exec(function(err){
 				Games.publishDestroy(gameID);
 
@@ -352,9 +369,16 @@ module.exports = {
 					game.currentUserTurn = playerIDs[currentIndex+1];
 				}
 
-				if (game.round == 0 && game.startArmies > 1){
+				if(game.startingArmies == 1){
+
+					game.startingArmies = 0;
+
+				}
+
+				if (game.round == 0 && game.startingArmies > 1){
 
 					newRound = false;
+					game.startingArmies = game.startingArmies - 1;
 
 				}
 
@@ -364,11 +388,6 @@ module.exports = {
 
 				}
 
-				if(game.startArmies == 1){
-
-					game.startArmies = 0;
-
-				}
 				//console.log(playerIDs);
 
 				//Change Turn
