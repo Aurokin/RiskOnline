@@ -70,6 +70,11 @@ module.exports = {
       collection: 'user',
       via: 'games',
       dominant: true
+    },
+
+    phase: {
+      type: 'integer',
+      defaultsTo: 0
     }
   },
 
