@@ -16,6 +16,7 @@ io.socket.on('connect', function socketConnected() {
 		if (message.data.update == 'chat' && message.data.status == 'message') {
 			var msg = message.data.message;
 			$('#chatGL').append('<p>'+msg+'</p>');
+			$("#chatGL").scrollTop($("#chatGL")[0].scrollHeight);
 		}
 	});
 

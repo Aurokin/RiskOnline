@@ -1,5 +1,5 @@
 <div id="gameID" class="hideMe"><%= gameID %></div>
-<%- block('localStyles', '<link href="/extraCSS/game.css" rel="stylesheet">') %>
+<%- block('localStyles', '<link href="/extraCSS/game.css" rel="stylesheet"><link href="/extraCSS/gameLobby.css" rel="stylesheet">') %>
 
 	<!-- <script src="/map/kinetic-v5.1.0.min.js"></script> -->
 
@@ -134,5 +134,13 @@
 
 	</div>
 </div>
+</div>
+<div id="chatContainer">
+	<div id="chatGL" class="clearfix">
+	</div>
+	<form id="chatForm">
+		<input id="chatInput" autocomplete="off" /><button>Send</button>
+	</form>
+</div>
 
-<%- block('localScripts', '<script src="/map/kinetic-v5.1.0.min.js"></script><script src="/map/gameData.js"></script><script src="/map/paths.js"></script><script src="/map/coordinates.js"></script><script src="/map/risk.js"></script><script src="/map/assetManager.js"></script><script src="/map/main.js"></script><script src="/js/game.js"></script>') %>
+<%- block('localScripts', '<script src="/map/kinetic-v5.1.0.min.js"></script><script src="/map/gameData.js"></script><script src="/map/paths.js"></script><script src="/map/coordinates.js"></script><script src="/map/risk.js"></script><script src="/map/assetManager.js"></script><script src="/map/main.js"></script><script src="/js/game.js"></script><script src="/js/chat.js"></script>') %>
