@@ -74,9 +74,9 @@ module.exports = {
 								//console.log(err);
 								res.send('Could Not Create Region');
 							}
-							Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'create', region: newRegion});
-							res.send(newRegion);
-							//res.send('New Region Created');
+							Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'create', region: newRegion, armyCount: army});
+							//res.send(newRegion);
+							res.send('New Region Created');
 						});
 					}
 					else {
@@ -88,9 +88,9 @@ module.exports = {
 								if (err) {
 									res.send('Region Could Not Be Added');
 								}
-								Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'add', region: region});
-								res.send(region);
-								//res.send('Army Added To Region');
+								Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'add', region: region, armyCount: army});
+								//res.send(region);
+								res.send('Army Added To Region');
 							});
 						}
 						else {
