@@ -46,6 +46,7 @@ module.exports.routes = {
   'post /attack': 'GamesController.attack',
   'post /move': 'GamesController.move',
   'post /game/changeTurn': 'GamesController.changeTurn',
+  'post /game/addTroops': 'GamesController.addTroops',
 
   '/chat': {
 	  view: 'real_time'

@@ -47,24 +47,60 @@ module.exports = {
 
 	addTroops : function (req , res){
 
-		console.log(req.playerName);
-		console.log(req.TerritoryName);
-		return;
-	/*	var user = req.body.username;
+		//get game and playerID
+		var gameID = req.body.gameID;
+		var playerID = req.body.playerID;
+		var playerIDs = [];
+		var army = parseInt(req.body.army);
 		var regionID = req.body.regionID;
 
-		Game.get({id: gameId}, function(game){
-
-			if (ControlledBy == username){
-
-
-
+		//find game
+		Games.findOne(gameID).populate('players').exec (function (err,game){
+			if(err){
+				//console.log(err);
+				res.send('Game Not Found With Given ID');
 			}
+			if(playerID == game.currentUserTurn){
+				Region.findOne({game : gameID, region : regionID}).exec(function(err, region) {
+					if (err) {
+						res.send('Region Not Found');
+						//console.log('Not found region');
+					}
 
+					if (typeof region === 'undefined') {
+						//Region Doesn't Exist
+						//Give Region To Player
+						Region.create({game: gameID, region : regionID, armyCount : army, controlledBy : playerID}).exec(function(err,newRegion){
+							if(err){
+								//console.log(err);
+								res.send('Could Not Create Region');
+							}
+							Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'create', region: newRegion});
+							res.send(newRegion);
+							//res.send('New Region Created');
+						});
+					}
+					else {
+						//Region Exists, Check If Belong To Player
+						//If So Add Troops To Region
+						if (region.controlledBy == playerID) {
+							region.armyCount = region.armyCount + army;
+							region.save(function(err) {
+								if (err) {
+									res.send('Region Could Not Be Added');
+								}
+								Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'add', region: region});
+								res.send(region);
+								//res.send('Army Added To Region');
+							});
+						}
+						else {
+							return res.send('Region Not Controlled By Player');
+						}
+					}
+				});
+			}
 		});
-
-		Games.publishUpdate(game.id, game);
-		return res.json(game);*/
 	},
 
 	attack : function (req, res){
@@ -74,7 +110,6 @@ module.exports = {
 	},
 
 	move : function (req, res) {
-
 
 
 
@@ -119,17 +154,33 @@ module.exports = {
 	},
 
 	endGame: function (req, res) {
-		/*summer */
+
 		var gameID = req.body.gameID;
 		var playerID = req.body.playerID;
 
 		Games.findOne(gameID).exec(function(err, gameID){
+
+			if(game.numPlayers < 2){
+
+				//game.players.remove(playerID);
+
+				Games.publishUpdate(gameID,{
+					id: game.id,
+					winner: 'playerID',
+					status: 'complete',
+					endDate: 'values.startDate = new Date().toISOString()',
+				})
+
+			}
+
+
+			game.players.remove(playerID);
+
 			Games.destroy(gameID).exec(function(err){
 				Games.publishDestroy(gameID);
+
 			});
 		});
-
-		/*hopefully we can take the logic from here*/
 	},
 
 	addPlayer: function (req, res) {
@@ -337,12 +388,7 @@ module.exports = {
 				res.send('Game Not Found With Given ID');
 			}
 
-			//console.log(game);
-
-			//If (game.round == 0 && game.startArmies > 0) Then Initial Map Logic
-
 			if(playerID == game.currentUserTurn) {
-
 				game.players.forEach(function (player, index, array) {
 					playerIDs.push(player.id);
 				});
@@ -360,7 +406,6 @@ module.exports = {
 					//console.log('Change Round, Reset To First Player');
 					game.currentUserTurn = playerIDs[0];
 					newRound = true;
-					game.round = game.round + 1;
 
 					if (currentIndex == 0) {
 						console.log('Declare Winner');
@@ -368,6 +413,25 @@ module.exports = {
 				}
 				else {
 					game.currentUserTurn = playerIDs[currentIndex+1];
+				}
+
+				if(game.startingArmies == 1){
+
+					game.startingArmies = 0;
+
+				}
+
+				if (game.round == 0 && game.startingArmies > 1){
+
+					newRound = false;
+					game.startingArmies = game.startingArmies - 1;
+
+				}
+
+				if(newRound == true){
+
+					game.round = game.round + 1;
+
 				}
 
 				//console.log(playerIDs);
@@ -402,8 +466,6 @@ module.exports = {
 			else {
 				res.send('It Is Not Players Turn');
 			}
-			//if yes then move turn back to player one
-			//update gamestate
 		});
 	},
 
