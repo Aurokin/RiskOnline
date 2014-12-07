@@ -50,7 +50,6 @@ module.exports = {
 		//get game and playerID
 		var gameID = req.body.gameID;
 		var playerID = req.body.playerID;
-		var playerIDs = [];
 		var army = parseInt(req.body.army);
 		var regionID = req.body.regionID;
 
@@ -110,9 +109,64 @@ module.exports = {
 	},
 
 	move : function (req, res) {
+		var gameID = req.body.gameID;
+		var playerID = req.body.playerID;
+		var armyMove = parseInt(req.body.armyMove);
+		var regionIDFrom = req.body.regionIDFrom;
+		var regionIDTo = req.body.regionIDTo;
+		var regionFrom;
+		var regionTo;
+		Games.findOne(gameID).populate('players').exec(function(err,game){
+			if(err){
+				res.send('Game Not Found With Given ID');
+			}
+			if(playerID == game.currentUserTurn){
+				Region.find({game : gameID, region: [regionIDFrom, regionIDTo], controlledBy: playerID}).exec(function(err, regions) {
+					if (err) {
+						res.send('Region Not Found');
+					}
+					if(regions.length==2){
+						//Do logic here
+						if (regions[0].region == regionIDFrom) {
+							regionFrom = 0;
+							regionTo = 1;
+						}
+						else {
+							regionFrom = 1;
+							regionTo = 0;
+						}
+						if(regions[regionFrom].armyCount > 1 ){
+							if (regions[regionFrom].armyCount - 1 < armyMove) {
+								armyMove = regions[regionFrom].armyCount - 1;
+							}
+							regions[regionFrom].armyCount = regions[regionFrom].armyCount - armyMove;
+							regions[regionTo].armyCount = regions[regionTo].armyCount + armyMove;
 
+							regions[regionFrom].save(function(err) {
+									if (err) {
+										res.send(err);
+									}
+									Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'remove', amount: armyMove, regionID: regionIDFrom});
 
-
+									regions[regionTo].save(function(err) {
+										if (err) {
+											res.send(err);
+										}
+										Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'add', amount: armyMove, regionID: regionIDTo});
+										res.send(regions);
+									});
+							});
+						}
+						else {
+							res.send('Player Not Have Enough Troop To Move');
+						}
+					}
+					else{
+						res.send('Region Not Belong Player');
+					}
+				});
+			}
+		});
 	},
 
 	startGame: function (req, res) {
