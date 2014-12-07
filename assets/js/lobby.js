@@ -7,7 +7,7 @@ $(document).ready(function() {
     var gameID = parseInt($('#gameID').text());
     io.socket.post("/game/start", {gameID: gameID}, function (data, jwres) {
       console.log(data);
-      window.location.href = 'http://localhost:1337/game?gameID='+gameID;
+      window.location.href = 'http://'+window.location.host+'/game?gameID='+gameID;
     });
   }
 });
@@ -34,7 +34,7 @@ io.socket.on('connect', function socketConnected() {
       });
     }
     else if (message.data.update == 'inProgress' && message.data.status == 'true') {
-      window.location.href = 'http://localhost:1337/game?gameID='+gameID;
+      window.location.href = 'http://'+window.location.host+'/game?gameID='+gameID;
     }
   });
 

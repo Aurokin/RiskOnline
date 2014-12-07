@@ -34,7 +34,7 @@ $('.joinGame').click(function() {
 		console.log('Posted');
 		console.log(data);
 		if (data.join == true) {
-			window.location.href = 'http://localhost:1337/game?gameID='+gameID;
+			window.location.href = 'http://'+window.location.host+'/game?gameID='+gameID;
 		}
 	});
 });
