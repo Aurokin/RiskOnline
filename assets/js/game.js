@@ -39,7 +39,7 @@ $(document).ready(function() {
     io.socket.post("/game/addTroops", postData, function (data, jwres) {
       console.log(data);
       //If It Is Initial Phase
-      if (phase == 0 && data == 'New Region Created') {
+      if (phase == 0) {
         //End Turn
         var postData = {
           gameID : gameID,
@@ -124,7 +124,7 @@ function loadRegionInfo(name) {
 function loadInitialState(resData) {
   currentUserTurn = resData.currentUserTurn;
   //Should have phase there too, need to use it in server logic
-
+  phase = resData.phase;
   loadInitialRegions(resData);
 
   if (resData.currentUserTurn == userID) {
@@ -175,8 +175,12 @@ function modifyButton(region) {
     return 0;
   }
   //Initial Phase Unclaimed Territory
-  if (phase == 0 && region[0].controlledBy == null) {
-    $('#placeArmyBtn').removeClass("disabled").prop("disabled", false);
+  if (phase == 0) {
+    var currRegions = _.every(regions, regionsFullTest);
+    console.log('currRegions '+currRegions);
+    if (region[0].controlledBy == null || (region[0].controlledBy == userID && currRegions == true)) {
+      $('#placeArmyBtn').removeClass("disabled").prop("disabled", false);
+    }
   }
 }
 
@@ -198,9 +202,25 @@ function regionUpdate(data) {
     updateRegionInfo(regionID, playerID, armyCount);
     recolorTerritory(territory, color);
   }
+  else if (data.status == 'add') {
+    var region = $.grep(regions, function(e){ return e.id == regionID; });
+    var regionID = data.region.region;
+    var armyCount = data.region.armyCount;
+    var playerID = data.region.controlledBy;
+    updateRegionInfo(regionID, playerID, armyCount);
+  }
 }
 
 function changeTurn(data) {
   currentUserTurn = data.playerID;
   disableButtons();
+}
+
+function regionsFullTest(region) {
+  if (region.controlledBy != null) {
+    return true;
+  }
+  else {
+    return false;
+  }
 }

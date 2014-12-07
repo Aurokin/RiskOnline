@@ -472,6 +472,7 @@ module.exports = {
 				if(game.startingArmies == 1){
 
 					game.startingArmies = 0;
+					game.phase = 1;
 
 				}
 
