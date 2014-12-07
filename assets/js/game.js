@@ -13,3 +13,9 @@ io.socket.on('connect', function socketConnected() {
 $(document).ready(function() {
 
 });
+
+function recolorTerritory(territory, color) {
+  Risk.Territories[territory].path.setFill(color);
+  Risk.Territories[territory].path.setOpacity(0.4);
+  Risk.mapLayer.draw();
+}

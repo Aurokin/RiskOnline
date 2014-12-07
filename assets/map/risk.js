@@ -139,16 +139,20 @@ var Risk = {
 	},
 
 	divideTerritories: function() {
-
-		fillRandomColors();
+		//Disable Random Colors
+		//fillRandomColors();
 
 		for(var id in Risk.Territories) {
 			var color = Risk.Territories[id].color;
+			Risk.Territories[id].path.setFill('#fff');
+			Risk.Territories[id].path.setOpacity(0.4);
 
 			var neighbours = Risk.Territories[id].neighbours;
 
 			//a VERY simple algorithm to make the map more equal
 			var similarNeighbours = 0;
+			//Disable Random Colors
+			/*
 			for(var i = 0; i < neighbours.length; i++) {
 
 				var currNeighbour = neighbours[i];
@@ -168,6 +172,7 @@ var Risk = {
 				Risk.Territories[id].path.setFill(Risk.Settings.colors[newColor]);
 				Risk.Territories[id].path.setOpacity(0.4);
 			}
+			*/
 		}
 
 		Risk.mapLayer.draw();
@@ -191,5 +196,7 @@ var Risk = {
 			var randomNum = Math.floor(Math.random()*(colors.length));
 			return colors[randomNum];
 		}
+
+
 	}
 }
