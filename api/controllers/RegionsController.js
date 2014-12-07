@@ -6,7 +6,7 @@
  */
 
 module.exports = {
-	
+
 	fillWithRegions: function (req, res) {
 		Regions.create({
 			regionID: 1,
@@ -45,7 +45,7 @@ module.exports = {
 		});
 		Regions.create({
 			regionID: 6,
-			name: 'Northwest Territory',
+			name: 'North West Territory',
 			continent: 'North America'
 		}).exec(function(err, region) {
 			//console.log(region);
@@ -323,4 +323,3 @@ module.exports = {
 	}
 
 };
-
