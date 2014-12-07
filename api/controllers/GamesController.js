@@ -111,7 +111,6 @@ module.exports = {
 			if(err){
 				res.send('Game Not Found With Given ID');
 			}
-			//if(playerID == game.currentUserTurn){
 				Region.findOne({game : gameID, region: regionIDFrom, controlledBy: playerID}).exec(function(err, region1) {
 					if (err) {
 						res.send('Region Not Found');
@@ -132,7 +131,7 @@ module.exports = {
 
 					if (region1.armyCount >= region2.armyCount){
 						if(random_num_dice1>random_num_dice2){
-							region2.armyCount=region2.armyCount - region2.armyCount;
+							region2.armyCount=region2.armyCount - random_num_dice1;
 							if(region2.armyCount==0){
 								region2.controlledBy = playerID;
 								region2.armyCount = 1;
@@ -152,25 +151,27 @@ module.exports = {
 					console.log(random_num_dice2);
 					console.log(region1.armyCount);
 					console.log(region2.armyCount);
-/*
+
+					/*
 					region1.save(function(err) {
 						if (err) {
 							res.send(err);
 						}
-					Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'update', amount: armyMove, regionID: regionIDFrom});
+					Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'update', regionID : regionIDFrom});
+					//res.send(region1);
 					)};
+
 					region2.save(function(err) {
 						if (err) {
 							res.send(err);
 						}
-						Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'add', amount: armyMove, regionID: regionIDTo});
-						res.send(region1);
+						Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'update', regionID: regionIDTo});
+
 						res.send(region2);
 					)};
 */
 				});
 			});
-			//check for user current turn}
 		});
 	},
 
