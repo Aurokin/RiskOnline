@@ -19,7 +19,23 @@
 		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
   })
 %>
-<div id ="information" style="float: right; z-index:10; position: relative; left: -45px; width: 300px; min-height: 600px; background-color: #FAFFBD; border-radius: 20px;padding:10px;">
+<div id ="regionInformation" style="float: right; z-index:10; position: relative; left: -450px; width: 300px; min-height: 600px; background-color: #FAFFBD; border-radius: 20px;padding:10px;">
+	<div class="panelHead">
+		<h2 id="regionName"></h2>
+	</div>
+	<div class="panelBody">
+		<b>Controlled By: </b><span id="regionCB"></span><br>
+		<b>Number Of Armies: </b><span id="regionArmies"></span>
+		<div class="hidden" id="regionID"></div>
+		<div class="hidden" id="regionNameDB"></div>
+	</div>
+	<div class="panelFooter">
+		<button id="placeArmyBtn" type="button" class="disabled" disabled>Place Army</button>
+		<button id="moveArmyBtn" type="button" class="disabled" disabled>Move Army</button>
+		<button id="attackArmyBtn" type="button" class="disabled" disabled>Attack Army</button>
+	</div>
+</div>
+<div id ="information" style="float: right; z-index:10; position: relative; left: 200px; width: 300px; min-height: 600px; background-color: #FAFFBD; border-radius: 20px;padding:10px;">
 	<h1 style="text-align: center;">
 		Username
 	</h1>

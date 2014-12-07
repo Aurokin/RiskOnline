@@ -1,0 +1,24 @@
+.panelHead {
+  height: 80px;
+  border-bottom: 1px solid black;
+}
+
+.panelBody {
+  height: 200px;
+  border-bottom: 1px solid black;
+  padding-top: 20px;
+}
+
+#regionName {
+  margin: 0;
+  text-align: center;
+  padding-top: 15px;
+}
+
+.panelFooter {
+  padding-top: 20px;
+}
+
+.disabled {
+  color: #999;
+}
