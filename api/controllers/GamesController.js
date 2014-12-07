@@ -59,7 +59,7 @@ module.exports = {
 				//console.log(err);
 				res.send('Game Not Found With Given ID');
 			}
-			if(playerID == game.currentUserTurn){
+			//if(playerID == game.currentUserTurn){
 				Region.findOne({game : gameID, region : regionID}).exec(function(err, region) {
 					if (err) {
 						res.send('Region Not Found');
@@ -98,14 +98,80 @@ module.exports = {
 						}
 					}
 				});
-			}
+			//}
 		});
 	},
 
 	attack : function (req, res){
+		var gameID = req.body.gameID;
+		var playerID = req.body.playerID;
+		var regionIDFrom = req.body.regionIDFrom;
+		var regionIDTo = req.body.regionIDTo;
+		Games.findOne(gameID).populate('players').exec(function(err,game){
+			if(err){
+				res.send('Game Not Found With Given ID');
+			}
+			//if(playerID == game.currentUserTurn){
+				Region.findOne({game : gameID, region: regionIDFrom, controlledBy: playerID}).exec(function(err, region1) {
+					if (err) {
+						res.send('Region Not Found');
+					}
+
+					Region.findOne({game : gameID, region: regionIDTo}).exec(function(err, region2) {
+						if (err) {
+							res.send('Region Not Found');
+						}
+						console.log(region1.armyCount);
+						console.log(region2.armyCount);
 
 
+					var random_num_dice1 = Math.floor(Math.random() * 7)+1;
+					var random_num_dice2 = Math.floor(Math.random() * 7)+1;
 
+					//check adj list territory
+
+					if (region1.armyCount >= region2.armyCount){
+						if(random_num_dice1>random_num_dice2){
+							region2.armyCount=region2.armyCount - region2.armyCount;
+							if(region2.armyCount==0){
+								region2.controlledBy = playerID;
+								region2.armyCount = 1;
+								region1.armyCount = region1.armyCount - 1;
+								console.log(region1);
+								console.log(region2);
+							}
+						}
+						else {
+							region1.armyCount=region1.armyCount - random_num_dice2;
+						}
+					}
+					else{
+						res.send('You Cannot Fight');
+					}
+					console.log(random_num_dice1);
+					console.log(random_num_dice2);
+					console.log(region1.armyCount);
+					console.log(region2.armyCount);
+/*
+					region1.save(function(err) {
+						if (err) {
+							res.send(err);
+						}
+					Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'update', amount: armyMove, regionID: regionIDFrom});
+					)};
+					region2.save(function(err) {
+						if (err) {
+							res.send(err);
+						}
+						Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'add', amount: armyMove, regionID: regionIDTo});
+						res.send(region1);
+						res.send(region2);
+					)};
+*/
+				});
+			});
+			//check for user current turn}
+		});
 	},
 
 	move : function (req, res) {
@@ -126,6 +192,7 @@ module.exports = {
 						res.send('Region Not Found');
 					}
 					if(regions.length==2){
+						res.send('here');
 						//Do logic here
 						if (regions[0].region == regionIDFrom) {
 							regionFrom = 0;
