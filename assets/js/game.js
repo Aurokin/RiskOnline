@@ -1,5 +1,6 @@
 io.socket.on('connect', function socketConnected() {
-  var gameID = parseInt($('#gameID').text());
+  gameID = parseInt($('#gameID').text());
+  userID = parseInt($('#userID').text());
 
   io.socket.get("/games/"+gameID, function(resData, jwres) {
     console.log(resData);
@@ -7,6 +8,9 @@ io.socket.on('connect', function socketConnected() {
 
     io.socket.get("/regions", function(regionsData, jwres) {
       loadRegions(resData, regionsData);
+      if (resData.currentUserTurn == userID) {
+        //Its Users Turn Load UI
+      }
     });
   });
 
