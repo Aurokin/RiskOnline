@@ -70,6 +70,7 @@ $(document).ready(function() {
         console.log(data);
         if (data.phase == 2) {
           //Phase 2 Logic
+          disableButtons();
         }
         else if (data.phase == 3) {
           $('#endPhaseBtn').addClass("disabled").prop("disabled", true);
