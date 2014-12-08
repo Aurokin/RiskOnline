@@ -26,7 +26,9 @@ io.socket.on('connect', function socketConnected() {
     }
     else if (message.data.update == "phaseChange") {
       phase = message.data.phase;
+      remainingArmies = 0;
       changeText('currentPhase', phase);
+      changeText('remainingArmies', '0');
     }
   });
 
@@ -222,7 +224,7 @@ function modifyButton(region) {
     }
   }
   else {
-    if (region[0].controlledBy == userID && remainingArmies > 0) {
+    if (region[0].controlledBy == userID && remainingArmies > 0 && phase == 1) {
       $('#placeArmyBtn').removeClass("disabled").prop("disabled", false);
     }
   }

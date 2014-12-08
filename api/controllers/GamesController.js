@@ -663,6 +663,7 @@ module.exports = {
 			}
 
 			game.phase = 2;
+			game.armiesRemaining = 0;
 
 			game.save(function(err){
 				if (err) {
