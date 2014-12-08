@@ -134,7 +134,7 @@ module.exports = {
 							res.send('Regions Are Not Adjacent')
 						}
 						else {
-							if (region1.armyCount >= region2.armyCount){
+							if (region1.armyCount >= region2.armyCount && region2.controlledBy != playerID){
 								if(random_num_dice1>random_num_dice2){
 									region2.armyCount=region2.armyCount - random_num_dice1 + random_num_dice2;
 									if(region2.armyCount<=0){
