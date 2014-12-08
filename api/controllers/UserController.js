@@ -33,7 +33,7 @@ module.exports =
 												//console.log('login');
 												req.session.name = user.name;
 												req.session.user = user.id;
-												res.view('static/index');
+												res.redirect('/');
 											}
 									});
 							}
@@ -43,7 +43,17 @@ module.exports =
 		{
 			//console.log(req.session);
 			req.session.destroy(function() {
-				res.view('static/index');
+				res.redirect('/');
+			});
+		},
+		create: function(req, res) {
+			User.create(req.body).exec(function(err, user){
+				if (err) {
+					return res.view('static/error', {error: 'Username/Email May Already Be Taken, Or Incorrect Password'});
+				}
+				req.session.name = user.name;
+				req.session.user = user.id;
+				return res.redirect('/');
 			});
 		}
 };

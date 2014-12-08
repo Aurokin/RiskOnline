@@ -512,7 +512,7 @@ module.exports = {
 		var currentIndex;
 		var newRound = false;
 
-		Games.findOne(gameID).populate('players').exec(function(err, game){
+		Games.findOne(gameID).populate('players').populate('regions').exec(function(err, game){
 
 			if (err) {
 				console.log(err);
@@ -546,24 +546,36 @@ module.exports = {
 					game.currentUserTurn = playerIDs[currentIndex+1];
 				}
 
+				game.phase = 1;
+
 				if(game.startingArmies == 1){
-
 					game.startingArmies = 0;
-					game.phase = 1;
-
 				}
 
 				if (game.round == 0 && game.startingArmies > 1){
-
+					game.phase = 0;
 					newRound = false;
 					game.startingArmies = game.startingArmies - 1;
+				}
 
+				else {
+					//Calculate Armies For Next Turn
+					//console.log(game.regions);
+					var counter = 0;
+					for (i = 0; i < game.regions.length; i++) {
+						if (game.regions[i].controlledBy == game.currentUserTurn) {
+							counter = counter + 1;
+						}
+					}
+					game.armiesRemaining = parseInt(counter / 3);
+
+					if (game.armiesRemaining < 3) {
+						game.armiesRemaining = 3;
+					}
 				}
 
 				if(newRound == true){
-
 					game.round = game.round + 1;
-
 				}
 
 				//console.log(playerIDs);
@@ -575,7 +587,11 @@ module.exports = {
 					Games.publishUpdate(game.id, {
 						id: game.id,
 						playerID: game.currentUserTurn,
-						update: 'changeTurn'
+						update: 'changeTurn',
+						armiesRemaining: game.armiesRemaining,
+						startingArmies: game.startingArmies,
+						phase: game.phase,
+						round: game.round
 					});
 
 					if (err) {
@@ -588,7 +604,8 @@ module.exports = {
 						Games.publishUpdate(game.id, {
 							id: game.id,
 							round: game.round,
-							update: 'changeRound'
+							update: 'changeRound',
+							phase: game.phase
 						});
 					}
 					res.send(game);
@@ -643,6 +660,61 @@ module.exports = {
 
 			Games.message(gameID, {message: chatMessage, update: 'chat', status: 'message'});
 			res.send('Message Sent');
+		});
+	},
+
+	reinforceToAttackPhase: function (req, res) {
+		var gameID = req.body.gameID;
+
+		Games.findOne(gameID).exec(function(err, game){
+			if (err) {
+				res.send('Game Not Found');
+			}
+
+			game.phase = 2;
+			game.armiesRemaining = 0;
+
+			game.save(function(err){
+				if (err) {
+					res.send("Game Phase Couldn't Be Saved");
+				}
+
+				Games.publishUpdate(game.id, {
+					id: game.id,
+					phase: game.phase,
+					update: 'phaseChange',
+					status: 'update'
+				});
+
+				res.send({phase: game.phase});
+			});
+		});
+	},
+
+	attackToMovePhase: function (req, res) {
+		var gameID = req.body.gameID;
+
+		Games.findOne(gameID).exec(function(err, game){
+			if (err) {
+				res.send('Game Not Found');
+			}
+
+			game.phase = 3;
+
+			game.save(function(err){
+					if (err) {
+						res.send("Game Phase Couldn't Be Saved");
+					}
+
+					Games.publishUpdate(game.id, {
+						id: game.id,
+						phase: game.phase,
+						update: 'phaseChange',
+						status: 'update'
+					});
+
+					res.send("Phase Change");
+			});
 		});
 	}
 };

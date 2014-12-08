@@ -20,6 +20,16 @@ io.socket.on('connect', function socketConnected() {
     else if (message.data.update == "changeTurn") {
       changeTurn(message.data);
     }
+    else if (message.data.update == "changeRound") {
+      round = message.data.round;
+      changeText('currentRound', round);
+    }
+    else if (message.data.update == "phaseChange") {
+      phase = message.data.phase;
+      remainingArmies = 0;
+      changeText('currentPhase', phase);
+      changeText('remainingArmies', '0');
+    }
   });
 
 
@@ -53,6 +63,22 @@ $(document).ready(function() {
       }
     });
   });
+  //End Phase Button
+  $('#endPhaseBtn').click(function() {
+    if (phase == 1) {
+      io.socket.post("/game/reinforceToAttackPhase", {gameID: gameID}, function (data, jwres) {
+        console.log(data);
+        if (data.phase == 2) {
+          //Phase 2 Logic
+          disableButtons();
+        }
+        else if (data.phase == 3) {
+          $('#endPhaseBtn').addClass("disabled").prop("disabled", true);
+          $('#endTurnBtn').removeClass("disabled").prop("disabled", false);
+        }
+      });
+    }
+  });
 });
 
 function recolorTerritory(territory, color) {
@@ -62,7 +88,7 @@ function recolorTerritory(territory, color) {
 }
 
 function loadPlayers(resData) {
-  colors = ['#36FF7C', 'FF36B9', '#52A3FF', '#FFAE52', '#E8FF52'];
+  colors = ['#36FF7C', '#FF36B9', '#52A3FF', '#FFAE52', '#E8FF52', '#FF0000'];
   players = [];
   var currPlayer = {};
   for (i = 0; i < resData.players.length; i++) {
@@ -70,6 +96,7 @@ function loadPlayers(resData) {
     currPlayer.name = resData.players[i].name;
     currPlayer.color = colors[i];
     players[i] = currPlayer;
+    addPlayerToUI(i+1, currPlayer.name);
     currPlayer = {};
   }
 
@@ -125,13 +152,28 @@ function loadInitialState(resData) {
   currentUserTurn = resData.currentUserTurn;
   //Should have phase there too, need to use it in server logic
   phase = resData.phase;
+  round = resData.round;
   loadInitialRegions(resData);
+  loadGameName(resData.name);
+  var existPlayer = _.findWhere(players, {id: currentUserTurn});
+  changeText('userTurn', existPlayer.name);
+  changeText('currentRound', round);
+  changeText('currentPhase', phase);
+  if (resData.round > 0) {
+    changeText('remainingArmies', resData.armiesRemaining);
+    remainingArmies = resData.armiesRemaining;
+  }
+  else {
+    changeText('remainingArmies', resData.startingArmies);
+    startingArmies = resData.startingArmies;
+  }
 
-  if (resData.currentUserTurn == userID) {
-    //Its Players Turn
-    if (resData.round == 0) {
-      //Initial Placement Round
-      phase = 0;
+  if (currentUserTurn == userID && round > 0) {
+    if (phase == 1 || phase == 2) {
+      enableEndPhase();
+    }
+    else {
+      enableEndTurn();
     }
   }
 }
@@ -177,8 +219,13 @@ function modifyButton(region) {
   //Initial Phase Unclaimed Territory
   if (phase == 0) {
     var currRegions = _.every(regions, regionsFullTest);
-    console.log('currRegions '+currRegions);
+    //console.log('currRegions '+currRegions);
     if (region[0].controlledBy == null || (region[0].controlledBy == userID && currRegions == true)) {
+      $('#placeArmyBtn').removeClass("disabled").prop("disabled", false);
+    }
+  }
+  else {
+    if (region[0].controlledBy == userID && remainingArmies > 0 && phase == 1) {
       $('#placeArmyBtn').removeClass("disabled").prop("disabled", false);
     }
   }
@@ -208,12 +255,30 @@ function regionUpdate(data) {
     var armyCount = data.region.armyCount;
     var playerID = data.region.controlledBy;
     updateRegionInfo(regionID, playerID, armyCount);
+
+    remainingArmies = remainingArmies - 1;
+    changeText('remainingArmies', remainingArmies);
+    if (remainingArmies == 0) {
+      disableButtons();
+    }
   }
 }
 
 function changeTurn(data) {
+  if (data.round > 0) {
+    remainingArmies = data.armiesRemaining;
+  }
+  else {
+    remainingArmies = data.startingArmies;
+  }
   currentUserTurn = data.playerID;
+  round = data.round;
+  phase = data.phase;
+  updateGameInfo(currentUserTurn, round, phase, remainingArmies);
   disableButtons();
+  if (phase == 1 || phase == 2) {
+    enableEndPhase();
+  }
 }
 
 function regionsFullTest(region) {
@@ -223,4 +288,32 @@ function regionsFullTest(region) {
   else {
     return false;
   }
+}
+
+function loadGameName(name) {
+  $('#gameName').text(name);
+}
+
+function addPlayerToUI(number, name) {
+  $('<div class="playerInPanel"><div id="p'+number+'Color" class="playerColor"></div><span id="p'+number+'Name" class="playerName">'+name+'</span></div>').appendTo('#playersInGame');
+}
+
+function changeText(id, text) {
+  $('#'+id).text(text);
+}
+
+function enableEndPhase() {
+  $('#endPhaseBtn').removeClass("disabled").prop("disabled", false);
+}
+
+function enableEndTurn() {
+  $('#endTurnBtn').removeClass("disabled").prop("disabled", false);
+}
+
+function updateGameInfo(currentUserTurn, round, phase, remainingArmies) {
+  var existPlayer = _.findWhere(players, {id: currentUserTurn});
+  changeText('userTurn', existPlayer.name);
+  changeText('currentRound', round);
+  changeText('currentPhase', phase);
+  changeText('remainingArmies', remainingArmies);
 }

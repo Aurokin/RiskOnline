@@ -131,7 +131,7 @@ var Risk = {
 
 				group.on('click', function() {
 					//need to send this "click" to GamesController
-					console.log(path.attrs.id);
+					//console.log(path.attrs.id);
 					loadRegionInfo(path.attrs.id);
 					location.hash = path.attrs.id;
 

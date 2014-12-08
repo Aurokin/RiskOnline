@@ -18,7 +18,7 @@ $('#create-game').submit(function(e) {
     console.log(data);*/
 
     if (data.create == true) {
-      window.location.href = 'http://localhost:1337/game?gameID='+data.id;
+      window.location.href = 'http://'+window.location.host+'/game?gameID='+data.id;
     }
   });
 
