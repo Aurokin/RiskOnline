@@ -111,6 +111,7 @@ module.exports = {
 			if(err){
 				res.send('Game Not Found With Given ID');
 			}
+			if(playerID == game.currentUserTurn){
 				Region.findOne({game : gameID, region: regionIDFrom, controlledBy: playerID}).exec(function(err, region1) {
 					if (err) {
 						res.send('Region Not Found');
@@ -120,58 +121,56 @@ module.exports = {
 						if (err) {
 							res.send('Region Not Found');
 						}
-						console.log(region1.armyCount);
-						console.log(region2.armyCount);
-
 
 					var random_num_dice1 = Math.floor(Math.random() * 7)+1;
 					var random_num_dice2 = Math.floor(Math.random() * 7)+1;
 
 					//check adj list territory
-
-					if (region1.armyCount >= region2.armyCount){
-						if(random_num_dice1>random_num_dice2){
-							region2.armyCount=region2.armyCount - random_num_dice1;
-							if(region2.armyCount==0){
-								region2.controlledBy = playerID;
-								region2.armyCount = 1;
-								region1.armyCount = region1.armyCount - 1;
-								console.log(region1);
-								console.log(region2);
-							}
+					AdjRegions.findOne({region: regionIDFrom, adjRegion: regionIDTo}).exec(function(err, adjRegion) {
+						if(err){
+							res.send('You Did Not Choose Adj Region');
+						}
+						if (typeof adjRegion === 'undefined') {
+							res.send('Regions Are Not Adjacent')
 						}
 						else {
-							region1.armyCount=region1.armyCount - random_num_dice2;
-						}
-					}
-					else{
-						res.send('You Cannot Fight');
-					}
-					console.log(random_num_dice1);
-					console.log(random_num_dice2);
-					console.log(region1.armyCount);
-					console.log(region2.armyCount);
+							if (region1.armyCount >= region2.armyCount){
+								if(random_num_dice1>random_num_dice2){
+									region2.armyCount=region2.armyCount - random_num_dice1 + random_num_dice2;
+									if(region2.armyCount<=0){
+										region2.controlledBy = playerID;
+										region2.armyCount = 1;
+										region1.armyCount = region1.armyCount - 1;
+									}
+								}
+								else {
+									region1.armyCount=region1.armyCount - random_num_dice2 + random_num_dice1;
+								}
+							}
+							else{
+								res.send('You Cannot Fight');
+							}
 
-					/*
-					region1.save(function(err) {
-						if (err) {
-							res.send(err);
+							//save 2 regions
+							region1.save(function(err) {
+								if (err) {
+									res.send(err);
+								}
+								Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'attackUpdate', regionID : regionIDFrom, armyCount: region1.armyCount, controlledBy : region1.controlledBy});
+								region2.save(function(err) {
+									if (err) {
+										res.send(err);
+									}
+									Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'attackUpdate', regionID: regionIDTo, armyCount: region2.armyCount, controlledBy : region2.controlledBy});
+									res.send(region2);
+								});
+							});
+							//close 2 save functions
 						}
-					Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'update', regionID : regionIDFrom});
-					//res.send(region1);
-					)};
-
-					region2.save(function(err) {
-						if (err) {
-							res.send(err);
-						}
-						Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'update', regionID: regionIDTo});
-
-						res.send(region2);
-					)};
-*/
+					});
 				});
 			});
+		}
 		});
 	},
 
@@ -192,46 +191,56 @@ module.exports = {
 					if (err) {
 						res.send('Region Not Found');
 					}
-					if(regions.length==2){
-						res.send('here');
-						//Do logic here
-						if (regions[0].region == regionIDFrom) {
-							regionFrom = 0;
-							regionTo = 1;
+					//check adj list territory
+					AdjRegions.findOne({region: regionIDFrom, adjRegion: regionIDTo}).exec(function(err, adjRegion) {
+						if(err){
+							res.send('You Did Not Choose Adj Region');
+						}
+						if (typeof adjRegion === 'undefined') {
+							res.send('Regions Are Not Adjacent')
 						}
 						else {
-							regionFrom = 1;
-							regionTo = 0;
-						}
-						if(regions[regionFrom].armyCount > 1 ){
-							if (regions[regionFrom].armyCount - 1 < armyMove) {
-								armyMove = regions[regionFrom].armyCount - 1;
+						if(regions.length==2){
+							//Do logic here
+							if (regions[0].region == regionIDFrom) {
+								regionFrom = 0;
+								regionTo = 1;
 							}
-							regions[regionFrom].armyCount = regions[regionFrom].armyCount - armyMove;
-							regions[regionTo].armyCount = regions[regionTo].armyCount + armyMove;
+							else {
+								regionFrom = 1;
+								regionTo = 0;
+							}
+							if(regions[regionFrom].armyCount > 1 ){
+								if (regions[regionFrom].armyCount - 1 < armyMove) {
+									armyMove = regions[regionFrom].armyCount - 1;
+								}
+								regions[regionFrom].armyCount = regions[regionFrom].armyCount - armyMove;
+								regions[regionTo].armyCount = regions[regionTo].armyCount + armyMove;
 
-							regions[regionFrom].save(function(err) {
-									if (err) {
-										res.send(err);
-									}
-									Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'remove', amount: armyMove, regionID: regionIDFrom});
-
-									regions[regionTo].save(function(err) {
+								regions[regionFrom].save(function(err) {
 										if (err) {
 											res.send(err);
 										}
-										Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'add', amount: armyMove, regionID: regionIDTo});
-										res.send(regions);
-									});
-							});
+										Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'remove', amount: armyMove, regionID: regionIDFrom});
+
+										regions[regionTo].save(function(err) {
+											if (err) {
+												res.send(err);
+											}
+											Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'add', amount: armyMove, regionID: regionIDTo});
+											res.send(regions);
+										});
+								});
+							}
+							else {
+								res.send('Player Not Have Enough Troop To Move');
+							}
 						}
-						else {
-							res.send('Player Not Have Enough Troop To Move');
+						else{
+							res.send('Region Not Belong Player');
 						}
 					}
-					else{
-						res.send('Region Not Belong Player');
-					}
+				});
 				});
 			}
 		});
