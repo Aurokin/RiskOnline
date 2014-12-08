@@ -551,6 +551,18 @@ module.exports = {
 
 				else {
 					//Calculate Armies For Next Turn
+					//console.log(game.regions);
+					var counter = 0;
+					for (i = 0; i < game.regions.length; i++) {
+						if (game.regions[i].controlledBy == game.currentUserTurn) {
+							counter = counter + 1;
+						}
+					}
+					game.armiesRemaining = parseInt(counter / 3);
+
+					if (game.armiesRemaining < 3) {
+						game.armiesRemaining = 3;
+					}
 				}
 
 				if(newRound == true){

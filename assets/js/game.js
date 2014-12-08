@@ -53,6 +53,14 @@ $(document).ready(function() {
       }
     });
   });
+  //End Phase Button
+  $('#endPhaseBtn').click(function() {
+    if (phase == 1) {
+      io.socket.post("/game/reinforceToAttackPhase", {gameID: gameID}, function (data, jwres) {
+        console.log(data);
+      }
+    }
+  });
 });
 
 function recolorTerritory(territory, color) {
@@ -141,14 +149,6 @@ function loadInitialState(resData) {
     changeText('remainingArmies', resData.startingArmies);
     startingArmies = resData.startingArmies;
   }
-
-  if (resData.currentUserTurn == userID) {
-    //Its Players Turn
-    if (resData.round == 0) {
-      //Initial Placement Round
-      phase = 0;
-    }
-  }
 }
 
 function loadInitialRegions(resData) {
@@ -197,6 +197,11 @@ function modifyButton(region) {
       $('#placeArmyBtn').removeClass("disabled").prop("disabled", false);
     }
   }
+  else {
+    if (region[0].controlledBy == userID && remainingArmies > 0) {
+      $('#placeArmyBtn').removeClass("disabled").prop("disabled", false);
+    }
+  }
 }
 
 function disableButtons() {
@@ -223,6 +228,12 @@ function regionUpdate(data) {
     var armyCount = data.region.armyCount;
     var playerID = data.region.controlledBy;
     updateRegionInfo(regionID, playerID, armyCount);
+
+    remainingArmies = remainingArmies - 1;
+    changeText('remainingArmies', remainingArmies);
+    if (remainingArmies == 0) {
+      disableButtons();
+    }
   }
 }
 
@@ -238,6 +249,9 @@ function changeTurn(data) {
   phase = data.phase;
   updateGameInfo(currentUserTurn, round, phase, remainingArmies);
   disableButtons();
+  if (phase == 1 || phase == 2) {
+    $('#endPhaseBtn').removeClass("disabled").prop("disabled", false);
+  }
 }
 
 function regionsFullTest(region) {
