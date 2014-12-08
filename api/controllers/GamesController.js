@@ -503,7 +503,7 @@ module.exports = {
 		var currentIndex;
 		var newRound = false;
 
-		Games.findOne(gameID).populate('players').exec(function(err, game){
+		Games.findOne(gameID).populate('players').populate('regions').exec(function(err, game){
 
 			if (err) {
 				console.log(err);
@@ -547,6 +547,10 @@ module.exports = {
 					game.phase = 0;
 					newRound = false;
 					game.startingArmies = game.startingArmies - 1;
+				}
+
+				else {
+					//Calculate Armies For Next Turn
 				}
 
 				if(newRound == true){
