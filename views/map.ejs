@@ -36,104 +36,23 @@
 	</div>
 </div>
 <div id ="information" style="float: right; z-index:10; position: relative; left: 200px; width: 300px; min-height: 600px; background-color: #FAFFBD; border-radius: 20px;padding:10px;">
-	<h1 style="text-align: center;">
-		Username
-	</h1>
-	<hr>
-	<table>
-		<tr>
-			<td><strong>Armies: </strong></td><td></td>
-		</tr>
-		<tr>
-			<td></td><td>armyCount</td>
-		</tr>
-
-
-		<tr>
-			<td><strong>Countries: </strong></td><td></td>
-		</tr>
-		<tr>
-			<td></td><td>country[]</td>
-		</tr>
-		<tr>
-			<td></td><td>country[]</td>
-		</tr>
-
-
-		<tr>
-			<td><strong>Continents: </strong></td><td></td>
-		</tr>
-		<tr>
-			<td></td><td>continent[]</td>
-		</tr>
-		<tr>
-			<td></td><td>continent[]</td>
-		</tr>
-		<!--for(i=0;i<continentscontrolled; i++)
-		{
-			<tr>
-				<td></td><td>continentName[]</td>
-			</tr>
-		}-->
-	</table>
-	<hr>
-	<button type="button" name="addTroops" onclick="addTroops('tyler','japan')">Click me</button>
-
-
-	<div id = "turnBox">
-
-	<div style="height: 10px; opacity:0;"></div>
-	<div id = "turnBox" style = "text-align: center;">
-	yo!
-	<!--
-		if(person[].turn == true)
-		{
-			<h4 style="text-align: center">It is currently {Player's} Turn.</h4>
-		}
-		if(myTurn == true)
-		{
-			turnPosition = 'place';
-				<h4 id="instruct" style ="text-align: center;">Where would you like to place your armies?</h4>
-				set var
-			turnPosition = 'attackQ';
-				<%/*document.getElementById("instruct").innerHTML = "Would you like to attack?";*/%>
-					if yes
-						turnPosition = 'attack';
-					else
-						turnPosition = 'fortify';
-			if turnPosition == 'attack'
-				<%/*document.getElementById("instruct").innerHTML = "Where would you like to attack from?";*/%>
-					set var
-				<%/*document.getElementById("instruct").innerHTML = "Where would you like to attack?";*/%>
-					set var
-				<%/*document.getElementById("instruct").innerHTML = "Please roll the dice!";*/%>
-					display dice
-					set dievar
-						rng
-							if(dievar>rng)
-								<%/*document.getElementById("instruct").innerHTML = "Congratulations! You won that fight!";*/%>
-								set var
-							else
-								<%/*document.getElementById("instruct").innerHTML = "You lost that fight!";*/%>
-								set var
-				turnPosition = 'fortify';
-				<%/*document.getElementById("instruct").innerHTML = "Where would you like to place your armies?";*/%>
-					set var
-				<%/*document.getElementById("instruct").innerHTML = "How many armies shall you place?";*/%>
-					set var
-			loop
-				<%/*document.getElementById("instruct").innerHTML = "Will you place more armies?";*/%>
-					set var
-						if yes
-							<%/*document.getElementById("instruct").innerHTML = "Where would you like to place your armies?";*/%>
-								set var
-							<%/*document.getElementById("instruct").innerHTML = "How many armies shall you place?";*/%>
-								set var
-				myTurn = 'false';
-		}-->
-
+	<div class="panelHead">
+		<h2 id="gameName"></h2>
 	</div>
-</div>
+	<div class="panelBody">
+		<b>Current Users Turn: </b><span id="userTurn"></span><br>
+		<b>Current Round: </b><span id="currentRound"></span><br>
+		<b>Current Phase: </b><span id="currentPhase"></span><br>
+		<b>Remaining Armies: </b><span id="remainingArmies"></span><br>
+		<b>Players</b><br>
+		<div id="playersInGame">
+
+		</div>
+	</div>
+	<div class="panelFooter">
+		<button id="endPhaseBtn" type="button" class="disabled" disabled>End Phase</button>
+		<button id="endTurnBtn" type="button" class="disabled" disabled>End Turn</button>
+	</div>
 </div>
 <div id="chatContainer">
 	<div id="chatGL" class="clearfix">

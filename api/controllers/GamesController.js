@@ -566,7 +566,10 @@ module.exports = {
 					Games.publishUpdate(game.id, {
 						id: game.id,
 						playerID: game.currentUserTurn,
-						update: 'changeTurn'
+						update: 'changeTurn',
+						armiesRemaining: game.armiesRemaining,
+						startingArmies: game.startingArmies,
+						phase: game.phase
 					});
 
 					if (err) {
@@ -638,7 +641,7 @@ module.exports = {
 		});
 	},
 
-	moveToAttackPhase: function (req, res) {
+	reinforceToAttackPhase: function (req, res) {
 		var gameID = req.body.gameID;
 
 		Games.findOne(gameID).exec(function(err, game){
@@ -647,6 +650,33 @@ module.exports = {
 			}
 
 			game.phase = 2;
+
+			game.save(function(err){
+				if (err) {
+					res.send("Game Phase Couldn't Be Saved");
+				}
+
+				Games.publishUpdate(game.id, {
+					id: game.id,
+					phase: game.phase,
+					update: 'phaseChange',
+					status: 'update'
+				});
+
+				res.send("Phase Change");
+			});
+		});
+	},
+
+	attackToMovePhase: function (req, res) {
+		var gameID = req.body.gameID;
+
+		Games.findOne(gameID).exec(function(err, game){
+			if (err) {
+				res.send('Game Not Found');
+			}
+
+			game.phase = 3;
 
 			game.save(function(err){
 					if (err) {

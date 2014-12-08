@@ -62,7 +62,7 @@ function recolorTerritory(territory, color) {
 }
 
 function loadPlayers(resData) {
-  colors = ['#36FF7C', '#FF36B9', '#52A3FF', '#FFAE52', '#E8FF52'];
+  colors = ['#36FF7C', '#FF36B9', '#52A3FF', '#FFAE52', '#E8FF52', '#FF0000'];
   players = [];
   var currPlayer = {};
   for (i = 0; i < resData.players.length; i++) {
@@ -70,6 +70,7 @@ function loadPlayers(resData) {
     currPlayer.name = resData.players[i].name;
     currPlayer.color = colors[i];
     players[i] = currPlayer;
+    addPlayerToUI(i+1, currPlayer.name);
     currPlayer = {};
   }
 
@@ -125,7 +126,21 @@ function loadInitialState(resData) {
   currentUserTurn = resData.currentUserTurn;
   //Should have phase there too, need to use it in server logic
   phase = resData.phase;
+  round = resData.round;
   loadInitialRegions(resData);
+  loadGameName(resData.name);
+  var existPlayer = _.findWhere(players, {id: currentUserTurn});
+  changeText('userTurn', existPlayer.name);
+  changeText('currentRound', round);
+  changeText('currentPhase', phase);
+  if (resData.round > 0) {
+    changeText('remainingArmies', resData.armiesRemaining);
+    remainingArmies = resData.armiesRemaining;
+  }
+  else {
+    changeText('remainingArmies', resData.startingArmies);
+    startingArmies = resData.startingArmies;
+  }
 
   if (resData.currentUserTurn == userID) {
     //Its Players Turn
@@ -212,7 +227,16 @@ function regionUpdate(data) {
 }
 
 function changeTurn(data) {
+  if (data.round > 0) {
+    remainingArmies = data.armiesRemaining;
+  }
+  else {
+    remainingArmies = data.startingArmies;
+  }
   currentUserTurn = data.playerID;
+  round = data.round;
+  phase = data.phase;
+  updateGameInfo(currentUserTurn, round, phase, remainingArmies);
   disableButtons();
 }
 
@@ -223,4 +247,24 @@ function regionsFullTest(region) {
   else {
     return false;
   }
+}
+
+function loadGameName(name) {
+  $('#gameName').text(name);
+}
+
+function addPlayerToUI(number, name) {
+  $('<div class="playerInPanel"><div id="p'+number+'Color" class="playerColor"></div><span id="p'+number+'Name" class="playerName">'+name+'</span></div>').appendTo('#playersInGame');
+}
+
+function changeText(id, text) {
+  $('#'+id).text(text);
+}
+
+function updateGameInfo(currentUserTurn, round, phase, remainingArmies) {
+  var existPlayer = _.findWhere(players, {id: currentUserTurn});
+  changeText('userTurn', existPlayer.name);
+  changeText('currentRound', round);
+  changeText('currentPhase', phase);
+  changeText('remainingArmies', remainingArmies);
 }
