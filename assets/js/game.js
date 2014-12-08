@@ -20,6 +20,14 @@ io.socket.on('connect', function socketConnected() {
     else if (message.data.update == "changeTurn") {
       changeTurn(message.data);
     }
+    else if (message.data.update == "changeRound") {
+      round = message.data.round;
+      changeText('currentRound', round);
+    }
+    else if (message.data.update == "phaseChange") {
+      phase = message.data.phase;
+      changeText('currentPhase', phase);
+    }
   });
 
 
@@ -58,7 +66,14 @@ $(document).ready(function() {
     if (phase == 1) {
       io.socket.post("/game/reinforceToAttackPhase", {gameID: gameID}, function (data, jwres) {
         console.log(data);
-      }
+        if (data.phase == 2) {
+          //Phase 2 Logic
+        }
+        else if (data.phase == 3) {
+          $('#endPhaseBtn').addClass("disabled").prop("disabled", true);
+          $('#endTurnBtn').removeClass("disabled").prop("disabled", false);
+        }
+      });
     }
   });
 });
@@ -148,6 +163,15 @@ function loadInitialState(resData) {
   else {
     changeText('remainingArmies', resData.startingArmies);
     startingArmies = resData.startingArmies;
+  }
+
+  if (currentUserTurn == userID && round > 0) {
+    if (phase == 1 || phase == 2) {
+      enableEndPhase();
+    }
+    else {
+      enableEndTurn();
+    }
   }
 }
 
@@ -250,7 +274,7 @@ function changeTurn(data) {
   updateGameInfo(currentUserTurn, round, phase, remainingArmies);
   disableButtons();
   if (phase == 1 || phase == 2) {
-    $('#endPhaseBtn').removeClass("disabled").prop("disabled", false);
+    enableEndPhase();
   }
 }
 
@@ -273,6 +297,14 @@ function addPlayerToUI(number, name) {
 
 function changeText(id, text) {
   $('#'+id).text(text);
+}
+
+function enableEndPhase() {
+  $('#endPhaseBtn').removeClass("disabled").prop("disabled", false);
+}
+
+function enableEndTurn() {
+  $('#endTurnBtn').removeClass("disabled").prop("disabled", false);
 }
 
 function updateGameInfo(currentUserTurn, round, phase, remainingArmies) {

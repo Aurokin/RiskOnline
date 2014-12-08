@@ -581,7 +581,8 @@ module.exports = {
 						update: 'changeTurn',
 						armiesRemaining: game.armiesRemaining,
 						startingArmies: game.startingArmies,
-						phase: game.phase
+						phase: game.phase,
+						round: game.round
 					});
 
 					if (err) {
@@ -675,7 +676,7 @@ module.exports = {
 					status: 'update'
 				});
 
-				res.send("Phase Change");
+				res.send({phase: game.phase});
 			});
 		});
 	},
