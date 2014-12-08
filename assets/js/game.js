@@ -62,7 +62,7 @@ function recolorTerritory(territory, color) {
 }
 
 function loadPlayers(resData) {
-  colors = ['#36FF7C', 'FF36B9', '#52A3FF', '#FFAE52', '#E8FF52'];
+  colors = ['#36FF7C', '#FF36B9', '#52A3FF', '#FFAE52', '#E8FF52'];
   players = [];
   var currPlayer = {};
   for (i = 0; i < resData.players.length; i++) {
