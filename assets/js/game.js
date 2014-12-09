@@ -94,7 +94,7 @@ $(document).ready(function() {
     attack(attackableRegions);
   });
   //Actual Attack Button
-  $('#actualAttackBtn').click(function() {
+  $('.actualAttackBtn').click(function() {
     var regionFrom = parseInt($('#regionID').text());
     var regionTo = this.getAttribute("value");
 
