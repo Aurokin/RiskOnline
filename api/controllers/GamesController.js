@@ -630,7 +630,7 @@ module.exports = {
 			res.send('User Is Not Logged In!');
 		}
 
-		console.log(gameName+' '+password+' '+numPlayers+' '+playerID);
+		//console.log(gameName+' '+password+' '+numPlayers+' '+playerID);
 
 		Games.create({
 			name: gameName,
