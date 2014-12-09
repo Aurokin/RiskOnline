@@ -300,7 +300,7 @@ module.exports = {
 					winner: 'playerID',
 					status: 'complete',
 					endDate: 'values.startDate = new Date().toISOString()',
-				})
+				});
 
 			}
 
@@ -385,14 +385,15 @@ module.exports = {
 		var gameID = parseInt(req.body.gameID);
 		var playerID = parseInt(req.body.playerID);
 		var password = req.body.password;
+		var curPlayers = 0;
 		//var roomName = 'game'+gameID+'info';
 
-
+		/*
 		console.log('gameID: '+gameID);
 		console.log('playerID: '+playerID);
 		console.log('password: '+password);
 		console.log(typeof playerID);
-
+		*/
 
 		//Error Out For Invalid Player ID / Game ID
 		if (typeof playerID === 'object' || typeof gameID === 'object') {
@@ -425,12 +426,14 @@ module.exports = {
 					}
 
 					game.save(function(err) {
-						var curPlayers = game.players.length + 1;
-						Games.publishUpdate(game.id, {id: gameID, currentPlayers: curPlayers, status: 'add', update: 'player', numPlayers: game.numPlayers});
+						curPlayers = game.players.length + 1;
+						//curPlayers = curPlayers.toString();
+						//This Line Causes Error That Does No Harm On Join, But Doesn't When Game Is Created Through Postman, Really Frustrating, Appears Fixed For Now
+						Games.publishUpdate(game.id, {id: game.id, currentPlayers: curPlayers, status: 'add', update: 'player', numPlayers: game.numPlayers});
 
 						//.subscribe maybe not necesscary?
 						//Games.subscribe(req.socket, game.id);
-						console.log('done');
+						//console.log('done');
 						return res.send({join: true});
 					});
 
@@ -615,8 +618,8 @@ module.exports = {
 
 		var gameName = req.body.gameName;
 		var password = req.body.password;
-		var numPlayers = parseInt(req.body.numPlayers);
-		var playerID = parseInt(req.session.user);
+		var numPlayers = req.body.numPlayers;
+		var playerID = req.session.user;
 
 		if (typeof playerID === 'undefined') {
 			res.send('User Is Not Logged In!');
@@ -638,8 +641,13 @@ module.exports = {
 			if (err) {
 				res.send('Database Error: Couldnt Create Game');
 			}
-			Games.publishCreate({id: game.id, name: game.name, password: game.password, numPlayers: game.numPlayers, currentPlayers: 1});
-			res.send({create: true, id: game.id});
+			if (typeof game === 'undefined') {
+				res.send({create: false});
+			}
+			else {
+				Games.publishCreate({id: game.id, name: game.name, password: game.password, numPlayers: game.numPlayers, currentPlayers: 1});
+				res.send({create: true, id: game.id});
+			}
 		});
 	},
 
