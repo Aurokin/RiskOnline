@@ -74,7 +74,7 @@ module.exports = {
 								//console.log(err);
 								res.send('Could Not Create Region');
 							}
-							Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'create', region: newRegion, armyCount: army, controlledBy: newRegion.controlledBy});
+							Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'create', region: newRegion, armyCount: army});
 							//res.send(newRegion);
 							res.send('New Region Created');
 						});
@@ -88,7 +88,7 @@ module.exports = {
 								if (err) {
 									res.send('Region Could Not Be Added');
 								}
-								Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'add', region: region, armyCount: army, controlledBy: region.controlledBy});
+								Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'add', region: region, armyCount: army});
 								//res.send(region);
 								res.send('Army Added To Region');
 							});
@@ -164,11 +164,20 @@ module.exports = {
 									if (err) {
 										res.send(err);
 									}
-									if (changeControl == true) {
-										Games.publishUpdate(gameID, {id: gameID, update:'changeControl', status:'changed', region: regionIDTo, armyCount: region2.armyCount, controlledBy: region2.controlledBy});
-									}
 									Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'attackUpdate', region: regionIDTo, armyCount: region2.armyCount, controlledBy : region2.controlledBy});
-									res.send('Attack Successful');
+									if (changeControl == true) {
+										game.moves = game.moves + 1;
+										game.save(function(err) {
+											if (err) {
+												console.log(err);
+											}
+											Games.publishUpdate(gameID, {id: gameID, update:'changeControl', status:'changed', region: regionIDTo, armyCount: region2.armyCount, controlledBy: region2.controlledBy, moves: game.moves});
+											res.send('Attack Successful');
+										});
+									}
+									else {
+										res.send('Attack Successful');
+									}
 								});
 							});
 							//close 2 save functions
@@ -184,8 +193,8 @@ module.exports = {
 		var gameID = req.body.gameID;
 		var playerID = req.body.playerID;
 		var armyMove = parseInt(req.body.armyMove);
-		var regionIDFrom = parseInt(req.body.regionIDFrom);
-		var regionIDTo = parseInt(req.body.regionIDTo);
+		var regionIDFrom = req.body.regionIDFrom;
+		var regionIDTo = req.body.regionIDTo;
 		var regionFrom;
 		var regionTo;
 		Games.findOne(gameID).populate('players').exec(function(err,game){
@@ -549,6 +558,7 @@ module.exports = {
 				}
 
 				game.phase = 1;
+				game.moves = 1;
 
 				if(game.startingArmies == 1){
 					game.startingArmies = 0;
@@ -556,6 +566,7 @@ module.exports = {
 
 				if (game.round == 0 && game.startingArmies > 1){
 					game.phase = 0;
+					game.moves = 0;
 					newRound = false;
 					game.startingArmies = game.startingArmies - 1;
 				}
@@ -593,7 +604,8 @@ module.exports = {
 						armiesRemaining: game.armiesRemaining,
 						startingArmies: game.startingArmies,
 						phase: game.phase,
-						round: game.round
+						round: game.round,
+						moves: game.moves
 					});
 
 					if (err) {
@@ -607,7 +619,8 @@ module.exports = {
 							id: game.id,
 							round: game.round,
 							update: 'changeRound',
-							phase: game.phase
+							phase: game.phase,
+							moves: game.moves
 						});
 					}
 					res.send(game);
@@ -724,7 +737,7 @@ module.exports = {
 						status: 'update'
 					});
 
-					res.send("Phase Change");
+					res.send({phase: game.phase});
 			});
 		});
 	}

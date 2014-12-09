@@ -86,3 +86,7 @@
 }
 
 /* Players In Panel */
+
+.numIcons {
+  pointer-events: none;
+}

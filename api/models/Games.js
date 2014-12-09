@@ -79,6 +79,11 @@ module.exports = {
 
     armiesRemaining: {
       type: 'integer'
+    },
+
+    moves : {
+      type: 'integer',
+      defaultsTo: 0
     }
   },
 

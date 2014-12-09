@@ -41,6 +41,8 @@ io.socket.on('connect', function socketConnected() {
     }
     else if (message.data.update == "changeControl") {
       //Notify User Continent Changed Control
+      moves = message.data.moves;
+      changeText('currentMoves', moves);
     }
   });
 
@@ -145,6 +147,17 @@ $(document).ready(function() {
       });
     }
   });
+  //End Turn Button
+  $('#endTurnBtn').click(function() {
+    var postData = {
+      gameID : gameID,
+      playerID : userID
+    }
+    io.socket.post("/game/changeTurn", postData, function (data, jwres) {
+      console.log(data);
+      $('#endTurnBtn').addClass("disabled").prop("disabled", true);
+    });
+  });
 });
 
 function recolorTerritory(territory, color) {
@@ -242,12 +255,14 @@ function loadInitialState(resData) {
   //Should have phase there too, need to use it in server logic
   phase = resData.phase;
   round = resData.round;
+  moves = resData.moves;
   loadInitialRegions(resData);
   loadGameName(resData.name);
   var existPlayer = _.findWhere(players, {id: currentUserTurn});
   changeText('userTurn', existPlayer.name);
   changeText('currentRound', round);
   changeText('currentPhase', phase);
+  changeText('currentMoves', moves);
   if (resData.round > 0) {
     changeText('remainingArmies', resData.armiesRemaining);
     remainingArmies = resData.armiesRemaining;
@@ -284,6 +299,7 @@ function loadInitialRegions(resData) {
       existRegion.controlledByName = existPlayer.name;
       existRegion.armyCount = initialRegions[i].armyCount;
       recolorTerritory(existRegion.name ,existPlayer.color);
+      $('#armyCount'+existRegion.name).text(initialRegions[i].armyCount);
     }
   }
 }
@@ -295,6 +311,7 @@ function updateRegionInfo(regionID, playerID, armyCount) {
   existRegion.armyCount = armyCount;
   existRegion.controlledByName = existPlayer.name;
   existRegion.color = existPlayer.color;
+  $('#armyCount'+existRegion.name).text(armyCount);
 }
 
 function modifyButton(region) {
@@ -345,7 +362,7 @@ function regionUpdate(data) {
   else if (data.status == 'add') {
     var regionID = data.region.region;
     var armyCount = data.region.armyCount;
-    var playerID = data.controlledBy;
+    var playerID = data.region.controlledBy;
     console.log(armyCount);
     updateRegionInfo(regionID, playerID, armyCount);
 
@@ -377,9 +394,10 @@ function changeTurn(data) {
   currentUserTurn = data.playerID;
   round = data.round;
   phase = data.phase;
+  moves = data.moves;
   updateGameInfo(currentUserTurn, round, phase, remainingArmies);
   disableButtons();
-  if (phase == 1 || phase == 2) {
+  if ((phase == 1 || phase == 2) && (currentUserTurn == userID)) {
     enableEndPhase();
   }
 }
