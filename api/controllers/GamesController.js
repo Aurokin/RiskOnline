@@ -451,7 +451,7 @@ module.exports = {
 						curPlayers = game.players.length + 1;
 						//curPlayers = curPlayers.toString();
 						//This Line Causes Error That Does No Harm On Join, But Doesn't When Game Is Created Through Postman, Really Frustrating, Appears Fixed For Now, Not It Was Pretending
-						Games.publishUpdate(game.id, {id: game.id, currentPlayers: curPlayers, status: 'add', update: 'player', numPlayers: game.numPlayers});
+						Games.publishUpdate(game.id, {id: game.id, currentPlayers: curPlayers, status: 'add', update: 'player', numPlayers: game.numPlayers, playerID: playerID});
 
 						//.subscribe maybe not necesscary?
 						//Games.subscribe(req.socket, game.id);
