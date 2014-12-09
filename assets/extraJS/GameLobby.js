@@ -19,7 +19,7 @@ io.socket.on('connect', function socketConnected() {
 				}
 				else {
 					createJoinRow(resData[i].id, resData[i].name, resData[i].players.length, resData[i].numPlayers, false);
-				}				
+				}
 			}
 			else if(resData[i].inProgress == true){
 				for(j = 0; j < resData[i].players.length; j++) {
@@ -71,7 +71,7 @@ $(document).ready(function(){
  		$("#joinTable").addClass("hidden");
     });
 
-    $('.joinGame').click(function() {
+  $('.joinGame').click(function() {
 		console.log('harro');
 		//console.log(this);
 		//console.log(this.getAttribute("value"));
@@ -112,12 +112,12 @@ function createCurrentRow(gameID, name, round, currentUserTurn){
 }
 
 function joinGame(gameID) {
-		console.log('harro');
+		//console.log('harro');
 		//console.log(this);
 		//console.log(this.getAttribute("value"));
 		console.log($('#userID').text());
 
-		var gameID = parseInt(gameID);
+		//gameID = parseInt(gameID);
 		var playerID = parseInt($('#userID').text());
 		var playerName = $('#userName').text();
 		var password = '';

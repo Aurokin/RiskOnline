@@ -382,17 +382,17 @@ module.exports = {
 
 	joinGame: function (req, res) {
 		//Requires GameID, PlayerID, Password
-		var gameID = req.body.gameID;
-		var playerID = req.body.playerID;
+		var gameID = parseInt(req.body.gameID);
+		var playerID = parseInt(req.body.playerID);
 		var password = req.body.password;
 		//var roomName = 'game'+gameID+'info';
 
-		/*
+
 		console.log('gameID: '+gameID);
 		console.log('playerID: '+playerID);
 		console.log('password: '+password);
 		console.log(typeof playerID);
-		*/
+
 
 		//Error Out For Invalid Player ID / Game ID
 		if (typeof playerID === 'object' || typeof gameID === 'object') {
@@ -402,7 +402,7 @@ module.exports = {
 		Games.findOne(gameID).populate('players').exec(function(err, game) {
 
 			if (err) {
-				console.log(err);
+				//console.log(err);
 			}
 
 			/*
@@ -420,25 +420,18 @@ module.exports = {
 					//Incomplete
 					game.players.add(playerID);
 
-					if (parseInt(playerID) < game.currentUserTurn) {
-						game.currentUserTurn = parseInt(playerID);
+					if (playerID < game.currentUserTurn) {
+						game.currentUserTurn = playerID;
 					}
 
 					game.save(function(err) {
-						var status = {join: true, full: false};
-						//If the Lobby Is Full
-						if (game.players.length + 1 == game.numPlayers) {
-							status.full = true;
-						}
-
-						//Maybe message isn't needed, just publishUpdate
 						var curPlayers = game.players.length + 1;
 						Games.publishUpdate(game.id, {id: gameID, currentPlayers: curPlayers, status: 'add', update: 'player', numPlayers: game.numPlayers});
 
 						//.subscribe maybe not necesscary?
-						Games.subscribe(req.socket, game.id);
-
-						return res.send(status);
+						//Games.subscribe(req.socket, game.id);
+						console.log('done');
+						return res.send({join: true});
 					});
 
 				}
@@ -454,8 +447,8 @@ module.exports = {
 	},
 
 	enterLobby: function (req, res) {
-		var gameID = req.query.gameID;
-		var playerID = req.session.user;
+		var gameID = parseInt(req.query.gameID);
+		var playerID = parseInt(req.session.user);
 		var isFull = 'false';
 		var match = 'false';
 		//var roomName = req.param('game'+gameID+'info');
@@ -500,7 +493,6 @@ module.exports = {
 			else {
 				return res.view('static/error', {error: 'Player Not In Game'});
 			}
-			Games.publishUpdate(games);
 
 		});
 	},
@@ -623,11 +615,15 @@ module.exports = {
 
 		var gameName = req.body.gameName;
 		var password = req.body.password;
-		var numPlayers = req.body.numPlayers;
-		var playerID = req.session.user;
+		var numPlayers = parseInt(req.body.numPlayers);
+		var playerID = parseInt(req.session.user);
 
 		if (typeof playerID === 'undefined') {
 			res.send('User Is Not Logged In!');
+		}
+
+		if (password == '') {
+			password = null;
 		}
 
 		//console.log(gameName+' '+password+' '+numPlayers+' '+playerID);

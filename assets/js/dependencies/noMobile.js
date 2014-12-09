@@ -7,11 +7,10 @@ function mobileCheck() {
 $(document).ready(function ()
 {
  var mobileStatus = mobileCheck();
- console.log(mobileStatus);
+ //console.log(mobileStatus);
  if(mobileStatus == true)
  	{
  		$("body").hide();
  		window.alert("This website is not available on mobile devices");
  	}
 });
-
