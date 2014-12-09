@@ -276,6 +276,7 @@ function updateRegionInfo(regionID, playerID, armyCount) {
   existRegion.controlledBy = playerID;
   existRegion.armyCount = armyCount;
   existRegion.controlledByName = existPlayer.name;
+  existRegion.color = existPlayer.color;
 }
 
 function modifyButton(region) {
@@ -323,18 +324,25 @@ function regionUpdate(data) {
     updateRegionInfo(regionID, playerID, armyCount);
     recolorTerritory(territory, color);
   }
-  else if (data.status == 'add' || data.status == 'attackUpdate') {
-    var region = $.grep(regions, function(e){ return e.id == regionID; });
-    var regionID = data.region.region;
-    var armyCount = data.region.armyCount;
-    var playerID = data.region.controlledBy;
+  else if (data.status == 'add') {
+    var regionID = data.region;
+    var armyCount = data.armyCount;
+    var playerID = data.controlledBy;
     updateRegionInfo(regionID, playerID, armyCount);
 
     remainingArmies = remainingArmies - 1;
     changeText('remainingArmies', remainingArmies);
-    if (remainingArmies == 0) {
-      disableButtons();
-    }
+  }
+
+  else if (data.status == 'attackUpdate') {
+    var regionID = data.region;
+    var armyCount = data.armyCount;
+    var playerID = data.controlledBy;
+
+    updateRegionInfo(regionID, playerID, armyCount);
+    var region = $.grep(regions, function(e){ return e.id == regionID; });
+    var player = $.grep(players, function(e){ return e.id == playerID; });
+    recolorTerritory(territory, color);
   }
 }
 
