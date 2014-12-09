@@ -432,7 +432,8 @@ module.exports = {
 						}
 
 						//Maybe message isn't needed, just publishUpdate
-						Games.publishUpdate(game.id, {id: gameID, playerID: playerID, status: 'add'});
+						var curPlayers = game.players.length + 1;
+						Games.publishUpdate(game.id, {id: gameID, currentPlayers: curPlayers, status: 'add', update: 'player', numPlayers: game.numPlayers});
 
 						//.subscribe maybe not necesscary?
 						Games.subscribe(req.socket, game.id);
