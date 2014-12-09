@@ -118,80 +118,94 @@ module.exports = {
 					if (err) {
 						res.send('Region Not Found');
 					}
+					if (typeof region1 === 'undefined') {
+						res.send('Region Not Found');
+					}
+					else {
+						Region.findOne({game : gameID, region: regionIDTo, controlledBy: {'!': playerID}}).exec(function(err, region2) {
+							if (err) {
+								res.send('Region Not Found');
+							}
 
-					Region.findOne({game : gameID, region: regionIDTo, controlledBy: {'!': playerID}}).exec(function(err, region2) {
-						if (err) {
-							res.send('Region Not Found');
-						}
+							if (typeof region1 === 'undefined') {
+								res.send('Region Not Found');
+							}
+							else {
 
-					var random_num_dice1 = Math.floor(Math.random() * 6)+1;
-					var random_num_dice2 = Math.floor(Math.random() * 6)+1;
+								var random_num_dice1 = Math.floor(Math.random() * 6)+1;
+								var random_num_dice2 = Math.floor(Math.random() * 6)+1;
 
-					//check adj list territory
-					AdjRegions.findOne({region: regionIDFrom, adjRegion: regionIDTo}).exec(function(err, adjRegion) {
-						if(err){
-							res.send('You Did Not Choose Adj Region');
-						}
-						if (typeof adjRegion === 'undefined') {
-							res.send('Regions Are Not Adjacent')
-						}
-						else {
-							if (region1.armyCount >= region2.armyCount && region2.controlledBy != playerID){
-								if (region1.armyCount > 1){
-									if(random_num_dice1>random_num_dice2){
-										region2.armyCount=region2.armyCount - 1;
-										if(region2.armyCount<=0){
-											//This Is Where Player Loses!
-											originalRegionOwner = region2.controlledBy
-											changeControl = true;
-											region2.controlledBy = playerID;
-											region2.armyCount = 1;
-											region1.armyCount = region1.armyCount - 1;
-										}
+								//check adj list territory
+								AdjRegions.findOne({region: regionIDFrom, adjRegion: regionIDTo}).exec(function(err, adjRegion) {
+									if(err){
+										res.send('You Did Not Choose Adj Region');
+									}
+									if (typeof adjRegion === 'undefined') {
+										res.send('Regions Are Not Adjacent')
 									}
 									else {
-										region1.armyCount=region1.armyCount - 1;
-									}
-								}
-							}
-							else{
-								res.send('You Cannot Fight');
-							}
-
-							//save 2 regions
-							region1.save(function(err) {
-								if (err) {
-									res.send(err);
-								}
-								Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'attackUpdate', region : regionIDFrom, armyCount: region1.armyCount, controlledBy : region1.controlledBy});
-								region2.save(function(err) {
-									if (err) {
-										res.send(err);
-									}
-									//error happend at save, on last attack only (can't save undefined when referring to region2)
-									Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'attackUpdate', region: regionIDTo, armyCount: region2.armyCount, controlledBy : region2.controlledBy});
-									if (changeControl == true) {
-										game.moves = game.moves + 1;
-										game.save(function(err) {
-											if (err) {
-												console.log(err);
+										//Does Region1 Need More Armies?
+										if (region2.controlledBy != playerID){
+											if (region1.armyCount > 1){
+												if(random_num_dice1>random_num_dice2){
+													region2.armyCount=region2.armyCount - 1;
+													if(region2.armyCount<=0){
+														//This Is Where Player Loses!
+														originalRegionOwner = region2.controlledBy
+														changeControl = true;
+														region2.controlledBy = playerID;
+														region2.armyCount = 1;
+														region1.armyCount = region1.armyCount - 1;
+													}
+												}
+												else {
+													region1.armyCount=region1.armyCount - 1;
+												}
 											}
-											Games.publishUpdate(gameID, {id: gameID, update:'changeControl', status:'changed', region: regionIDTo, armyCount: region2.armyCount, controlledBy: region2.controlledBy, moves: game.moves});
-											sails.controllers.games.playerMightHaveLost(gameID, originalRegionOwner);
-											res.send('Attack Successful');
+										}
+										else{
+											res.send('You Cannot Fight');
+										}
+
+										//save 2 regions
+										region1.save(function(err) {
+											if (err) {
+												res.send(err);
+											}
+											Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'attackUpdate', region : regionIDFrom, armyCount: region1.armyCount, controlledBy : region1.controlledBy});
+											region2.save(function(err) {
+												if (err) {
+													res.send(err);
+												}
+												//error happend at save, on last attack only (can't save undefined when referring to region2)
+												Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'attackUpdate', region: regionIDTo, armyCount: region2.armyCount, controlledBy : region2.controlledBy});
+												if (changeControl == true) {
+													game.moves = game.moves + 1;
+													game.save(function(err) {
+														if (err) {
+															console.log(err);
+														}
+														Games.publishUpdate(gameID, {id: gameID, update:'changeControl', status:'changed', region: regionIDTo, armyCount: region2.armyCount, controlledBy: region2.controlledBy, moves: game.moves});
+													//	sails.controllers.games.playerMightHaveLost(gameID, originalRegionOwner);
+														res.send({id: gameID, update: 'regionControl', status: 'playerLostRegion', player: originalRegionOwner});
+													});
+												}
+												else {
+													res.send('Attack Successful');
+												}
+											});
 										});
-									}
-									else {
-										res.send('Attack Successful');
+										//close 2 save functions
 									}
 								});
-							});
-							//close 2 save functions
-						}
-					});
+							}
+						});
+					}
 				});
-			});
-		}
+			}
+			else {
+				res.send('Its Not Your Turn');
+			}
 		});
 	},
 
@@ -777,6 +791,46 @@ module.exports = {
 							playersLeft: game.players.length - 1
 						});
 					});
+				}
+			}
+		});
+	},
+
+	playerLost: function (req, res) {
+		gameID = parseInt(req.body.gameID);
+		playerID = parseInt(req.body.playerID);
+		var PIG = false;
+
+		Games.findOne(gameID).populate('players').exec(function(err, game){
+			if (typeof game === 'undefined') {
+				console.log('Game Doesnt Exist');
+				res.send('Game Doesnt Exist');
+			}
+			else {
+				for (i = 0; i < game.players.length; i++) {
+					if (game.players[i].id == playerID) {
+						PIG = true;
+					}
+				}
+				if (PIG == true){
+					//Player Lost
+					game.players.remove(playerID);
+					game.save(function(err) {
+						if (err) {
+							console.log(err);
+						}
+						console.log(game.players.length - 1);
+						Games.publishUpdate(game.id, {
+							id: game.id,
+							player: playerID,
+							update: 'removePlayer',
+							playersLeft: game.players.length - 1
+						});
+						res.send({status: 'playerRemoved', playersLeft: game.players.length -1, player: playerID});
+					});
+				}
+				else {
+					res.send('Player Not In Game');
 				}
 			}
 		});

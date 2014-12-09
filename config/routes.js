@@ -52,6 +52,7 @@ module.exports.routes = {
   'post /game/reinforceToAttackPhase': 'GamesController.reinforceToAttackPhase',
   'post /game/attackToMovePhase': 'GamesController.attackToMovePhase',
   'post /game/end': 'GamesController.endGame',
+  'post /game/playerLost': 'GamesController.playerLost',
   '/chat': {
 	  view: 'real_time'
 	},

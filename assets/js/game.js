@@ -155,6 +155,16 @@ $(document).ready(function() {
       $('#attackModal').modal('toggle');
       var existRegion = _.findWhere(regions, {id: regionID});
       //loadRegionInfo(existRegion.name);
+      if (data.status == "playerLostRegion") {
+        var currRegions = _.where(regions, {controlledBy: data.player});
+        console.log(currRegions.length);
+        if (currRegions.length == 0) {
+          //Player Lost
+          io.socket.post("/game/playerLost", {gameID: gameID, playerID: data.player}, function (playerLost, jwres) {
+            console.log(playerLost);
+          });
+        }
+      }
     });
   });
   //Move Army Button
