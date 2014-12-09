@@ -342,6 +342,7 @@ function regionUpdate(data) {
     updateRegionInfo(regionID, playerID, armyCount);
     var region = $.grep(regions, function(e){ return e.id == regionID; });
     var player = $.grep(players, function(e){ return e.id == playerID; });
+    var territory = region[0].name;
     recolorTerritory(territory, color);
   }
 }
