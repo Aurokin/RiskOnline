@@ -94,7 +94,7 @@ $(document).ready(function() {
     attack(attackableRegions);
   });
   //Actual Attack Button
-  $(body).delegate(".actualAttackBtn", "click", function(event){
+  $(document).delegate(".actualAttackBtn", "click", function(event){
     event.stopPropagation();
     console.log(event);
     var regionFrom = parseInt($('#regionID').text());
