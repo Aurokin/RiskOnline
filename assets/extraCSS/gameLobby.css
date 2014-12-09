@@ -11,6 +11,7 @@
 #chatGL {
   bottom: 0px;
   width: 100%;
+  position: absolute;
   height: 180px;
   color: #FFFFFF;
   border: solid 5px;
@@ -26,6 +27,7 @@
 #chatForm{
   width: 100%;
   bottom: 0px;
+  position: absolute;
 }
 
 #chatInput{
