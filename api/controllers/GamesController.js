@@ -108,6 +108,7 @@ module.exports = {
 		var regionIDFrom = req.body.regionIDFrom;
 		var regionIDTo = req.body.regionIDTo;
 		var changeControl = false;
+		var originalRegionOwner = 0;
 		Games.findOne(gameID).populate('players').exec(function(err,game){
 			if(err){
 				res.send('Game Not Found With Given ID');
@@ -140,6 +141,7 @@ module.exports = {
 									region2.armyCount=region2.armyCount - 1;
 									if(region2.armyCount<=0){
 										//This Is Where Player Loses!
+										originalRegionOwner = region2.controlledBy
 										changeControl = true;
 										region2.controlledBy = playerID;
 										region2.armyCount = 1;
@@ -164,6 +166,7 @@ module.exports = {
 									if (err) {
 										res.send(err);
 									}
+									//error happend at save, on last attack only (can't save undefined when referring to region2)
 									Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'attackUpdate', region: regionIDTo, armyCount: region2.armyCount, controlledBy : region2.controlledBy});
 									if (changeControl == true) {
 										game.moves = game.moves + 1;
@@ -172,6 +175,7 @@ module.exports = {
 												console.log(err);
 											}
 											Games.publishUpdate(gameID, {id: gameID, update:'changeControl', status:'changed', region: regionIDTo, armyCount: region2.armyCount, controlledBy: region2.controlledBy, moves: game.moves});
+											sails.controllers.games.playerMightHaveLost(gameID, originalRegionOwner);
 											res.send('Attack Successful');
 										});
 									}
@@ -309,30 +313,9 @@ module.exports = {
 	endGame: function (req, res) {
 
 		var gameID = req.body.gameID;
-		var playerID = req.body.playerID;
-
-		Games.findOne(gameID).exec(function(err, gameID){
-
-			if(game.numPlayers < 2){
-
-				//game.players.remove(playerID);
-
-				Games.publishUpdate(gameID,{
-					id: game.id,
-					winner: 'playerID',
-					status: 'complete',
-					endDate: 'values.startDate = new Date().toISOString()',
-				});
-
-			}
-
-
-			game.players.remove(playerID);
-
-			Games.destroy(gameID).exec(function(err){
-				Games.publishDestroy(gameID);
-
-			});
+		Games.destroy(gameID).exec(function(err, games){
+			Games.publishDestroy(gameID);
+			res.send('Game '+gameID+' Destroyed');
 		});
 	},
 
@@ -753,6 +736,47 @@ module.exports = {
 
 					res.send({phase: game.phase});
 			});
+		});
+	},
+
+	playerMightHaveLost: function (gameID, playerID) {
+		gameID = parseInt(gameID);
+		playerID = parseInt(playerID);
+		var counter = 0;
+		var PIG = false;
+
+		Games.findOne(gameID).populate('regions').populate('players').exec(function(err, game){
+			if (typeof game === 'undefined') {
+				console.log('Game Doesnt Exist');
+			}
+			else {
+				for (i = 0; i < game.players.length; i++) {
+					if (game.players[i].id == playerID) {
+						PIG = true;
+						for (j = 0; j < game.regions.length; j++) {
+							if (game.regions[j].controlledBy == playerID) {
+								counter = counter + 1;
+							}
+						}
+					}
+				}
+				if (PIG == true && counter == 0){
+					//Player Lost
+					game.players.remove(playerID);
+					game.save(function(err) {
+						if (err) {
+							console.log(err);
+						}
+						console.log(game.players.length - 1);
+						Games.publishUpdate(game.id, {
+							id: game.id,
+							player: playerID,
+							update: 'removePlayer',
+							playersLeft: game.players.length - 1
+						});
+					});
+				}
+			}
 		});
 	}
 };

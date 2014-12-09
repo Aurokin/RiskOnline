@@ -18,39 +18,59 @@ io.socket.on('connect', function socketConnected() {
 
   io.socket.on('games', function gameDataReceived(message) {
     console.log(message);
-    if (message.data.update == "region") {
-      regionUpdate(message.data);
-      loadRegionInfo('');
-      //Update Army Count
-      //Should Call loadRegionInfo Here
+    if (message.verb == "destroyed") {
+      window.location.href = 'http://'+window.location.host+'/game/winner';
     }
-    else if (message.data.update == "changeTurn") {
-      changeTurn(message.data);
-    }
-    else if (message.data.update == "changeRound") {
-      round = message.data.round;
-      phase = message.data.phase;
-      moves = message.data.moves;
-      changeText('currentPhase', phase);
-      changeText('currentRound', round);
-      changeText('currentMoves', moves);
-    }
-    else if (message.data.update == "phaseChange") {
-      phase = message.data.phase;
-      remainingArmies = 0;
-      moves = message.data.moves;
-      changeText('currentMoves', moves);
-      changeText('currentPhase', phase);
-      changeText('remainingArmies', '0');
-    }
-    else if (message.data.update == "changeControl") {
-      //Notify User Continent Changed Control
-      moves = message.data.moves;
-      changeText('currentMoves', moves);
-    }
-    else if (message.data.update == "moved") {
-      moves = message.data.moves;
-      changeText('currentMoves', moves);
+    else {
+      if (message.data.update == "region") {
+        regionUpdate(message.data);
+        loadRegionInfo('');
+        //Update Army Count
+        //Should Call loadRegionInfo Here
+      }
+      else if (message.data.update == "changeTurn") {
+        changeTurn(message.data);
+      }
+      else if (message.data.update == "changeRound") {
+        round = message.data.round;
+        phase = message.data.phase;
+        moves = message.data.moves;
+        changeText('currentPhase', phase);
+        changeText('currentRound', round);
+        changeText('currentMoves', moves);
+      }
+      else if (message.data.update == "phaseChange") {
+        phase = message.data.phase;
+        remainingArmies = 0;
+        moves = message.data.moves;
+        changeText('currentMoves', moves);
+        changeText('currentPhase', phase);
+        changeText('remainingArmies', '0');
+      }
+      else if (message.data.update == "changeControl") {
+        //Notify User Continent Changed Control
+        moves = message.data.moves;
+        changeText('currentMoves', moves);
+      }
+      else if (message.data.update == "moved") {
+        moves = message.data.moves;
+        changeText('currentMoves', moves);
+      }
+      else if (message.data.update == "removePlayer") {
+        if (userID == message.data.player) {
+          window.location.href = 'http://'+window.location.host+'/game/loser';
+        }
+        else {
+          $('#player'+message.data.player+'panel').remove();
+          if (message.data.playersLeft == 1) {
+            io.socket.post("/game/end", {gameID: gameID}, function (data, jwres) {
+              if (data == 'Game '+gameID+' Destroyed') {
+                window.location.href = 'http://'+window.location.host+'/game/winner';
+              }
+            });
+          }
+        }
+      }
     }
   });
 
@@ -250,7 +270,7 @@ function loadPlayers(resData) {
     currPlayer.name = resData.players[i].name;
     currPlayer.color = colors[i];
     players[i] = currPlayer;
-    addPlayerToUI(i+1, currPlayer.name);
+    addPlayerToUI(i+1, currPlayer.name, currPlayer.id);
     currPlayer = {};
   }
 
@@ -503,8 +523,8 @@ function loadGameName(name) {
   $('#gameName').text(name);
 }
 
-function addPlayerToUI(number, name) {
-  $('<div class="playerInPanel"><div id="p'+number+'Color" class="playerColor"></div><span id="p'+number+'Name" class="playerName">'+name+'</span></div>').appendTo('#playersInGame');
+function addPlayerToUI(number, name, pid) {
+  $('<div class="playerInPanel" id="player'+pid+'panel"><div id="p'+number+'Color" class="playerColor"></div><span id="p'+number+'Name" class="playerName">'+name+'</span></div>').appendTo('#playersInGame');
 }
 
 function changeText(id, text) {
