@@ -19,8 +19,10 @@ io.socket.on('connect', function socketConnected() {
   io.socket.on('games', function gameDataReceived(message) {
     console.log(message);
     if (message.data.update == "region") {
-      regionUpdate(message.data);
       //Update Army Count
+      regionUpdate(message.data);
+      var existRegion = _.findWhere(regions, {id: message.data.region});
+      loadRegionInfo(existRegion.name);
       //Should Call loadRegionInfo Here
     }
     else if (message.data.update == "changeTurn") {
@@ -112,8 +114,7 @@ $(document).ready(function() {
     io.socket.post("/game/attack", postData, function (data, jwres) {
       console.log(data);
       $('#attackModal').modal('toggle');
-      var existRegion = _.findWhere(regions, {id: regionID});
-      loadRegionInfo(existRegion.name);
+
     });
   });
   //End Phase Button
