@@ -117,13 +117,13 @@ module.exports = {
 						res.send('Region Not Found');
 					}
 
-					Region.findOne({game : gameID, region: regionIDTo}).exec(function(err, region2) {
+					Region.findOne({game : gameID, region: regionIDTo, controlledBy: {'!': playerID}}).exec(function(err, region2) {
 						if (err) {
 							res.send('Region Not Found');
 						}
 
-					var random_num_dice1 = Math.floor(Math.random() * 7)+1;
-					var random_num_dice2 = Math.floor(Math.random() * 7)+1;
+					var random_num_dice1 = Math.floor(Math.random() * 6)+1;
+					var random_num_dice2 = Math.floor(Math.random() * 6)+1;
 
 					//check adj list territory
 					AdjRegions.findOne({region: regionIDFrom, adjRegion: regionIDTo}).exec(function(err, adjRegion) {
@@ -134,9 +134,9 @@ module.exports = {
 							res.send('Regions Are Not Adjacent')
 						}
 						else {
-							if (region1.armyCount >= region2.armyCount){
+							if (region1.armyCount > 1){
 								if(random_num_dice1>random_num_dice2){
-									region2.armyCount=region2.armyCount - random_num_dice1 + random_num_dice2;
+									region2.armyCount=region2.armyCount - 1;
 									if(region2.armyCount<=0){
 										region2.controlledBy = playerID;
 										region2.armyCount = 1;
@@ -144,7 +144,7 @@ module.exports = {
 									}
 								}
 								else {
-									region1.armyCount=region1.armyCount - random_num_dice2 + random_num_dice1;
+									region1.armyCount=region1.armyCount - 1;
 								}
 							}
 							else{
