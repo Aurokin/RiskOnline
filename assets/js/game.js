@@ -30,12 +30,16 @@ io.socket.on('connect', function socketConnected() {
     else if (message.data.update == "changeRound") {
       round = message.data.round;
       phase = message.data.phase;
+      moves = message.data.moves;
       changeText('currentPhase', phase);
       changeText('currentRound', round);
+      changeText('currentMoves', moves);
     }
     else if (message.data.update == "phaseChange") {
       phase = message.data.phase;
       remainingArmies = 0;
+      moves = message.data.moves;
+      changeText('currentMoves', moves);
       changeText('currentPhase', phase);
       changeText('remainingArmies', '0');
     }
@@ -64,6 +68,7 @@ $(document).ready(function() {
       console.log(data);
       //If It Is Initial Phase
       if (phase == 0) {
+        disableButtons();
         //End Turn
         var postData = {
           gameID : gameID,
@@ -77,6 +82,9 @@ $(document).ready(function() {
         });
       }
       else {
+        if (remainingArmies < 1) {
+          disableButtons();
+        }
         var existRegion = _.findWhere(regions, {id: regionID});
         //Probably Better To Reload Info For Everyone
         //loadRegionInfo(existRegion.name);
@@ -395,7 +403,7 @@ function changeTurn(data) {
   round = data.round;
   phase = data.phase;
   moves = data.moves;
-  updateGameInfo(currentUserTurn, round, phase, remainingArmies);
+  updateGameInfo(currentUserTurn, round, phase, remainingArmies, moves);
   disableButtons();
   if ((phase == 1 || phase == 2) && (currentUserTurn == userID)) {
     enableEndPhase();
@@ -431,12 +439,13 @@ function enableEndTurn() {
   $('#endTurnBtn').removeClass("disabled").prop("disabled", false);
 }
 
-function updateGameInfo(currentUserTurn, round, phase, remainingArmies) {
+function updateGameInfo(currentUserTurn, round, phase, remainingArmies, moves) {
   var existPlayer = _.findWhere(players, {id: currentUserTurn});
   changeText('userTurn', existPlayer.name);
   changeText('currentRound', round);
   changeText('currentPhase', phase);
   changeText('remainingArmies', remainingArmies);
+  changeText('currentMoves', moves);
 }
 
 function attack(attackableRegions) {
