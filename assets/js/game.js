@@ -98,6 +98,8 @@ $(document).ready(function() {
     var regionFrom = parseInt($('#regionID').text());
     var regionTo = this.getAttribute("value");
 
+    console.log('attacking!!!')
+
     postData = {
       gameID : gameID,
       playerID : userID,
@@ -106,6 +108,7 @@ $(document).ready(function() {
     }
 
     io.socket.post("/game/attack", postData, function (data, jwres) {
+      console.log(data);
       $('#attackModal').modal('toggle');
       var existRegion = _.findWhere(regions, {id: regionID});
       loadRegionInfo(existRegion.name);
