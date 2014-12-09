@@ -428,7 +428,7 @@ module.exports = {
 					game.save(function(err) {
 						curPlayers = game.players.length + 1;
 						//curPlayers = curPlayers.toString();
-						//This Line Causes Error That Does No Harm On Join, But Doesn't When Game Is Created Through Postman, Really Frustrating, Appears Fixed For Now
+						//This Line Causes Error That Does No Harm On Join, But Doesn't When Game Is Created Through Postman, Really Frustrating, Appears Fixed For Now, Not It Was Pretending
 						Games.publishUpdate(game.id, {id: game.id, currentPlayers: curPlayers, status: 'add', update: 'player', numPlayers: game.numPlayers});
 
 						//.subscribe maybe not necesscary?
