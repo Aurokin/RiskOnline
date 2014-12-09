@@ -84,7 +84,7 @@ $(document).ready(function() {
     var attackableRegions = [];
     for (i = 0; i < currAdjRegions.length; i++) {
       var currRegion = _.findWhere(regions, {id: currAdjRegions[i].adjRegion});
-      if (currRegion.controlledBy != playerID) {
+      if (currRegion.controlledBy != userID) {
         //Can Attack
         attackableRegions.push(currRegion);
       }
