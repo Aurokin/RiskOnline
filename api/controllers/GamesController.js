@@ -107,6 +107,7 @@ module.exports = {
 		var playerID = req.body.playerID;
 		var regionIDFrom = req.body.regionIDFrom;
 		var regionIDTo = req.body.regionIDTo;
+		var changeControl = false;
 		Games.findOne(gameID).populate('players').exec(function(err,game){
 			if(err){
 				res.send('Game Not Found With Given ID');
@@ -138,6 +139,8 @@ module.exports = {
 								if(random_num_dice1>random_num_dice2){
 									region2.armyCount=region2.armyCount - 1;
 									if(region2.armyCount<=0){
+										//This Is Where Player Loses!
+										changeControl = true;
 										region2.controlledBy = playerID;
 										region2.armyCount = 1;
 										region1.armyCount = region1.armyCount - 1;
@@ -161,8 +164,11 @@ module.exports = {
 									if (err) {
 										res.send(err);
 									}
+									if (changeControl == true) {
+										Games.publishUpdate(gameID, {id: gameID, update:'changeControl', status:'changed', regionID: regionIDTo, armyCount: region2.armyCount, controlledBy: region2.controlledBy});
+									}
 									Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'attackUpdate', regionID: regionIDTo, armyCount: region2.armyCount, controlledBy : region2.controlledBy});
-									res.send(region2);
+									res.send('Attack Successful');
 								});
 							});
 							//close 2 save functions
