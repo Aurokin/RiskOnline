@@ -10,6 +10,7 @@ io.socket.on('connect', function socketConnected() {
       loadRegions(resData, regionsData);
       io.socket.get("/adjRegions", function(adjRegionsData, jwres) {
         console.log(adjRegionsData);
+        loadAdjRegions(adjRegionsData);
         loadInitialState(resData);
       });
     });
@@ -77,19 +78,16 @@ $(document).ready(function() {
   //Attack Button
   $('#attackArmyBtn').click(function() {
     var regionID = parseInt($('#regionID').text());
-    var currAdjRegions = _.where(adjRegions, {region: regionID});
-    console.log(adjRegions);
-    console.log(currAdjRegions);
+    var adjRegions = _.where(adjRegions, {region: regionID});
     var attackableRegions = [];
-    for (i = 0; i < currAdjRegions.length; i++) {
-      var currRegion = _.findWhere(regions, {id: currAdjRegions[i].adjRegion});
+    for (i = 0; i < adjRegions.length; i++) {
+      var currRegion = _.findWhere(regions, {id: adjRegions[i].adjRegion});
       if (currRegion.controlledBy != playerID) {
         //Can Attack
         attackableRegions.push(currRegion);
       }
       currRegion = {};
     }
-    console.log(attackableRegions);
     attack(attackableRegions);
   });
   //Actual Attack Button
@@ -383,7 +381,7 @@ function updateGameInfo(currentUserTurn, round, phase, remainingArmies) {
 function attack(attackableRegions) {
   $('#attackModalBody').text('');
   if (attackableRegions.length == 0) {
-    $('#attackModalBody').text('No Attackable Regions');
+    $('#attackModalBody').text('<p>No Attackable Regions</p>');
   }
   else {
     for (i = 0; i < attackableRegions.length; i++) {
