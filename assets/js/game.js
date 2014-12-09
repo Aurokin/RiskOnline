@@ -20,6 +20,7 @@ io.socket.on('connect', function socketConnected() {
     console.log(message);
     if (message.data.update == "region") {
       regionUpdate(message.data);
+      loadRegionInfo('');
       //Update Army Count
       //Should Call loadRegionInfo Here
     }
@@ -70,13 +71,13 @@ $(document).ready(function() {
           console.log(data);
           var existRegion = _.findWhere(regions, {id: regionID});
           //Probably Better To Reload Info For Everyone
-          loadRegionInfo(existRegion.name);
+          //loadRegionInfo(existRegion.name);
         });
       }
       else {
         var existRegion = _.findWhere(regions, {id: regionID});
         //Probably Better To Reload Info For Everyone
-        loadRegionInfo(existRegion.name);
+        //loadRegionInfo(existRegion.name);
       }
     });
   });
@@ -84,8 +85,8 @@ $(document).ready(function() {
   $('#attackArmyBtn').click(function() {
     var regionID = parseInt($('#regionID').text());
     var currAdjRegions = _.where(adjRegions, {region: regionID});
-    console.log(adjRegions);
-    console.log(currAdjRegions);
+    //console.log(adjRegions);
+    //console.log(currAdjRegions);
     var attackableRegions = [];
     for (i = 0; i < currAdjRegions.length; i++) {
       var currRegion = _.findWhere(regions, {id: currAdjRegions[i].adjRegion});
@@ -95,18 +96,18 @@ $(document).ready(function() {
       }
       currRegion = {};
     }
-    console.log(attackableRegions);
+    //console.log(attackableRegions);
     attack(attackableRegions);
   });
   //Actual Attack Button
   $(document).delegate(".actualAttackBtn", "click", function(event){
     event.stopPropagation();
-    console.log(event);
+    //console.log(event);
     var regionID = parseInt($('#regionID').text());
     var regionFrom = parseInt($('#regionID').text());
     var regionTo = this.getAttribute("value");
 
-    console.log('attacking!!!');
+    //console.log('attacking!!!');
 
     postData = {
       gameID : gameID,
@@ -119,7 +120,7 @@ $(document).ready(function() {
       console.log(data);
       $('#attackModal').modal('toggle');
       var existRegion = _.findWhere(regions, {id: regionID});
-      loadRegionInfo(existRegion.name);
+      //loadRegionInfo(existRegion.name);
     });
   });
   //End Phase Button
@@ -131,7 +132,13 @@ $(document).ready(function() {
           //Phase 2 Logic
           disableButtons();
         }
-        else if (data.phase == 3) {
+      });
+    }
+    if (phase == 2) {
+      io.socket.post("/game/attackToMovePhase", {gameID: gameID}, function (data, jwres) {
+        console.log(data);
+        if (data.phase == 3) {
+          disableButtons();
           $('#endPhaseBtn').addClass("disabled").prop("disabled", true);
           $('#endTurnBtn').removeClass("disabled").prop("disabled", false);
         }
@@ -198,6 +205,17 @@ function loadAdjRegions(data) {
 }
 
 function loadRegionInfo(name) {
+  var regionID = parseInt($('#regionID').text());
+  if (isNaN(regionID) == true && name == '') {
+    //console.log('what');
+    return 0;
+  }
+  if (name == '') {
+    //console.log(regionID);
+    var existRegion = _.findWhere(regions, {id: regionID});
+    name = existRegion.name;
+  }
+
   var result = $.grep(regions, function(e){ return e.name == name; });
   //console.log(result);
   //console.log(result[0].name);
@@ -325,9 +343,10 @@ function regionUpdate(data) {
     recolorTerritory(territory, color);
   }
   else if (data.status == 'add') {
-    var regionID = data.region;
-    var armyCount = data.armyCount;
+    var regionID = data.region.region;
+    var armyCount = data.region.armyCount;
     var playerID = data.controlledBy;
+    console.log(armyCount);
     updateRegionInfo(regionID, playerID, armyCount);
 
     remainingArmies = remainingArmies - 1;
@@ -335,7 +354,7 @@ function regionUpdate(data) {
   }
 
   else if (data.status == 'attackUpdate') {
-    var regionID = data.region;
+    var regionID = parseInt(data.region);
     var armyCount = data.armyCount;
     var playerID = data.controlledBy;
 
@@ -343,6 +362,7 @@ function regionUpdate(data) {
     var region = $.grep(regions, function(e){ return e.id == regionID; });
     var player = $.grep(players, function(e){ return e.id == playerID; });
     var territory = region[0].name;
+    var color = player[0].color;
     recolorTerritory(territory, color);
   }
 }

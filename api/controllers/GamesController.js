@@ -74,7 +74,7 @@ module.exports = {
 								//console.log(err);
 								res.send('Could Not Create Region');
 							}
-							Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'create', region: newRegion, armyCount: army});
+							Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'create', region: newRegion, armyCount: army, controlledBy: newRegion.controlledBy});
 							//res.send(newRegion);
 							res.send('New Region Created');
 						});
@@ -88,7 +88,7 @@ module.exports = {
 								if (err) {
 									res.send('Region Could Not Be Added');
 								}
-								Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'add', region: region, armyCount: army});
+								Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'add', region: region, armyCount: army, controlledBy: region.controlledBy});
 								//res.send(region);
 								res.send('Army Added To Region');
 							});
@@ -184,8 +184,8 @@ module.exports = {
 		var gameID = req.body.gameID;
 		var playerID = req.body.playerID;
 		var armyMove = parseInt(req.body.armyMove);
-		var regionIDFrom = req.body.regionIDFrom;
-		var regionIDTo = req.body.regionIDTo;
+		var regionIDFrom = parseInt(req.body.regionIDFrom);
+		var regionIDTo = parseInt(req.body.regionIDTo);
 		var regionFrom;
 		var regionTo;
 		Games.findOne(gameID).populate('players').exec(function(err,game){
