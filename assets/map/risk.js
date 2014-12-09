@@ -132,6 +132,14 @@ var Risk = {
 				group.on('click', function() {
 					//need to send this "click" to GamesController
 					//console.log(path.attrs.id);
+					/* I'm using this to collect coordinates for numbers.
+					var x = event.x;
+					var y = event.y;
+					var canvas = map;
+					x -= map.offsetLeft;
+					y -= map.offsetTop;
+					alert("x:" + x + " y:" + y);
+					*/
 					loadRegionInfo(path.attrs.id);
 					location.hash = path.attrs.id;
 

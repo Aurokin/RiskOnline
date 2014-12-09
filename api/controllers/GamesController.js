@@ -107,6 +107,8 @@ module.exports = {
 		var playerID = req.body.playerID;
 		var regionIDFrom = req.body.regionIDFrom;
 		var regionIDTo = req.body.regionIDTo;
+		var changeControl = false;
+		var originalRegionOwner = 0;
 		Games.findOne(gameID).populate('players').exec(function(err,game){
 			if(err){
 				res.send('Game Not Found With Given ID');
@@ -117,13 +119,13 @@ module.exports = {
 						res.send('Region Not Found');
 					}
 
-					Region.findOne({game : gameID, region: regionIDTo}).exec(function(err, region2) {
+					Region.findOne({game : gameID, region: regionIDTo, controlledBy: {'!': playerID}}).exec(function(err, region2) {
 						if (err) {
 							res.send('Region Not Found');
 						}
 
-					var random_num_dice1 = Math.floor(Math.random() * 7)+1;
-					var random_num_dice2 = Math.floor(Math.random() * 7)+1;
+					var random_num_dice1 = Math.floor(Math.random() * 6)+1;
+					var random_num_dice2 = Math.floor(Math.random() * 6)+1;
 
 					//check adj list territory
 					AdjRegions.findOne({region: regionIDFrom, adjRegion: regionIDTo}).exec(function(err, adjRegion) {
@@ -134,17 +136,24 @@ module.exports = {
 							res.send('Regions Are Not Adjacent')
 						}
 						else {
+<<<<<<< HEAD
 							if (region1.armyCount >= region2.armyCount && region2.controlledBy != playerID){
+=======
+							if (region1.armyCount > 1){
+>>>>>>> 05c3278ab2e538e998577ab6b5c092a23236e2f4
 								if(random_num_dice1>random_num_dice2){
-									region2.armyCount=region2.armyCount - random_num_dice1 + random_num_dice2;
+									region2.armyCount=region2.armyCount - 1;
 									if(region2.armyCount<=0){
+										//This Is Where Player Loses!
+										originalRegionOwner = region2.controlledBy
+										changeControl = true;
 										region2.controlledBy = playerID;
 										region2.armyCount = 1;
 										region1.armyCount = region1.armyCount - 1;
 									}
 								}
 								else {
-									region1.armyCount=region1.armyCount - random_num_dice2 + random_num_dice1;
+									region1.armyCount=region1.armyCount - 1;
 								}
 							}
 							else{
@@ -156,13 +165,27 @@ module.exports = {
 								if (err) {
 									res.send(err);
 								}
-								Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'attackUpdate', regionID : regionIDFrom, armyCount: region1.armyCount, controlledBy : region1.controlledBy});
+								Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'attackUpdate', region : regionIDFrom, armyCount: region1.armyCount, controlledBy : region1.controlledBy});
 								region2.save(function(err) {
 									if (err) {
 										res.send(err);
 									}
-									Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'attackUpdate', regionID: regionIDTo, armyCount: region2.armyCount, controlledBy : region2.controlledBy});
-									res.send(region2);
+									//error happend at save, on last attack only (can't save undefined when referring to region2)
+									Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'attackUpdate', region: regionIDTo, armyCount: region2.armyCount, controlledBy : region2.controlledBy});
+									if (changeControl == true) {
+										game.moves = game.moves + 1;
+										game.save(function(err) {
+											if (err) {
+												console.log(err);
+											}
+											Games.publishUpdate(gameID, {id: gameID, update:'changeControl', status:'changed', region: regionIDTo, armyCount: region2.armyCount, controlledBy: region2.controlledBy, moves: game.moves});
+											sails.controllers.games.playerMightHaveLost(gameID, originalRegionOwner);
+											res.send('Attack Successful');
+										});
+									}
+									else {
+										res.send('Attack Successful');
+									}
 								});
 							});
 							//close 2 save functions
@@ -221,14 +244,21 @@ module.exports = {
 										if (err) {
 											res.send(err);
 										}
-										Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'remove', amount: armyMove, regionID: regionIDFrom});
+										Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'moveUpdate',  region: regionIDFrom, armyCount: regions[regionFrom].armyCount, controlledBy : regions[regionFrom].controlledBy});
 
 										regions[regionTo].save(function(err) {
 											if (err) {
 												res.send(err);
 											}
-											Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'add', amount: armyMove, regionID: regionIDTo});
-											res.send(regions);
+											Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'moveUpdate', region: regionIDTo, armyCount: regions[regionTo].armyCount, controlledBy : regions[regionTo].controlledBy});
+											game.moves = game.moves - 1;
+											game.save(function(err) {
+												if (err) {
+													console.log(err);
+												}
+												Games.publishUpdate(gameID, {id: gameID, update: 'moved', moves: game.moves});
+												res.send(regions);
+											});
 										});
 								});
 							}
@@ -287,30 +317,9 @@ module.exports = {
 	endGame: function (req, res) {
 
 		var gameID = req.body.gameID;
-		var playerID = req.body.playerID;
-
-		Games.findOne(gameID).exec(function(err, gameID){
-
-			if(game.numPlayers < 2){
-
-				//game.players.remove(playerID);
-
-				Games.publishUpdate(gameID,{
-					id: game.id,
-					winner: 'playerID',
-					status: 'complete',
-					endDate: 'values.startDate = new Date().toISOString()',
-				})
-
-			}
-
-
-			game.players.remove(playerID);
-
-			Games.destroy(gameID).exec(function(err){
-				Games.publishDestroy(gameID);
-
-			});
+		Games.destroy(gameID).exec(function(err, games){
+			Games.publishDestroy(gameID);
+			res.send('Game '+gameID+' Destroyed');
 		});
 	},
 
@@ -382,9 +391,10 @@ module.exports = {
 
 	joinGame: function (req, res) {
 		//Requires GameID, PlayerID, Password
-		var gameID = req.body.gameID;
-		var playerID = req.body.playerID;
+		var gameID = parseInt(req.body.gameID);
+		var playerID = parseInt(req.body.playerID);
 		var password = req.body.password;
+		var curPlayers = 0;
 		//var roomName = 'game'+gameID+'info';
 
 		/*
@@ -402,7 +412,7 @@ module.exports = {
 		Games.findOne(gameID).populate('players').exec(function(err, game) {
 
 			if (err) {
-				console.log(err);
+				//console.log(err);
 			}
 
 			/*
@@ -420,24 +430,20 @@ module.exports = {
 					//Incomplete
 					game.players.add(playerID);
 
-					if (parseInt(playerID) < game.currentUserTurn) {
-						game.currentUserTurn = parseInt(playerID);
+					if (playerID < game.currentUserTurn) {
+						game.currentUserTurn = playerID;
 					}
 
 					game.save(function(err) {
-						var status = {join: true, full: false};
-						//If the Lobby Is Full
-						if (game.players.length + 1 == game.numPlayers) {
-							status.full = true;
-						}
-
-						//Maybe message isn't needed, just publishUpdate
-						Games.publishUpdate(game.id, {id: gameID, playerID: playerID, status: 'add'});
+						curPlayers = game.players.length + 1;
+						//curPlayers = curPlayers.toString();
+						//This Line Causes Error That Does No Harm On Join, But Doesn't When Game Is Created Through Postman, Really Frustrating, Appears Fixed For Now, Not It Was Pretending
+						Games.publishUpdate(game.id, {id: game.id, currentPlayers: curPlayers, status: 'add', update: 'player', numPlayers: game.numPlayers, playerID: playerID});
 
 						//.subscribe maybe not necesscary?
-						Games.subscribe(req.socket, game.id);
-
-						return res.send(status);
+						//Games.subscribe(req.socket, game.id);
+						//console.log('done');
+						return res.send({join: true});
 					});
 
 				}
@@ -453,8 +459,8 @@ module.exports = {
 	},
 
 	enterLobby: function (req, res) {
-		var gameID = req.query.gameID;
-		var playerID = req.session.user;
+		var gameID = parseInt(req.query.gameID);
+		var playerID = parseInt(req.session.user);
 		var isFull = 'false';
 		var match = 'false';
 		//var roomName = req.param('game'+gameID+'info');
@@ -470,37 +476,41 @@ module.exports = {
 				return res.view('static/error', {error: err});
 			}
 
+			if (typeof game === 'undefined') {
+				return res.view('static/error', {error: 'Game Doesnt Exist'});
+			}
+
 			//console.log('numPlayers: '+game.numPlayers);
 			//console.log('players in game: '+game.players.length);
 
 			//Check If Game Is Full
-			if (game.numPlayers == game.players.length) {
-				isFull = 'true';
-			}
-
-			game.players.forEach(function (player, index, array) {
-				//console.log('Player ID: '+player.id+' - Player ID: '+playerID);
-				//console.log(typeof player.id+' - '+typeof playerID);
-				//Ensure Player Is In Game
-				if (player.id == playerID) {
-					//console.log('Match');
-					match = 'true';
-				}
-			});
-
-			if (match == 'true') {
-
-				if (game.inProgress == true) {
-					return res.view('map', {gameID: gameID});
-				}
-
-				return res.view('static/gamelobby', {isFull: isFull, gameID: gameID});
-			}
 			else {
-				return res.view('static/error', {error: 'Player Not In Game'});
-			}
-			Games.publishUpdate(games);
+				if (game.numPlayers == game.players.length) {
+					isFull = 'true';
+				}
 
+				game.players.forEach(function (player, index, array) {
+					//console.log('Player ID: '+player.id+' - Player ID: '+playerID);
+					//console.log(typeof player.id+' - '+typeof playerID);
+					//Ensure Player Is In Game
+					if (player.id == playerID) {
+						//console.log('Match');
+						match = 'true';
+					}
+				});
+
+				if (match == 'true') {
+
+					if (game.inProgress == true) {
+						return res.view('map', {gameID: gameID});
+					}
+
+					return res.view('static/gamelobby', {isFull: isFull, gameID: gameID});
+				}
+				else {
+					return res.view('static/error', {error: 'Player Not In Game'});
+				}
+			}
 		});
 	},
 
@@ -547,6 +557,7 @@ module.exports = {
 				}
 
 				game.phase = 1;
+				game.moves = 1;
 
 				if(game.startingArmies == 1){
 					game.startingArmies = 0;
@@ -554,6 +565,7 @@ module.exports = {
 
 				if (game.round == 0 && game.startingArmies > 1){
 					game.phase = 0;
+					game.moves = 0;
 					newRound = false;
 					game.startingArmies = game.startingArmies - 1;
 				}
@@ -591,7 +603,8 @@ module.exports = {
 						armiesRemaining: game.armiesRemaining,
 						startingArmies: game.startingArmies,
 						phase: game.phase,
-						round: game.round
+						round: game.round,
+						moves: game.moves
 					});
 
 					if (err) {
@@ -605,7 +618,8 @@ module.exports = {
 							id: game.id,
 							round: game.round,
 							update: 'changeRound',
-							phase: game.phase
+							phase: game.phase,
+							moves: game.moves
 						});
 					}
 					res.send(game);
@@ -629,7 +643,11 @@ module.exports = {
 			res.send('User Is Not Logged In!');
 		}
 
-		console.log(gameName+' '+password+' '+numPlayers+' '+playerID);
+		if (password == '') {
+			password = null;
+		}
+
+		//console.log(gameName+' '+password+' '+numPlayers+' '+playerID);
 
 		Games.create({
 			name: gameName,
@@ -641,8 +659,13 @@ module.exports = {
 			if (err) {
 				res.send('Database Error: Couldnt Create Game');
 			}
-			Games.publishCreate({id: game.id, name: game.name, password: game.password, numPlayers: game.numPlayers, currentPlayers: 1});
-			res.send({create: true, id: game.id});
+			if (typeof game === 'undefined') {
+				res.send({create: false});
+			}
+			else {
+				Games.publishCreate({id: game.id, name: game.name, password: game.password, numPlayers: game.numPlayers, currentPlayers: 1});
+				res.send({create: true, id: game.id});
+			}
 		});
 	},
 
@@ -683,7 +706,8 @@ module.exports = {
 					id: game.id,
 					phase: game.phase,
 					update: 'phaseChange',
-					status: 'update'
+					status: 'update',
+					moves: game.moves
 				});
 
 				res.send({phase: game.phase});
@@ -710,11 +734,53 @@ module.exports = {
 						id: game.id,
 						phase: game.phase,
 						update: 'phaseChange',
-						status: 'update'
+						status: 'update',
+						moves: game.moves
 					});
 
-					res.send("Phase Change");
+					res.send({phase: game.phase});
 			});
+		});
+	},
+
+	playerMightHaveLost: function (gameID, playerID) {
+		gameID = parseInt(gameID);
+		playerID = parseInt(playerID);
+		var counter = 0;
+		var PIG = false;
+
+		Games.findOne(gameID).populate('regions').populate('players').exec(function(err, game){
+			if (typeof game === 'undefined') {
+				console.log('Game Doesnt Exist');
+			}
+			else {
+				for (i = 0; i < game.players.length; i++) {
+					if (game.players[i].id == playerID) {
+						PIG = true;
+						for (j = 0; j < game.regions.length; j++) {
+							if (game.regions[j].controlledBy == playerID) {
+								counter = counter + 1;
+							}
+						}
+					}
+				}
+				if (PIG == true && counter == 0){
+					//Player Lost
+					game.players.remove(playerID);
+					game.save(function(err) {
+						if (err) {
+							console.log(err);
+						}
+						console.log(game.players.length - 1);
+						Games.publishUpdate(game.id, {
+							id: game.id,
+							player: playerID,
+							update: 'removePlayer',
+							playersLeft: game.players.length - 1
+						});
+					});
+				}
+			}
 		});
 	}
 };

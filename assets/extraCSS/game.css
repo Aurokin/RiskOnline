@@ -23,6 +23,21 @@
   color: #999;
 }
 
+.numIcons
+{
+  height: 25px;
+  width: 25px;
+  border-radius: 25px;
+  position: absolute;
+  z-index: 15;
+  background-color: #FFFFE0;
+  border: 2px solid black;
+  font-size: 17px;
+  margin: 0;
+  padding: 0;
+  vertical-align: top;
+  text-align: center;
+}
 #gameName {
   text-align: center;
   padding-top: 15px;
@@ -71,3 +86,7 @@
 }
 
 /* Players In Panel */
+
+.numIcons {
+  pointer-events: none;
+}

@@ -51,6 +51,7 @@ module.exports.routes = {
   'post /game/attack': 'GamesController.attack',
   'post /game/reinforceToAttackPhase': 'GamesController.reinforceToAttackPhase',
   'post /game/attackToMovePhase': 'GamesController.attackToMovePhase',
+  'post /game/end': 'GamesController.endGame',
   '/chat': {
 	  view: 'real_time'
 	},
@@ -81,7 +82,15 @@ module.exports.routes = {
 
   'post /game/start': 'GamesController.startGame',
 
-  'post /game/chat': 'GamesController.sendChatMessage'
+  'post /game/chat': 'GamesController.sendChatMessage',
+
+  'get /game/winner' : {
+    view: 'static/winner'
+  },
+
+  'get /game/loser' : {
+    view: 'static/loser'
+  },
 
 
   /***************************************************************************
