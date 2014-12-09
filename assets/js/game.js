@@ -98,7 +98,7 @@ $(document).ready(function() {
     var regionFrom = parseInt($('#regionID').text());
     var regionTo = this.getAttribute("value");
 
-    console.log('attacking!!!')
+    console.log('attacking!!!');
 
     postData = {
       gameID : gameID,
