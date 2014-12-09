@@ -140,7 +140,9 @@ $(document).ready(function() {
   //Move Army Button
   $('#moveArmyBtn').click(function() {
     var regionID = parseInt($('#regionID').text());
+    var regionForMoveable = _.findWhere(regions, {id: regionID});
     var currAdjRegions = _.where(adjRegions, {region: regionID});
+    var amountMoveable = regionForMoveable.armyCount - 1;
     //console.log(adjRegions);
     //console.log(currAdjRegions);
     var moveableRegions = [];
@@ -153,15 +155,29 @@ $(document).ready(function() {
       currRegion = {};
     }
     //console.log(attackableRegions);
-    move(moveableRegions);
+    move(moveableRegions, amountMoveable);
   });
-  //Actual Attack Button
-  $(document).delegate(".moveAttackBtn", "click", function(event){
+  $(document).delegate(".moveAmountBtn", "click", function(event){
+    $('#movesModal').modal('toggle');
+    $('#moveAmountModal').modal();
+    $('#moveAmountModalBody').html('');
+    var id = this.getAttribute("value");
+    var amountMoveable = this.getAttribute("amountMoveable");
+    var select = "<select id='valOfAmountMoveable'>";
+    for (i = 1; i <= amountMoveable; i++) {
+      select = select+"<option value='"+i+"'>"+i+"</option>";
+    }
+    select = select+"</select>";
+    $('<div class="moveBlock">'+select+' - <button class="actualMoveBtn" value="'+id+'" amountMoveable="'+amountMoveable+'">Move!</button></div>').appendTo('#moveAmountModalBody');
+  });
+  //Actual move Button
+  $(document).delegate(".actualMoveBtn", "click", function(event){
     event.stopPropagation();
     //console.log(event);
     var regionID = parseInt($('#regionID').text());
     var regionFrom = parseInt($('#regionID').text());
     var regionTo = this.getAttribute("value");
+    var armyMove = parseInt($('#valOfAmountMoveable').val());
 
     //console.log('attacking!!!');
 
@@ -169,16 +185,18 @@ $(document).ready(function() {
       gameID : gameID,
       playerID : userID,
       regionIDFrom : regionFrom,
-      regionIDTo : regionTo
+      regionIDTo : regionTo,
+      armyMove : armyMove
     }
 
     io.socket.post("/game/move", postData, function (data, jwres) {
       console.log(data);
-      $('#movesModal').modal('toggle');
+      $('#moveAmountModal').modal('toggle');
       var existRegion = _.findWhere(regions, {id: regionID});
       if (moves < 1) {
         disableButtons();
       }
+      $('#moveModal').modal('toggle');
       //loadRegionInfo(existRegion.name);
     });
   });
@@ -395,7 +413,7 @@ function modifyButton(region) {
     else if (region[0].controlledBy == userID && region[0].armyCount > 1 && phase == 2) {
       $('#attackArmyBtn').removeClass("disabled").prop("disabled", false);
     }
-    else if (region[0].controlledBy == userID && region[0].armyCount > 1 && phase == 3 && moves > 1) {
+    else if (region[0].controlledBy == userID && region[0].armyCount > 1 && phase == 3 && moves > 0) {
       $('#moveArmyBtn').removeClass("disabled").prop("disabled", false);
     }
   }
@@ -513,7 +531,7 @@ function updateGameInfo(currentUserTurn, round, phase, remainingArmies, moves) {
 function attack(attackableRegions) {
   $('#attackModalBody').text('');
   if (attackableRegions.length == 0) {
-    $('#attackModalBody').text('<No Attackable Regions');
+    $('#attackModalBody').text('No Attackable Regions');
   }
   else {
     for (i = 0; i < attackableRegions.length; i++) {
@@ -525,7 +543,7 @@ function attack(attackableRegions) {
   $('#attackModal').modal();
 }
 
-function move(moveableRegions) {
+function move(moveableRegions, amountMoveable) {
   $('#moveModalBody').text('');
   if (moveableRegions.length == 0) {
     $('#moveModalBody').text('No Moveable Regions');
@@ -534,7 +552,7 @@ function move(moveableRegions) {
     for (i = 0; i < moveableRegions.length; i++) {
       var name = moveableRegions[i].name;
       var id = moveableRegions[i].id;
-      $('<div class="moveBlock">'+name+' - <button class="actualMoveBtn" value="'+id+'">Move!</button></div>').appendTo('#moveModalBody');
+      $('<div class="moveBlock">'+name+' - <button class="moveAmountBtn" value="'+id+'" amountMoveable="'+amountMoveable+'">Move!</button></div>').appendTo('#moveModalBody');
     }
   }
   $('#moveModal').modal();

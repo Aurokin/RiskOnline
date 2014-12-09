@@ -236,13 +236,13 @@ module.exports = {
 										if (err) {
 											res.send(err);
 										}
-										Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'moveUpdate',  region: regionIDFrom, armyCount: armyMove, controlledBy : regions[regionFrom].controlledBy});
+										Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'moveUpdate',  region: regionIDFrom, armyCount: regions[regionFrom].armyCount, controlledBy : regions[regionFrom].controlledBy});
 
 										regions[regionTo].save(function(err) {
 											if (err) {
 												res.send(err);
 											}
-											Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'moveUpdate', region: regionIDTo, armyCount: armyMove, controlledBy : regions[regionTo].controlledBy});
+											Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'moveUpdate', region: regionIDTo, armyCount: regions[regionTo].armyCount, controlledBy : regions[regionTo].controlledBy});
 											game.moves = game.moves - 1;
 											game.save(function(err) {
 												if (err) {
@@ -719,7 +719,8 @@ module.exports = {
 					id: game.id,
 					phase: game.phase,
 					update: 'phaseChange',
-					status: 'update'
+					status: 'update',
+					moves: game.moves
 				});
 
 				res.send({phase: game.phase});
@@ -746,7 +747,8 @@ module.exports = {
 						id: game.id,
 						phase: game.phase,
 						update: 'phaseChange',
-						status: 'update'
+						status: 'update',
+						moves: game.moves
 					});
 
 					res.send({phase: game.phase});
