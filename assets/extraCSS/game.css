@@ -4,7 +4,7 @@
 }
 
 .panelBody {
-  height: 200px;
+  height: 270px;
   border-bottom: 1px solid black;
   padding-top: 20px;
 }
@@ -38,3 +38,51 @@
   vertial-align: top;
   text-align: center;
 }
+#gameName {
+  text-align: center;
+  padding-top: 15px;
+  margin: 0px;
+}
+
+/* Players In Panel */
+
+.playerInPanel {
+  display: block;
+}
+
+.playerColor {
+  height: 16px;
+  width: 16px;
+  display: inline-block;
+}
+
+.playerName {
+  vertical-align: text-bottom;
+  padding-left: 5px;
+}
+
+#p1Color {
+  background-color: #36FF7C;
+}
+
+#p2Color {
+  background-color: #FF36B9;
+}
+
+#p3Color {
+  background-color: #52A3FF;
+}
+
+#p4Color {
+  background-color: #FFAE52;
+}
+
+#p5Color {
+  background-color: #E8FF52;
+}
+
+#p6Color {
+  background-color: #FF0000;
+}
+
+/* Players In Panel */

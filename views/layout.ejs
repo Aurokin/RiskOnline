@@ -62,6 +62,7 @@
     <script src="/js/dependencies/bootstrap.js"></script>
     <script src="/js/dependencies/customValidate.js"></script>
     <script src="/js/dependencies/jquery.validate.min.js"></script>
+    <script src="/js/dependencies/noMobile.js"></script>
     <script src="/js/dependencies/underscore-min.js"></script>
     <script src="/js/siteSocket.js"></script>
     <!--SCRIPTS END-->
@@ -124,6 +125,7 @@
         <ul class="nav navbar-nav">
           <% if (session.user) { %>
             <li class="active"><a href="/user/show/<%= session.user %>"><%= session.name %></a></li>
+            <li><a href="/GameList">Game List</a></li>
           <% } %>
           <% if (session.authenticated && session.User.admin) { %>
           <li><a href="/user">User Administration</a></li>
