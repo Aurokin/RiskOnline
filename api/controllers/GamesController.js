@@ -236,14 +236,21 @@ module.exports = {
 										if (err) {
 											res.send(err);
 										}
-										Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'remove', amount: armyMove, regionID: regionIDFrom});
+										Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'moveUpdate',  region: regionIDFrom, armyCount: armyMove, controlledBy : regions[regionFrom].controlledBy});
 
 										regions[regionTo].save(function(err) {
 											if (err) {
 												res.send(err);
 											}
-											Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'add', amount: armyMove, regionID: regionIDTo});
-											res.send(regions);
+											Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'moveUpdate', region: regionIDTo, armyCount: armyMove, controlledBy : regions[regionTo].controlledBy});
+											game.moves = game.moves - 1;
+											game.save(function(err) {
+												if (err) {
+													console.log(err);
+												}
+												Games.publishUpdate(gameID, {id: gameID, update: 'moved', moves: game.moves});
+												res.send(regions);
+											});
 										});
 								});
 							}
@@ -482,36 +489,41 @@ module.exports = {
 				return res.view('static/error', {error: err});
 			}
 
+			if (typeof game === 'undefined') {
+				return res.view('static/error', {error: 'Game Doesnt Exist'});
+			}
+
 			//console.log('numPlayers: '+game.numPlayers);
 			//console.log('players in game: '+game.players.length);
 
 			//Check If Game Is Full
-			if (game.numPlayers == game.players.length) {
-				isFull = 'true';
-			}
-
-			game.players.forEach(function (player, index, array) {
-				//console.log('Player ID: '+player.id+' - Player ID: '+playerID);
-				//console.log(typeof player.id+' - '+typeof playerID);
-				//Ensure Player Is In Game
-				if (player.id == playerID) {
-					//console.log('Match');
-					match = 'true';
-				}
-			});
-
-			if (match == 'true') {
-
-				if (game.inProgress == true) {
-					return res.view('map', {gameID: gameID});
-				}
-
-				return res.view('static/gamelobby', {isFull: isFull, gameID: gameID});
-			}
 			else {
-				return res.view('static/error', {error: 'Player Not In Game'});
-			}
+				if (game.numPlayers == game.players.length) {
+					isFull = 'true';
+				}
 
+				game.players.forEach(function (player, index, array) {
+					//console.log('Player ID: '+player.id+' - Player ID: '+playerID);
+					//console.log(typeof player.id+' - '+typeof playerID);
+					//Ensure Player Is In Game
+					if (player.id == playerID) {
+						//console.log('Match');
+						match = 'true';
+					}
+				});
+
+				if (match == 'true') {
+
+					if (game.inProgress == true) {
+						return res.view('map', {gameID: gameID});
+					}
+
+					return res.view('static/gamelobby', {isFull: isFull, gameID: gameID});
+				}
+				else {
+					return res.view('static/error', {error: 'Player Not In Game'});
+				}
+			}
 		});
 	},
 

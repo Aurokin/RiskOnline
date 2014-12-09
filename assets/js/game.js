@@ -48,6 +48,10 @@ io.socket.on('connect', function socketConnected() {
       moves = message.data.moves;
       changeText('currentMoves', moves);
     }
+    else if (message.data.update == "moved") {
+      moves = message.data.moves;
+      changeText('currentMoves', moves);
+    }
   });
 
 
@@ -130,6 +134,51 @@ $(document).ready(function() {
       console.log(data);
       $('#attackModal').modal('toggle');
       var existRegion = _.findWhere(regions, {id: regionID});
+      //loadRegionInfo(existRegion.name);
+    });
+  });
+  //Move Army Button
+  $('#moveArmyBtn').click(function() {
+    var regionID = parseInt($('#regionID').text());
+    var currAdjRegions = _.where(adjRegions, {region: regionID});
+    //console.log(adjRegions);
+    //console.log(currAdjRegions);
+    var moveableRegions = [];
+    for (i = 0; i < currAdjRegions.length; i++) {
+      var currRegion = _.findWhere(regions, {id: currAdjRegions[i].adjRegion});
+      if (currRegion.controlledBy == userID) {
+        //Can Attack
+        moveableRegions.push(currRegion);
+      }
+      currRegion = {};
+    }
+    //console.log(attackableRegions);
+    move(moveableRegions);
+  });
+  //Actual Attack Button
+  $(document).delegate(".moveAttackBtn", "click", function(event){
+    event.stopPropagation();
+    //console.log(event);
+    var regionID = parseInt($('#regionID').text());
+    var regionFrom = parseInt($('#regionID').text());
+    var regionTo = this.getAttribute("value");
+
+    //console.log('attacking!!!');
+
+    postData = {
+      gameID : gameID,
+      playerID : userID,
+      regionIDFrom : regionFrom,
+      regionIDTo : regionTo
+    }
+
+    io.socket.post("/game/move", postData, function (data, jwres) {
+      console.log(data);
+      $('#movesModal').modal('toggle');
+      var existRegion = _.findWhere(regions, {id: regionID});
+      if (moves < 1) {
+        disableButtons();
+      }
       //loadRegionInfo(existRegion.name);
     });
   });
@@ -346,6 +395,9 @@ function modifyButton(region) {
     else if (region[0].controlledBy == userID && region[0].armyCount > 1 && phase == 2) {
       $('#attackArmyBtn').removeClass("disabled").prop("disabled", false);
     }
+    else if (region[0].controlledBy == userID && region[0].armyCount > 1 && phase == 3 && moves > 1) {
+      $('#moveArmyBtn').removeClass("disabled").prop("disabled", false);
+    }
   }
 }
 
@@ -389,6 +441,16 @@ function regionUpdate(data) {
     var territory = region[0].name;
     var color = player[0].color;
     recolorTerritory(territory, color);
+  }
+
+  else if (data.status == 'moveUpdate') {
+    var regionID = parseInt(data.region);
+    var armyCount = data.armyCount;
+    var playerID = data.controlledBy;
+
+    updateRegionInfo(regionID, playerID, armyCount);
+    var region = $.grep(regions, function(e){ return e.id == regionID; });
+    var player = $.grep(players, function(e){ return e.id == playerID; });
   }
 }
 
@@ -461,4 +523,19 @@ function attack(attackableRegions) {
     }
   }
   $('#attackModal').modal();
+}
+
+function move(moveableRegions) {
+  $('#moveModalBody').text('');
+  if (moveableRegions.length == 0) {
+    $('#moveModalBody').text('No Moveable Regions');
+  }
+  else {
+    for (i = 0; i < moveableRegions.length; i++) {
+      var name = moveableRegions[i].name;
+      var id = moveableRegions[i].id;
+      $('<div class="moveBlock">'+name+' - <button class="actualMoveBtn" value="'+id+'">Move!</button></div>').appendTo('#moveModalBody');
+    }
+  }
+  $('#moveModal').modal();
 }
