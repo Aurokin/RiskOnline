@@ -19,10 +19,8 @@ io.socket.on('connect', function socketConnected() {
   io.socket.on('games', function gameDataReceived(message) {
     console.log(message);
     if (message.data.update == "region") {
-      //Update Army Count
       regionUpdate(message.data);
-      var existRegion = _.findWhere(regions, {id: message.data.region});
-      loadRegionInfo(existRegion.name);
+      //Update Army Count
       //Should Call loadRegionInfo Here
     }
     else if (message.data.update == "changeTurn") {
@@ -75,6 +73,11 @@ $(document).ready(function() {
           loadRegionInfo(existRegion.name);
         });
       }
+      else {
+        var existRegion = _.findWhere(regions, {id: regionID});
+        //Probably Better To Reload Info For Everyone
+        loadRegionInfo(existRegion.name);
+      }
     });
   });
   //Attack Button
@@ -99,6 +102,7 @@ $(document).ready(function() {
   $(document).delegate(".actualAttackBtn", "click", function(event){
     event.stopPropagation();
     console.log(event);
+    var regionID = parseInt($('#regionID').text());
     var regionFrom = parseInt($('#regionID').text());
     var regionTo = this.getAttribute("value");
 
@@ -114,7 +118,8 @@ $(document).ready(function() {
     io.socket.post("/game/attack", postData, function (data, jwres) {
       console.log(data);
       $('#attackModal').modal('toggle');
-
+      var existRegion = _.findWhere(regions, {id: regionID});
+      loadRegionInfo(existRegion.name);
     });
   });
   //End Phase Button
