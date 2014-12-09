@@ -159,15 +159,15 @@ module.exports = {
 								if (err) {
 									res.send(err);
 								}
-								Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'attackUpdate', regionID : regionIDFrom, armyCount: region1.armyCount, controlledBy : region1.controlledBy});
+								Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'attackUpdate', region : regionIDFrom, armyCount: region1.armyCount, controlledBy : region1.controlledBy});
 								region2.save(function(err) {
 									if (err) {
 										res.send(err);
 									}
 									if (changeControl == true) {
-										Games.publishUpdate(gameID, {id: gameID, update:'changeControl', status:'changed', regionID: regionIDTo, armyCount: region2.armyCount, controlledBy: region2.controlledBy});
+										Games.publishUpdate(gameID, {id: gameID, update:'changeControl', status:'changed', region: regionIDTo, armyCount: region2.armyCount, controlledBy: region2.controlledBy});
 									}
-									Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'attackUpdate', regionID: regionIDTo, armyCount: region2.armyCount, controlledBy : region2.controlledBy});
+									Games.publishUpdate(gameID, {id: gameID, update: 'region', status: 'attackUpdate', region: regionIDTo, armyCount: region2.armyCount, controlledBy : region2.controlledBy});
 									res.send('Attack Successful');
 								});
 							});

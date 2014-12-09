@@ -72,7 +72,7 @@ $(document).ready(function(){
     });
 
   $('.joinGame').click(function() {
-		console.log('harro');
+		//console.log('harro');
 		//console.log(this);
 		//console.log(this.getAttribute("value"));
 		console.log($('#userID').text());

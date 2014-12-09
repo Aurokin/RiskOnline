@@ -8,7 +8,10 @@ io.socket.on('connect', function socketConnected() {
 
     io.socket.get("/regions", function(regionsData, jwres) {
       loadRegions(resData, regionsData);
-      loadInitialState(resData);
+      io.socket.get("/adjRegions", function(adjRegionsData, jwres) {
+        console.log(adjRegionsData);
+        loadInitialState(resData);
+      });
     });
   });
 
@@ -16,12 +19,16 @@ io.socket.on('connect', function socketConnected() {
     console.log(message);
     if (message.data.update == "region") {
       regionUpdate(message.data);
+      //Update Army Count
+      //Should Call loadRegionInfo Here
     }
     else if (message.data.update == "changeTurn") {
       changeTurn(message.data);
     }
     else if (message.data.update == "changeRound") {
       round = message.data.round;
+      phase = message.data.phase;
+      changeText('currentPhase', phase);
       changeText('currentRound', round);
     }
     else if (message.data.update == "phaseChange") {
@@ -29,6 +36,9 @@ io.socket.on('connect', function socketConnected() {
       remainingArmies = 0;
       changeText('currentPhase', phase);
       changeText('remainingArmies', '0');
+    }
+    else if (message.data.update == "changeControl") {
+      //Notify User Continent Changed Control
     }
   });
 
@@ -58,9 +68,43 @@ $(document).ready(function() {
         io.socket.post("/game/changeTurn", postData, function (data, jwres) {
           console.log(data);
           var existRegion = _.findWhere(regions, {id: regionID});
+          //Probably Better To Reload Info For Everyone
           loadRegionInfo(existRegion.name);
         });
       }
+    });
+  });
+  //Attack Button
+  $('#attackArmyBtn').click(function() {
+    var regionID = parseInt($('#regionID').text());
+    var adjRegions = _.where(adjRegions, {region: regionID});
+    var attackableRegions = [];
+    for (i = 0; i < adjRegions.length; i++) {
+      var currRegion = _.findWhere(regions, {id: adjRegions[i].adjRegion});
+      if (currRegion.controlledBy != playerID) {
+        //Can Attack
+        attackableRegions.push(currRegion);
+      }
+      currRegion = {};
+    }
+    attack(attackableRegions);
+  });
+  //Actual Attack Button
+  $('#actualAttackBtn').click(function() {
+    var regionFrom = parseInt($('#regionID').text());
+    var regionTo = this.getAttribute("value");
+
+    postData = {
+      gameID : gameID,
+      playerID : userID,
+      regionIDFrom : regionFrom,
+      regionIDTo : regionTo
+    }
+
+    io.socket.post("/game/attack", postData, function (data, jwres) {
+      $('#attackModal').modal('toggle');
+      var existRegion = _.findWhere(regions, {id: regionID});
+      loadRegionInfo(existRegion.name);
     });
   });
   //End Phase Button
@@ -124,6 +168,18 @@ function loadRegions(resData, regionsData) {
   //Next Add resData Region Info To regions
   //console.log(regions);
   //Then Draw Map With New Colors
+}
+
+function loadAdjRegions(data) {
+  adjRegions = [];
+  var currAdjRegion = {};
+
+  for (i = 0; i < data.length; i++) {
+    currAdjRegion.region = data[i].region;
+    currAdjRegion.adjRegion = data[i].adjRegion;
+    adjRegions[i] = currAdjRegion;
+    currAdjRegion = {};
+  }
 }
 
 function loadRegionInfo(name) {
@@ -228,6 +284,9 @@ function modifyButton(region) {
     if (region[0].controlledBy == userID && remainingArmies > 0 && phase == 1) {
       $('#placeArmyBtn').removeClass("disabled").prop("disabled", false);
     }
+    else if (region[0].controlledBy == userID && region[0].armyCount > 1 && phase == 2) {
+      $('#attackArmyBtn').removeClass("disabled").prop("disabled", false);
+    }
   }
 }
 
@@ -316,4 +375,19 @@ function updateGameInfo(currentUserTurn, round, phase, remainingArmies) {
   changeText('currentRound', round);
   changeText('currentPhase', phase);
   changeText('remainingArmies', remainingArmies);
+}
+
+function attack(attackableRegions) {
+  $('#attackModalBody').text('');
+  if (attackableRegions.length == 0) {
+    $('#attackModalBody').text('<p>No Attackable Regions</p>');
+  }
+  else {
+    for (i = 0; i < attackableRegions.length; i++) {
+      var name = attackableRegions[i].name;
+      var id = attackableRegions[i].id;
+      $('<div class="attackBlock">'+name+' - <button class="actualAttackBtn" value="'+id+'">Attack!</button></div>').appendTo('#attackModalBody');
+    }
+  }
+  $('#attackModal').modal();
 }
