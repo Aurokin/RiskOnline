@@ -515,6 +515,16 @@ function changeTurn(data) {
   moves = data.moves;
   updateGameInfo(currentUserTurn, round, phase, remainingArmies, moves);
   disableButtons();
+  if (currentUserTurn == userID) {
+    //Open Notification
+    var n = noty({
+      layout: 'center',
+      type: 'success',
+      text: 'Its Your Turn!',
+      timeout: 1000,
+      closeWith: ['hover']
+    });
+  }
   if ((phase == 1 || phase == 2) && (currentUserTurn == userID)) {
     enableEndPhase();
   }
