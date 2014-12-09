@@ -323,7 +323,7 @@ function regionUpdate(data) {
     updateRegionInfo(regionID, playerID, armyCount);
     recolorTerritory(territory, color);
   }
-  else if (data.status == 'add') {
+  else if (data.status == 'add' || data.status == 'attackUpdate') {
     var region = $.grep(regions, function(e){ return e.id == regionID; });
     var regionID = data.region.region;
     var armyCount = data.region.armyCount;
