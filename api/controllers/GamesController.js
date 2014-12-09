@@ -136,24 +136,22 @@ module.exports = {
 							res.send('Regions Are Not Adjacent')
 						}
 						else {
-<<<<<<< HEAD
 							if (region1.armyCount >= region2.armyCount && region2.controlledBy != playerID){
-=======
-							if (region1.armyCount > 1){
->>>>>>> 05c3278ab2e538e998577ab6b5c092a23236e2f4
-								if(random_num_dice1>random_num_dice2){
-									region2.armyCount=region2.armyCount - 1;
-									if(region2.armyCount<=0){
-										//This Is Where Player Loses!
-										originalRegionOwner = region2.controlledBy
-										changeControl = true;
-										region2.controlledBy = playerID;
-										region2.armyCount = 1;
-										region1.armyCount = region1.armyCount - 1;
+								if (region1.armyCount > 1){
+									if(random_num_dice1>random_num_dice2){
+										region2.armyCount=region2.armyCount - 1;
+										if(region2.armyCount<=0){
+											//This Is Where Player Loses!
+											originalRegionOwner = region2.controlledBy
+											changeControl = true;
+											region2.controlledBy = playerID;
+											region2.armyCount = 1;
+											region1.armyCount = region1.armyCount - 1;
+										}
 									}
-								}
-								else {
-									region1.armyCount=region1.armyCount - 1;
+									else {
+										region1.armyCount=region1.armyCount - 1;
+									}
 								}
 							}
 							else{
