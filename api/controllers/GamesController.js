@@ -436,7 +436,7 @@ module.exports = {
 			//Make Sure Password Is Correct
 			if (game.password == password || game.password == null) {
 				//Make Sure Lobby Isn't Full
-				if (game.players.length < game.numPlayers) {
+				if (game.players.length < game.numPlayers && game.inProgress == false) {
 
 					//Should only add if it does not already exist
 					//Incomplete
