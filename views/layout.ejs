@@ -126,7 +126,7 @@
       <div class="navbar-collapse collapse">
         <ul class="nav navbar-nav">
           <% if (session.user) { %>
-            <li class="active"><a href="/user/show/<%= session.user %>"><%= session.name %></a></li>
+            <li class="active"><a href="/"><%= session.name %></a></li>
             <li><a href="/GameList">Game List</a></li>
           <% } %>
           <% if (session.authenticated && session.User.admin) { %>
@@ -179,7 +179,7 @@
     -->
 
     <!--TEMPLATES-->
-    
+
     <!--TEMPLATES END-->
 
 
