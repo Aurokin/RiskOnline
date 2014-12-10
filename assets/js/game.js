@@ -524,7 +524,6 @@ function changeTurn(data) {
       layout: 'center',
       type: 'success',
       text: 'Its Your Turn!',
-      timeout: 1000,
       closeWith: ['hover']
     });
   }
