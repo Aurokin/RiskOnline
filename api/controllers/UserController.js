@@ -35,6 +35,9 @@ module.exports =
 												req.session.user = user.id;
 												res.redirect('/');
 											}
+											else {
+												res.view('static/error', {error: 'Password Not Correct'});
+											}
 									});
 							}
 					});
