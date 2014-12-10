@@ -63,7 +63,7 @@ io.socket.on('connect', function socketConnected() {
         else {
           $('#player'+message.data.player+'panel').remove();
           //NOT TESTED, Should Remove Player From Array
-          players = _.reject(players, (function(el) { return el.id === message.data.player; });
+          //players = _.reject(players, (function(el) { return el.id === message.data.player; });
           if (message.data.playersLeft == 1) {
             io.socket.post("/game/end", {gameID: gameID}, function (data, jwres) {
               if (data == 'Game '+gameID+' Destroyed') {
