@@ -57,6 +57,7 @@ io.socket.on('connect', function socketConnected() {
         changeText('currentMoves', moves);
       }
       else if (message.data.update == "removePlayer") {
+        console.log(userID+' - '+message.data.player);
         if (parseInt(userID) === parseInt(message.data.player)) {
           window.location.href = 'http://'+window.location.host+'/game/loser';
         }
