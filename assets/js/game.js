@@ -19,7 +19,9 @@ io.socket.on('connect', function socketConnected() {
   io.socket.on('games', function gameDataReceived(message) {
     console.log(message);
     if (message.verb == "destroyed") {
-      window.location.href = 'http://'+window.location.host+'/game/winner';
+      setTimeout(function() {
+        window.location.href = 'http://'+window.location.host+'/game/loser';
+      }, 2000);  
     }
     else {
       if (message.data.update == "region") {
